@@ -1,0 +1,46 @@
+<#assign title="资金明细"/>
+<#assign controller="FundDetails"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+	<div class="container" id="container" style="padding-bottom: 40px;">
+		<div class="fd-cont">
+			<div class="fd-title"><h2>资金明细</h2></div>
+			<div class="fd-condition">
+				<span class="date-label">查询类型</span>
+				<select id="fundSelect">
+					<option value="">全部</option>
+					<option value="11">充值</option>
+					<option value="-11">提现</option>
+					<option value="12">转入</option>
+					<option value="-12">转出</option>
+					<option value="19">蓝补</option>
+					<option value="-19">红冲</option>
+					<option value="10">虚拟币兑换</option>
+				</select>
+				<span class="date-label">起止日期</span>
+				<div id="dateSelect"></div>
+				<span class="button" id="search">查询</span>
+			</div>
+			<div class="fd-body">
+				<table id="fd-table">
+					<thead>
+						<tr>
+							<th>交易流水号</th>
+							<th>交易前金额</th>
+							<th>交易金额</th>
+							<th>交易后金额</th>
+							<th>类型</th>
+							<th>发生时间</th>
+							<th>关联单号</th> 
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td colspan="8"><i class="loading-icon"></i></td></tr>
+					</tbody>
+				</table>
+				<div id="pagination_div"></div>
+			</div>
+		</div>
+	</div>
+</#macro>

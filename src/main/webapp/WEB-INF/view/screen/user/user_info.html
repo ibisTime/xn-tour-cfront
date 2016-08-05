@@ -1,0 +1,49 @@
+<#assign title="账户资料"/>
+<#assign controller="UserInfo"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+<div class="container" id="container" style="background-color:#FAFAFA;width:100%;padding-top: 20px;padding-bottom: 20px;">
+	<div class="user-info-body">
+		<div class="user-sidebar" id="ui-left">
+			<div class="avatar"><img src="${staticUrl}/images/04481549.png"/></div>
+			<div class="box-inner">
+				<ul class="account-nav">
+					<#if user.kind != "f2"><li><a href='./order_list.htm'>我的订单</a></li></#if>
+					<li class="current"><a href='./user_info.htm'>账户资料</a></li>
+					<li><a href='./user_address.htm'>收货地址</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="user-content">
+			<div class="cont-title"><h2>账户资料</h2></div>
+			<div class="cont-body">
+				<div>
+					<div class="line-left-cont"><span>账户余额：</span><span id="amount"></span><span>元</span><i class="money-icon"></i></div>
+					<div class="line-right-cont">
+						<div class="btn1 button" id="withdraw">提现</div>
+						<div class="btn2 button" id="fundList">资金明细</div>
+					</div>
+				</div>
+				<div>
+					<div class="line-left-cont"><span>登录密码<br><span class="llc-tip">互联网账号存在被盗风险，建议您定期更改密码以保护账户安全</span></span><i class="success-icon mt_21"></i></div>
+					<div class="line-right-cont">
+						<a class="r-edit" href="./resetPwd.htm", target="_blank">修改</a>
+					</div>
+				</div>
+				<div id="tradePwdDiv">
+					<div class="line-left-cont"><span>交易密码<br><span class="llc-tip">互联网账号存在被盗风险，建议您定期更改密码以保护账户安全</span></span><i class="mt_21"></i></div>
+					<div class="line-right-cont" id="tradePwdOp">
+						<a class="r-edit" target="_blank"></a>
+					</div>
+				</div>
+				<div>
+					<div class="line-left-cont"><span>手机验证<br><span class="llc-tip">您验证的手机：<span id="mobile">123****5555</span></span></span><i class="success-icon mt_21"></i></div>
+					<div class="line-right-cont">
+						<a id="changeMobile" class="r-edit" target="_blank">修改</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</#macro>

@@ -1,0 +1,27 @@
+<#assign title="找回登录密码"/>
+<#assign controller="pwdReset"/>
+<#include 'layout/layout_m.html'/>
+<#macro content>
+	<div class="flex flex-dv plr10 ptb20 hp100">
+		<form id="form">
+			<label class="form_ctrl plr10 clearfix nobr_b flex">
+				<span class="fl">手机号</span>
+				<input id="mobile" name="mobile" class="fl pl20 lh15rem flex1" type="tel" value="" placeholder="注册的手机号">
+			</label>
+			<label class="form_ctrl plr10 clearfix nobr_b js-input flex">
+				<span class="fl">校验码</span>
+				<span class="re fl wp50 pr20 flex1"><input type="tel" id="smsCaptcha" name="smsCaptcha" class="wp100 pl20" type="text" autocomplete="off" value="" placeholder="手机校验码"></span>
+				<input type="button" id="sendBtn" class="plain_btn fr wp33 t_bd b_bd_l tc pl10 btn_press t_orange" value="获取校验码"></input>
+			</label>
+			<label class="form_ctrl plr10 clearfix flex">
+				<span class="fl">设置新密码</span>
+				<input id="newPwd" name="newPwd" class="fl wp70 pl20 lh15rem flex1" type="" value="" autocomplete="off" placeholder="请设置新密码">
+			</label>
+			<input id="confirmBtn" type="button" class="wp100 mt25 btn btn_orange" value="保存"/>
+		</form>
+		<div class="flex1 flex flex-c">
+			<img class="wp50" src="${staticUrl}/images/logo_all.png"/>
+		</div>
+	</div>
+	
+</#macro>

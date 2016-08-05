@@ -1,0 +1,52 @@
+<#assign title="取现"/>
+<#assign controller="Withdraw"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+	<div class="frame-all">
+		<div class="con-all">
+			<!--表单 start-->
+			<form id="realform" novalidate="novalidate">
+			
+				<div class="ui-form-item">
+					<label class="ui-label">可用金额：</label> 
+					<b id="account_amount" class="ui-text am-ft-md am-ft-number"></b>
+				</div>
+				
+				
+				<div class="ui-form-item">
+					<label class="ui-label">银行卡：</label>
+					<div class="rel fl">
+						<input type="text" id="bankCard" name="bankCard" class="ui-input">
+					</div>	
+				</div>
+				
+				<div class="ui-form-item">
+					<label class="ui-label">开户支行：</label>
+					<div class="rel fl">
+						<input type="text" id="toBelong" name="toBelong" class="ui-input">
+					</div>	
+				</div>
+
+				
+				<div class="ui-form-item  lineTop-gray-dashed  ui-form-item-gray">
+					<label class="ui-label">取现金额：</label> 
+					<div class="rel fl">
+						<input type="text" id="amount" name="amount" class="ui-input">
+					</div>	
+				</div>
+				
+				
+				<div class="ui-form-item">
+					<label class="ui-label">交易密码：</label>
+                    <div class="rel fl">
+                    	<input type="password" id="trade_pwd" name="trade_pwd" class="ui-input" tabindex="1">
+                   	</div>
+                </div>
+				
+				<div class="ui-form-item">
+					<input type="button" id="wdBtn" class="tijiao" value="提交">
+				</div>
+			</form>
+		</div>
+	</div>
+</#macro>

@@ -1,0 +1,155 @@
+<div class="reg-l borderc bgf pb25 ui-form">
+    <div class="ui-form-item ui-form-title">
+        <label class="ui-label-head">信息填写已完成</label>
+        <p class="ui-prompt-gray" style="float: right;position: relative;left:0;">请您上传文件资料</p>
+    </div>
+    <div class="informationPanel" data-dojo-attach-point="sc1">
+        <div class="informationName">企业工商营业执照</div>
+        <div class="informationDetail">
+            <div class="photoPanel">
+                <p class="image" style="text-align: center;">
+                    <img src="${staticUrl}/images/upload/license.png" data-dojo-attach-point="s1">
+                </p>
+                <p  style="text-align: center;"><span>格式要求：</span><font>原件照片、扫描件或加盖公章的复印件</font><br>支持.jpg .jpeg .bmp .gif .png格式照片，大小不超过3M。</p>
+                <div class="uploadBtnPanel">
+                    <div class="uploadBtn">
+                        <a class="upBtn">选择文件</a>
+                        <input type="file" data-dojo-attach-point="f1"><!--此处先用此按钮做功能，<a>标签的onclick事件上传在ie中有兼容bug-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clb"></div>
+    </div>
+
+    <div class="informationPanel" data-dojo-attach-point="sc2">
+        <div class="informationName">组织机构代码证</div>
+        <div class="informationDetail">
+            <p>
+                若办理过三证合一的企业，请上传最新的营业执照。
+            </p>
+            <div class="photoPanel">
+                <p class="image"  style="text-align: center;">
+                    <img src="${staticUrl}/images/upload/organization.png" data-dojo-attach-point="s2">
+                </p>
+                <p  style="text-align: center;"><span>格式要求：</span><font>原件照片、扫描件或加盖公章的复印件</font><br>支持.jpg .jpeg .bmp .gif .png格式照片，大小不超过3M。</p>
+                <div class="uploadBtnPanel">
+                    <div class="uploadBtn">
+                        <a class="upBtn">选择文件</a>
+                        <input type="file" data-dojo-attach-point="f2"><!--此处先用此按钮做功能，<a>标签的onclick事件上传在ie中有兼容bug-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clb"></div>
+    </div>
+
+    <div class="informationPanel" data-dojo-attach-point="sc3">
+        <div class="informationName">税务登记证</div>
+        <div class="informationDetail">
+            <p>
+                若办理过三证合一的企业，请上传最新的营业执照。
+            </p>
+            <div class="photoPanel">
+                <div class="image" style="text-align: center;">
+                    <img src="${staticUrl}/images/upload/organization.png" data-dojo-attach-point="s3">
+                </div>
+                <p style="text-align: center;"><span>格式要求：</span><font>原件照片、扫描件或加盖公章的复印件</font><br>支持.jpg .jpeg .bmp .gif .png格式照片，大小不超过3M。</p>
+                <div class="uploadBtnPanel">
+                    <div class="uploadBtn">
+                        <a class="upBtn">选择文件</a>
+                        <input type="file" data-dojo-attach-point="f3"><!--此处先用此按钮做功能，<a>标签的onclick事件上传在ie中有兼容bug-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clb"></div>
+    </div>
+
+    <div class="informationPanel" data-dojo-attach-point="sc4">
+        <div class="informationName">法人身份证</div>
+        <div class="informationDetail">
+            <p>法人身份证必须在有效期内
+                <br>
+                请提交中华人民共和国居民身份证，无居民身份证的内地居民可提交《临时居民身份证》。
+            </p>
+            <div class="photoPanel">
+                <div class="image" style="text-align: center;">
+                    <img src="${staticUrl}/images/upload/id.png" data-dojo-attach-point="s4">
+                </div>
+                <p style="text-align: center;"><span>格式要求：</span><font>正反面在一张图片上</font><br>支持.jpg .jpeg .bmp .gif .png格式照片，大小不超过3M。</p>
+                <div class="uploadBtnPanel">
+                    <div class="uploadBtn">
+                        <a class="upBtn">选择文件</a>
+                        <input type="file" data-dojo-attach-point="f4"><!--此处先用此按钮做功能，<a>标签的onclick事件上传在ie中有兼容bug-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clb"></div>
+    </div>
+
+    <div class="informationPanel informationPanel_special" data-dojo-attach-point="sc5">
+        <div class="informationName">企业电子章</div>
+        <div class="informationDetail">
+            <p>请提交清晰有效的企业电子公章。</p>
+            <div class="photoPanel">
+                <div class="image" style="text-align: center;">
+                    <img src="${staticUrl}/images/upload/chapter.png" data-dojo-attach-point="s5">
+                </div>
+                <p style="text-align: center;"><span>格式要求：</span><font>电子公章</font><br>支持.jpg .jpeg .bmp .gif .png格式照片，大小不超过3M。</p>
+                <div class="uploadBtnPanel">
+                    <div class="uploadBtn">
+                        <a class="upBtn">选择文件</a>
+                        <input type="file" data-dojo-attach-point="f5"><!--用此按钮做功能-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clb"></div>
+    </div>
+
+    <div class="informationPanel" data-dojo-attach-point="sc6">
+        <div class="informationName">申请公函</div>
+        <div class="informationDetail">
+            <p>请下载<a class="downLoad" href="${staticUrl}/documents/申请认证公函.docx">[申请认证公函]</a><a class="downLoadBtn ml5"></a>，按要求填写后上传。</p>
+            <div class="photoPanel">
+                <div class="image" style="text-align: center;">
+                    <img src="${staticUrl}/images/upload/Invitation.png" data-dojo-attach-point="s6">
+                </div>
+                <p style="text-align: center;"><span>格式要求：</span><font>原件照片、扫描件或加盖公章的复印件</font><br>支持.jpg .jpeg .bmp .gif .png格式照片，大小不超过3M。</p>
+                <div class="uploadBtnPanel">
+                    <div class="uploadBtn">
+                        <a class="upBtn">选择文件</a>
+                        <input type="file" data-dojo-attach-point="f6">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clb"></div>
+    </div>
+
+    <div class="informationPanel" data-dojo-attach-point="sc7">
+        <div class="informationName">其它证明材料</div>
+        <div class="informationDetail">
+            <div class="photoPanel">
+                <div class="image" style="text-align: center;">
+                    <img src="${staticUrl}/images/upload/organization.png" data-dojo-attach-point="s7">
+                </div>
+                <p style="text-align: center;"><span>格式要求：</span><font>此处提交其他证明材料</font><br>支持.jpg .jpeg .bmp .gif .png格式照片，大小不超过3M。</p>
+                <div class="uploadBtnPanel">
+                    <div class="uploadBtn">
+                        <a class="upBtn">选择文件</a>
+                        <input type="file" data-dojo-attach-point="f7">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clb"></div>
+    </div>
+    <div>
+        <span class="ui-form-item" data-dojo-attach-point="i0"></span>
+        <span class="ui-form-item" data-dojo-attach-point="i1"></span>
+    </div>
+
+</div>

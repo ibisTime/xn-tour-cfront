@@ -1,0 +1,13 @@
+<#assign name="企业列表"/>
+<#assign controller="CompanyList"/>
+<#include 'layout/layout.html'/>
+<#macro subCss>
+<link rel="stylesheet" type="text/css"
+          href="${staticUrl}/css/company.css<#if jsVersion>?${jsVersion}</#if>" />
+</#macro>
+<#macro content>
+	<div class="stretch">
+		<div class="container" id="container">
+		</div>
+	</div>
+</#macro>

@@ -1,0 +1,25 @@
+<#assign title="首页"/>
+<#assign controller="Index"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+	<div class="container" id="container" style="width:100%;padding-bottom: 30px;">
+		<div id="index_imgs" class="index_imgs">
+			<div class="imgs_cont bd" style="width:100%;">
+				<ul class="img-ul">
+					<a href="${basePath}/detail/mall_list.htm?type=3"><li style="left:0;width: 100%;"><img src="${staticUrl}/images/11.jpg"></li></a>
+					<a href="${basePath}/detail/mall_list.htm?type=3"><li style="left:0;width: 100%;"><img src="${staticUrl}/images/12.png"></li></a>
+				</ul>
+			</div>
+			<div class="index_prev"><div class="btn-prev"></div></div>
+			<div class="index_next"><div class="btn-next"></div></div>
+			<div class="hd"><ul></ul></div>
+		</div>
+		<div class="img-show">
+			<div class="inblock"><a href="${basePath}/detail/mall_list.htm?type=3" class="p-relative d-inblock"><img src="${staticUrl}/images/21.png"/></a></div>
+			<div class="inblock"><a href="${basePath}/detail/mall_list.htm?type=1" class="p-relative d-inblock"><img src="${staticUrl}/images/22.png"/></a></div>
+			<div class="inblock"><a class="p-relative d-inblock"><img src="${staticUrl}/images/23.png"/></a></div>
+			<div class="inblock"><a class="p-relative d-inblock"><img src="${staticUrl}/images/24.png"/></a></div>
+		</div>
+		<div id="dsd"></div>
+	</div>
+</#macro>

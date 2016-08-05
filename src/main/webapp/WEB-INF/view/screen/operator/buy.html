@@ -1,0 +1,49 @@
+<#assign title="购买"/>
+<#assign controller="Buy"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+<div class="container browser-webkit account-address" id="container">
+	<div class="buy-top">
+		<div class="b-top-l">
+			<img id="btl-img" src=""/>
+			<div class="btr-imgs">
+				<ul style="margin-top: 15px;width: inherit;" id="btlImgs">
+					<li style="left:58px;" class="on"><img src=""></li>
+					<li style="left:163px;"><img src=""></li>
+					<li style="left:269px;"><img src=""></li>
+				</ul>
+			</div>
+		</div>
+		<div class="b-top-r">
+			<div>
+				<span class="b-name block-sp" id="btr-name"></span>
+				<span class="b-adv" id="btr-description"></span>
+			</div>
+			<div class="bp-div">
+				价格<span id="origin-price"></span><span class="b-price" id="btr-price"></span>
+			</div>
+			<div class="btr-imgs">
+				<a class="btr-direct btr-l" id="btr-l">&lt;</a>
+				<ul id="btr-images">
+					<!-- <li style="left:0;" class="on"><img src="${staticUrl}/images/services/photo.png"></li>
+					<li style="left:104px;"><img src="${staticUrl}/images/services/women.png"></li>
+					<li style="left:208px;"><img src="${staticUrl}/images/services/photo.png"></li>
+					<li style="left:312px;"><img src="${staticUrl}/images/services/women.png"></li>
+					<li style="left:416px;"><img src="${staticUrl}/images/services/photo.png"></li>
+					<li style="left:520px;"><img src="${staticUrl}/images/services/women.png"></li>
+					<li style="left:624px;"><img src="${staticUrl}/images/services/photo.png"></li>
+					<li style="left:728px;"><img src="${staticUrl}/images/services/women.png"></li> -->
+				</ul>
+				<a class="btr-direct btr-r" id="btr-r">&gt;</a>
+			</div>
+			<div class="cart-count" style="line-height: 50px;font-size:14px;">数量<div style="display: inline-block;"><span style="margin-left:10px;" id="subCount">-</span><input id="buyCount" type="text" value="1"/><span id="addCount">+</span></div></div>
+			<div class="bt-btn"><span class="button buy-btn" id="buyBtn" style="margin-right: 10px;">立即购买</span><span class="button" id="addCartBtn">加入购物车</span></div>
+			<i class='absolute-loading'></i>
+		</div>
+	</div>
+	<div class="buy-bottom">
+		<h3 class="bb-title">技术规格</h3>
+		<table border="1" cellpadding="10" cellspacing="0" id="bb-table"></table>
+	</div>
+</div>
+</#macro>

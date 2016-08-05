@@ -1,0 +1,86 @@
+<#assign title="企业详情"/>
+<#assign controller="companyDetail"/>
+<#include 'layout/layout_m.html'/>
+<#macro content>
+	<div class="swiper-container hp100">
+		<div class="tabs">
+			<a class="bg_fff ptb10 tc fl s_14 wp50 b_e4_r active tab">企业信息</a>
+			<a class="bg_fff ptb10 tc fl s_14 wp50 tab">企业账户</a>
+		</div>
+	    <div class="swiper-wrapper">
+	        <div class="swiper-slide">
+	        	<label class="form_ctrl fl b_f7_b clearfix re bg_f7">
+					<span class="fl t_bold s_14" id="name">&nbsp;</span>
+				</label>
+				<label class="form_ctrl nobr fl b_f7_b clearfix re s_12">
+					<span class="fl">工商注册号</span>
+					<span class="fr" id="gsyyzzNo"></span>
+				</label>
+				<label class="form_ctrl nobr fl b_f7_b clearfix re s_12">
+					<span class="fl">法人</span>
+					<span class="fr" id="realName"></span>
+				</label>
+				<label class="form_ctrl nobr fl b_f7_b clearfix re s_12">
+					<span class="fl">证件类型</span>
+					<span class="fr" id="idKind"></span>
+				</label>
+				<label class="form_ctrl nobr fl b_f7_b clearfix re s_12">
+					<span class="fl">证件号码</span>
+					<span class="fr" id="idNo"></span>
+				</label>
+				<label class="form_ctrl nobr fl b_f7_b clearfix re s_12">
+					<span class="fl">注册资金</span>
+					<span class="fr" id="capital"></span>
+				</label>
+				<label class="form_ctrl nobr b_f7_b fl clearfix re s_12">
+					<span class="fl">企业地址</span>
+					<span class="fr" id="address"></span>
+				</label>
+				<label class="form_ctrl b_f7_b fl clearfix re mt20 s_12">
+					<span class="fl">KYC状态</span>
+					<span class="fr" id="status"></span>
+				</label>
+				<label id="kycNoteCtn" style="display:none;" class="form_ctrl nobr b_f7_b fl clearfix re s_12">
+					<span class="fl">说明</span>
+					<span class="fr t-3dot wp80" id="kycNote"></span>
+				</label>
+			</div>
+	        <div class="swiper-slide" style="display: none;">
+	        	<div id="wrapper1">
+	        	
+		        	<div id="scroller">
+		        	
+			        	<div id="scroller-content">
+				        	<ul id="list-ctn">
+								
+							</ul>
+						</div>
+					</div>
+					<!-- div id="scroller-pullDown">
+					<img src="${staticUrl}/images/pull.gif">
+				</div-->
+				</div>
+			</div>
+	    </div>
+	</div>
+	<footer>
+		<div class="fixft bg_fff b_bd_t pt6 pb4 lh15rem">
+			<a class="fl tc wp25 t_aaa" href="${basePath}/project/l.htm">
+				<p><i class="fa fa-pie-chart fa-3x" aria-hidden="true"></i></p>
+				<p>项目中心</p>
+			</a>
+			<a class="fl tc wp25 t_aaa" href="${basePath}/subject/l.htm">
+				<p><i class="fa fa-pencil-square-o fa-3x" aria-hidden="true"></i></p>
+				<p>跟踪管理</p>
+			</a>
+			<a class="fl tc wp25 t_aaa active" href="${basePath}/company/list.htm">
+				<p><i class="fa fa-building fa-3x" aria-hidden="true"></i></p>
+				<p>企业管理</p>
+			</a>
+			<a class="fl tc wp25 t_aaa" href="${basePath}/user/me.htm">
+				<p><i class="fa fa-list-ul fa-3x" aria-hidden="true"></i></p>
+				<p>更多</p>
+			</a>
+		</div>
+	</footer>
+</#macro>

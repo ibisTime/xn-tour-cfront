@@ -1,0 +1,91 @@
+<#assign title="支付订单"/>
+<#assign controller="PayOrder"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+<div class="container browser-webkit account-address" id="container"
+	style="background-color: #FAFAFA; width: 100%; padding-top: 40px; padding-bottom: 40px;">
+	<div class="user-info-body">
+		<div id="alipayImg"></div>
+		<div id="po-top" class="user-content no-lr-margin" style="display: none;">
+			<div class="cont-title">
+				<h2>支付订单</h2>
+			</div>
+			<div class="cont-body" style="background-color: #fff;">
+				<div class="cb-list-item h-auto no-lr-margin po-success" id="po-success" style="display: none;">
+					<i></i><span>恭喜您，订单支付成功</span>
+				</div>
+				<div class="cb-nav">
+					<span>选择支付方式</span>
+				</div>
+				<div class="cb-list-item h-auto no-lr-margin">
+					<ul class="btm-d po-func" id="pay_order_img" style="padding: 5px;">
+						<li><img src="${staticUrl}/images/alipay.png"/></li>
+					</ul>
+					<div class="d-order-total so-order-total">商品总计：￥<span id="po-top-total"></span><span class="button payOrderBtn" id="po-payBtn">支付订单</span></div>
+				</div>
+			</div>
+		</div>
+		<div id="po-pfs-top" class="user-content no-lr-margin" style="display: none;">
+			<div class="cont-title">
+				<h2>我的订单</h2>
+			</div>
+			<div class="cont-body" style="background-color: #fff;">
+				<div class="cb-list-item h-auto no-lr-margin">
+					<p class="po-pfs-dd" style="line-height: 150px; text-align: center;">
+						<i></i>
+						<span style="line-height: 1.2em;display: inline-block;vertical-align: middle;font-size: 20px;margin-left: 71px;">
+							恭喜您，订单提交成功<br>
+							<span style="font-size: 14px;">客服会在24小时之内与您联系！</span>
+						</span>
+					</p>
+				</div>
+				<div class="cb-nav">
+					<span>汇款账户信息</span>
+				</div>
+				<div class="cb-list-item h-auto no-lr-margin">
+					<ul id="bInfo" class="btm-d po-func qds-po-ul" id="pay_order_img">
+						<li><span>户名：</span><span id="uName" style="padding-left: 4px;"></span></li>
+						<li><span>账号：</span><span id="cName" style="padding-left: 4px;"></span></li>
+						<li><span>开户银行：</span><span id="oName" style='padding-left: 4px;'></span></li>
+					</ul>
+					<div class="d-order-total so-order-total" style="font-size:14px;"><div style="float:left;padding-left:24px;">订单编号：<span id="pfs-code"></span></div><span>待付款</span></div>
+				</div>
+			</div>
+		</div>
+		<div class="user-content no-lr-margin  margin-t50">
+			<div class="cont-title">
+				<h2>购物清单</h2>
+			</div>
+			<div class="cont-body" style="background-color: #fff;">
+				<div class="cb-nav">
+					<span class="d-order-name">商品名称</span>
+					<span class="d-order-unit">单价</span>
+					<span class="d-order-count">数量</span>
+					<span class="d-order-amount">小计</span>
+				</div>
+				<div class="cb-list-item h-auto no-lr-margin">
+					<ul class="inline-div block-li d-order-ul" id="po-ul">
+						<i class='loading-icon'></i>
+					</ul>
+					<div class="d-order-total" id="po-total"></div>
+				</div>
+				<div class="cb-nav">
+					<span>收货信息</span>
+				</div>
+				<div class="cb-list-item d-order-info no-border">
+					<ul id="po-address"></ul>
+				</div>
+				<div class="cb-nav">
+					<span class="order-date">发票信息</span>
+				</div>
+				<div class="cb-list-item d-order-info">
+					<ul>
+						<li class="block-li">发票类型：<span id="od-rtype"></span></li>
+						<li class="block-li">发票抬头：<span id="od-rtitle"></span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</#macro>

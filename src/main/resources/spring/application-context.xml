@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-3.2.xsd
+    http://www.springframework.org/schema/task 
+    http://www.springframework.org/schema/task/spring-task.xsd
+    http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+	default-autowire="default">
+
+<context:property-placeholder
+		ignore-resource-not-found="true"  ignore-unresolvable="true" location="classpath*:application.properties" />
+	<!-- 扫描package进行注解 -->
+	<context:component-scan base-package="com.xnjr" >
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>
+       	<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"></context:exclude-filter>
+	</context:component-scan>
+	
+	<bean id="applicationProperties" class="com.xnjr.moom.front.base.ApplicationProperties" />
+	
+	<!-- 404页面 -->
+	<mvc:view-controller path="/404" view-name="error/404"/>
+	<!-- 500页面 -->
+	<mvc:view-controller path="/500" view-name="error/500"/>
+	
+	<!-- 验证码配置 start -->
+	<bean id="fastHashMapCaptchaStore" class="com.octo.captcha.service.captchastore.FastHashMapCaptchaStore"/>
+	<bean id="captchaEngineEx" class="com.xnjr.moom.front.captcha.MyCaptchaEngine"/>
+    <bean id="imageCaptchaService" class="com.xnjr.moom.front.captcha.MyCaptchaService">
+        <constructor-arg type="com.octo.captcha.service.captchastore.CaptchaStore" index="0">
+            <ref bean="fastHashMapCaptchaStore"/>
+        </constructor-arg>
+        <constructor-arg type="com.octo.captcha.engine.CaptchaEngine" index="1">
+            <ref bean="captchaEngineEx"/>
+        </constructor-arg>
+        <constructor-arg index="2">
+            <value>180</value>
+        </constructor-arg>
+        <constructor-arg index="3">
+            <value>100000</value>
+        </constructor-arg>
+        <constructor-arg index="4">
+            <value>75000</value>
+        </constructor-arg>
+    </bean>
+    <!-- 验证码配置 end -->
+    
+	<!-- redis start -->
+	<context:property-placeholder  ignore-unresolvable="true" location="classpath*:/redis.properties" />
+	<!-- 扫描注解Bean -->
+ 	<context:component-scan base-package="com.xnjr.moom.front.localToken">
+	</context:component-scan>	
+	<!-- 初始化属性文件 -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="maxActive" value="${redis.maxActive}" />
+		<property name="maxWait" value="${redis.maxWait}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+	</bean>
+
+	<!-- 配置redis 缓存服务器 -->
+	<bean id="connectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+		p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.pass}"
+		p:pool-config-ref="poolConfig" />
+	
+	<!-- redis操作模板 -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="userDAO" class="com.xnjr.moom.front.localToken.UserDAOImpl" />
+	<!-- redis end -->
+</beans>

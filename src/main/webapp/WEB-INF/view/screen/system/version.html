@@ -1,0 +1,31 @@
+<#assign name="版本升级信息"/>
+<#assign controller="Version"/>
+<#include 'layout/layout1.html'/>
+<#macro content>
+<style>
+h2 {
+	padding-bottom: 0.3em;
+    font-size: 1.75em;
+    line-height: 1.225;
+    border-bottom: 1px solid #eee
+}
+.release-date {
+	font-size: 0.7em;
+    color: #252525;
+    margin-left: 10px;
+}
+ul li {
+	font-size: 0.9em;
+	padding-bottom: 5px;
+}
+</style>
+<h2>Changelog</h2>
+<div>
+<h3>V2.0.0<span class="release-date">2016-04-24</span></h3>
+<ul>
+<li>新增Change Log，版本更新说明</li>
+<li>跟踪管理查询列表新增认购失败单查询</li>
+<li>企业银行账户新增支行设置</li>
+</ul>
+</div>
+</#macro>

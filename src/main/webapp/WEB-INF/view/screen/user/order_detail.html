@@ -1,0 +1,76 @@
+<#assign title="订单详情"/>
+<#assign controller="OrderDetail"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+<div class="container browser-webkit account-address" id="container"
+	style="background-color: #FAFAFA; width: 100%; padding-top: 40px; padding-bottom: 40px;">
+	<div class="user-info-body">
+		<div class="user-content no-lr-margin">
+			<div class="cont-title" style="padding-right:24px;">
+				<h2>订单编号：<span id="od-id"></span></h2>
+				<div class="cont-title-menu-item no-pointer" id="od-title"></div>
+			</div>
+			<div class="cont-body" style="background-color: #fff;">
+				<div class="cb-nav">
+					<span class="d-order-name">商品名称</span>
+					<span class="d-order-unit">单价</span>
+					<span class="d-order-count">数量</span>
+					<span class="d-order-amount">小计</span>
+				</div>
+				<div class="cb-list-item h-auto no-lr-margin">
+					<ul class="inline-div block-li d-order-ul" id="od-ul">
+						<i class="loading-icon"></i>
+					</ul>
+					<div class="d-order-total" id="od-total"></div>
+				</div>
+				<div class="cb-nav">
+					<span>收货信息</span>
+				</div>
+				<div class="cb-list-item d-order-info no-border">
+					<ul id="od-address">
+						<i class="loading-icon" style="height: 124px;position: absolute;top: 0;left: 50%;margin-left: -16px;"></i>
+					</ul>
+				</div>
+				<div class="cb-nav">
+					<span class="order-date">发票信息</span>
+				</div>
+				<div class="cb-list-item d-order-info" style="border-bottom:none;">
+					<ul>
+						<li class="block-li">发票类型：<span id="od-rtype"></span></li>
+						<li class="block-li">发票抬头：<span id="od-rtitle"></span></li>
+					</ul>
+				</div>
+				<div id="logisticsTitle" class="cb-nav" style="display:none;">
+					<span class="order-date">物流信息</span>
+				</div>
+				<div id="logisticsInfo" class="cb-list-item d-order-info" style="display:none;border-bottom:none;">
+					<ul>
+						<li class="block-li">物流公司：<span id="logisticsComp"></span></li>
+						<li class="block-li">物流单号：<span id="logisticsNO"></span></li>
+						<li class="block-li">发货时间：<span id="deliveryDatetime"></span></li>
+						<li class="block-li">发货人：<span id="deliverer"></span></li>
+					</ul>
+				</div>
+				<div class="cb-nav" style="display:none;" id="b-info-t">
+					<span>汇款账户信息</span>
+                </div>
+                <div style="display:none;border-bottom:none;" id="b-info-b" class="cb-list-item h-auto no-lr-margin">
+	                <ul id="bInfo" class="btm-d po-func qds-po-ul" style="padding: 20px 0;">
+		                <li><span>户名：</span><span id="uName" style="padding-left: 4px;"></span></li>
+		                <li><span>账号：</span><span id="cName" style="padding-left: 4px;"></span></li>
+		                <li><span>开户银行：</span><span id="oName" style='padding-left: 4px;'></span></li>
+	                </ul>
+                </div>
+                <div id="approveNoteTitle" class="cb-nav" style="display:none;">
+					<span class="order-date">备注</span>
+				</div>
+				<div id="approveNoteInfo" class="cb-list-item d-order-info" style="display:none;border-bottom:none;">
+					<ul>
+						<li class="block-li"><span id="approveNoteCont"></span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</#macro>

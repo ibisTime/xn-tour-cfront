@@ -1,0 +1,52 @@
+<#assign title="跟踪管理"/>
+<#assign controller="subjectList"/>
+<#include 'layout/layout_m.html'/>
+<#macro content>
+	<a class="wp100" href="${basePath}/account/l.htm">
+	<div class="flex flex-dv" style="height: 150px; position: relative; z-index: 2;">
+		<div class="flex2 flex flex-dv flex-c bg_ff7200 t_white">
+			<div class="s_12 ptb4">本金总额</div>
+			<div class="s_22" id="amount">&nbsp;</div>
+		</div>
+		<div class="flex1 flex flex-c bg_fff b_red_b">
+			<div class="flex1 tc b_red_r t_aaa s_12">
+				<div class="ptb2">累计投资</div>
+				<div class="s_18 t_orange" id="totalInvest">&nbsp;</div>
+			</div>
+			<div class="flex1 tc t_aaa s_12">
+				<div class="ptb2">累计收益</div>
+				<div class="s_18 t_orange" id="totalProfit">&nbsp;</div>
+			</div>
+		</div>
+	</div>
+	</a>
+	<div id="wrapper1" style="top: 150px;">
+		<div id="scroller">
+			<div id="scroller-content">
+				<ul id="list-ctn">
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<div class="fixft bg_fff b_bd_t pt6 pb4 lh15rem">
+			<a class="fl tc wp25 t_aaa" href="${basePath}/project/l.htm">
+				<p><i class="fa fa-pie-chart fa-3x" aria-hidden="true"></i></p>
+				<p>项目中心</p>
+			</a>
+			<a class="fl tc wp25 t_aaa active" href="${basePath}/subject/l.htm">
+				<p><i class="fa fa-pencil-square-o fa-3x" aria-hidden="true"></i></p>
+				<p>跟踪管理</p>
+			</a>
+			<a class="fl tc wp25 t_aaa" href="${basePath}/company/list.htm">
+				<p><i class="fa fa-building fa-3x" aria-hidden="true"></i></p>
+				<p>企业管理</p>
+			</a>
+			<a class="fl tc wp25 t_aaa" href="${basePath}/user/me.htm">
+				<p><i class="fa fa-list-ul fa-3x" aria-hidden="true"></i></p>
+				<p>更多</p>
+			</a>
+		</div>
+	</footer>
+</#macro>

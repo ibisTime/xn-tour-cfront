@@ -1,0 +1,110 @@
+<#assign title="收货地址"/>
+<#assign controller="UserAddress"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+<div class="container browser-webkit account-address" id="container"
+	style="background-color: #FAFAFA; width: 100%; padding-top: 20px; padding-bottom: 20px;">
+	<div class="user-info-body">
+		<div class="user-sidebar" id="ua-left">
+			<div class="avatar">
+				<img src="${staticUrl}/images/04481549.png" />
+			</div>
+			<div class="box-inner">
+				<ul class="account-nav">
+					<#if user.kind != "f2"><li><a href="./order_list.htm">我的订单</a></li></#if>
+					<li><a href="./user_info.htm">账户资料</a></li>
+					<li class="current"><a href='./user_address.htm'>收货地址</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="user-content" id="user-content" style="overflow: hidden;">
+			<div class="cont-title">
+				<h2>收货信息</h2>
+				<span class="ct-span"><a id="add_user_address">添加新地址</a></span>
+			</div>
+			<div class="cont-body">
+				<div class="cb-nav" style="display: none;">
+					<span class="name">姓名</span>
+					<span>详细地址</span>
+					<span class="telephone">电话</span>
+				</div>
+				<!-- <div class="cb-list-item margin24 none-ua-address">
+					<ul>
+						<li class="name">吴联请</li>
+						<li class="address">事件发生的及覅及的覅绝地反击纠纷司机的覅点击是地级市地方</li>
+						<li class="telephone">12345678952</li>
+						<li class="default"><a>设为默认</a></li>
+						<li class="edit"><span class="edit-icon"></span><span class="delete-icon"><a></a></span></li>
+					</ul>
+				</div> -->
+				<div class="box-inner fn-clear" id="addressBox" style="margin:0;display: none;border-top: #dadada solid 1px;">
+					<div class="address-form fn-clear">
+						<div class="fn-clear">
+							<div class="module-form-row form-item">
+								<div class="module-form-item-wrapper no-icon small-item">
+									<i>收货人姓名</i>
+									<input type="text" id="accept_name" name="accept_name" class="js-verify" value="">
+									<div class="verify-error" style="opacity: 1;">不能为空</div>
+									<div class="verify-error" style="opacity: 1;">长度不能超过64位</div>
+								</div>
+							</div>
+							<div class="module-form-row form-item">
+								<div class="module-form-item-wrapper no-icon small-item small-item-mobile">
+									<i>手机号</i>
+									<input type="text" name="mobile" id="mobile" class="js-verify" value="">
+									<div class="verify-error" style="opacity: 1;">不能为空</div>
+									<div class="verify-error" style="opacity: 1;">手机号错误</div>
+								</div>
+							</div>
+						</div>
+						<div class="fn-clear">
+							<div class="module-form-row form-item">
+								<div class="module-form-item-wrapper no-icon small-item" style="width: 143px;">
+									<i>省份</i>
+									<input type="text" name="provinceCode" id="provinceCode" class="js-verify" value="" style="width: 122px;">
+									<div class="verify-error" style="opacity: 1;">不能为空</div>
+									<div class="verify-error" style="opacity: 1;">长度不能超过20位</div>
+								</div>
+							</div>
+							<div class="module-form-row form-item">
+								<div class="module-form-item-wrapper no-icon small-item" style="width: 144px;">
+									<i>城市</i>
+									<input type="text" name="cityCode" id="cityCode" class="js-verify" value="" style="width: 122px;">
+									<div class="verify-error" style="opacity: 1;">不能为空</div>
+									<div class="verify-error" style="opacity: 1;">长度不能超过20位</div>
+								</div>
+							</div>
+							<div class="module-form-row form-item">
+								<div class="module-form-item-wrapper no-icon small-item" style="width: 144px;">
+									<i>区/县</i>
+									<input type="text" name="districtCode" id="districtCode" class="js-verify" value="" style="width: 122px;">
+									<div class="verify-error" style="opacity: 1;">不能为空</div>
+									<div class="verify-error" style="opacity: 1;">长度不能超过20位</div>
+								</div>
+							</div>
+						</div>
+						<div class="module-form-row fn-clear">
+							<div class="module-form-item-wrapper no-icon small-item small-item-location">
+								<i>街道编号/名称，楼宇名称</i>
+								<input type="text" name="street" class="js-verify" id="street" value="">
+								<div class="verify-error" style="opacity: 1;">不能为空</div>
+								<div class="verify-error" style="opacity: 1;">长度不能超过128位</div>
+							</div>
+						</div>
+						<div class="module-form-row fn-clear" style="line-height: 1.8em;">
+							<input type="checkbox" id="defaultAddress" style="vertical-align: bottom;" value="1"><span id="default_sp">设为默认地址</span>
+						</div>
+						<div class="blue-main-btn normal-main-btn fn-clear uad-sava-btn">
+							<a id="uadSave">保存新地址</a>
+						</div>
+						<div class="blue-main-btn normal-main-btn fn-clear uad-cancel-btn">
+							<a id="uadCancel">取消</a>
+						</div>
+					</div>
+				</div>
+				<i class='loading-icon'></i>
+			</div>
+		</div>
+	</div>
+</div>
+</#macro>

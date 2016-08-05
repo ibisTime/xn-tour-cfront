@@ -1,0 +1,17 @@
+<ul class="b_bd_b">
+	{{#each items}}
+        <li class="ptb8 clearfix b_bd_b plr10" modelCode="{{code}}">
+            <a href="../detail/mall_detail.html?code={{productCode}}">
+                <div class="fl wp30 tc"><img src="{{pic1}}"/></div>
+                <div class="fl wp40 pl12">
+                    <p class="tl">{{productName}}</p>
+                    <p class="tl pt4">{{modelName}}</p>
+                </div>
+                <div class="fl wp30 tr s_10">
+                    <p class="item_totalP">￥{{totalAmount}}</p>
+                    <p class="t_80">×<span>{{quantity}}</span></p>
+                </div>
+            </a>
+        </li>
+    {{/each}}              
+</ul>

@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    var dojoConfig = {
+        selectorEngine: 'acme',
+        async: 1,
+        tlmSiblingOfDojo: 0,
+        isDebug: '${isDebug}',
+        baseUrl: '<#if dojoUrl == "">/<#else>${dojoUrl}</#if>',
+        apiUrl: '${apiUrl}',
+        basePath: '${basePath}',
+        staticUrl: '${staticUrl}',
+        alipayQR: "${staticUrl}/images/alipayQR.jpg",
+        paths: {
+            jquery: "app/jquery/$"
+        },
+        packages: [
+			{name: 'dojo', location: 'dojo'},
+			{name: 'dijit', location: 'dijit'},
+			{name: 'dojox', location: 'dojox'},
+			{name: 'app', location: 'app'}
+		],
+        blankGif: '${staticUrl}/images/blank.gif',
+		controller: '${controller}'
+    };
+</script>
+<#if resRelease = "min">
+<script src="${staticUrl}/dojo.js"></script>
+<script src="${staticUrl}/${controller}.js?${jsVersion}"></script>
+<#else>
+<script src="${dojoUrl}/dojo/dojo.js"></script>
+</#if>
+<#if subScript??> <@subScript/> </#if>
+
+<script>
+	require(['app']);
+</script>

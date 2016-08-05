@@ -1,0 +1,28 @@
+<div class="oneFinancialOptimization">
+    <div class="FinancialOptimizationTitle caibaoTitle">${item.name}</div>
+    <div class="manInfo">
+        <a href="${baseUrl}/operator/index.htm?id=${item.trader}" target="_blank">
+        <div class="manPhoto">
+            <img src="${staticUrl}/images/services/women.png">
+            <br>
+            操盘手：${item.traderName}
+        </div></a>
+
+        <div class="descrip">
+            <div class="oneDescrip mb20">
+                <div class="descripName">业务简述</div>
+                <p>${!item.summary}</p>
+                <div class="clb"></div>
+            </div>
+            <div class="oneDescrip mb15">
+                <div class="descripName">收益说明</div>
+                <p data-dojo-attach-point="feeNode"></p>
+                <div class="clb"></div>
+            </div>
+            <div class="buyBtn">
+                <a class="" data-dojo-attach-point="linkNode"><span data-dojo-type="app/ux/GenericButton" data-dojo-props="height: 50, width: 240, textStyle: {'fontSize': '20px'}">意向认购</span></a>
+            </div>
+        </div>
+        <div class="clb"></div>
+    </div>
+</div>

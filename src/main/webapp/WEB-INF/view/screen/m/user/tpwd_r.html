@@ -1,0 +1,31 @@
+<#assign title="找回交易密码"/>
+<#assign controller="tPwdReset"/>
+<#include 'layout/layout_m.html'/>
+<#macro content>
+	<div class="flex flex-dv plr10 ptb20 hp100">
+		<form id="form">
+			<label class="form_ctrl plr10 clearfix nobr_b flex">
+				<span class="fl">手机号</span>
+				<input id="mobile" name="mobile" readonly="readonly" class="fl pl20 lh15rem flex1" type="tel" value="" placeholder="注册的手机号">
+			</label>
+			<label class="form_ctrl plr10 clearfix nobr_b flex">
+				<span class="fl">身份证号</span>
+				<input id="idNo" name="idNo" class="fl wp70 pl20 lh15rem flex1" type="text" value="" placeholder="请输入身份证号">
+			</label>
+			<label class="form_ctrl plr10 clearfix nobr_b js-input flex">
+				<span class="fl">校验码</span>
+				<span class="re fl wp50 pr20 flex1"><input type="tel" id="smsCaptcha" name="smsCaptcha" class="wp100 pl20" type="text" value="" placeholder="手机校验码"></span>
+				<input type="button" id="sendBtn" class="plain_btn fr wp33 b_bd_l tc btn_press t_orange" value="获取校验码"/>
+			</label>
+			<label class="form_ctrl plr10 clearfix flex">
+				<span class="fl">设置交易密码</span>
+				<input id="newTradePwd" name="newTradePwd" class="fl wp70 pl20 lh15rem flex1" type="" value="" placeholder="请设置交易密码">
+			</label>
+			<input type="button" id="confirmBtn" class="wp100 mt25 btn btn_orange" value="保存"/>
+		</form>
+		<div class="flex1 flex flex-c">
+			<img class="wp50" src="${staticUrl}/images/logo_all.png"/>
+		</div>
+	</div>
+	
+</#macro>

@@ -1,0 +1,74 @@
+<#assign title="售后服务"/>
+<#assign controller="AfterService"/>
+<#include 'layout/layout.html'/>
+<#macro content>
+<div class="container browser-webkit account-address" id="container"
+	style="background-color: #FAFAFA; width: 100%; padding-top: 20px; padding-bottom: 20px;">
+	<div class="user-info-body">
+		<div class="user-content ml0"  id="as-fw" style="overflow: hidden;">
+			<div class="cont-title">
+				<h2>售后服务</h2>
+				<span class="ct-span as_wxd"><a id="asWxd">我的维修单</a></span>
+			</div>
+			<div class="c-body">
+				<div class="cb-list-item none-ua-address">
+					<div class="as-title"><span>货品编号</span><input id="as-search" type="text"/><span id="as-search-btn" class="button">查询</span></div>
+					<div class="product-model">
+						<div class="as-b-title"><span>已购买货品</span></div>
+						<div>
+							<table id="pm-table" style="width: 100%;margin-bottom: 50px;">
+								<thead><tr><th>货品编号</th><th>所属型号</th><th>所属产品</th><th style="width:115px;">售后服务</th></tr></thead>
+								<tbody>								
+									<tr><td colspan="4"><i class='loading-icon'></i></td></tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="user-content ml0" id="as-bx" style="overflow: hidden;display: none;">
+			<div class="cont-title">
+				<h2>我要报修</h2>
+			</div>
+			<div class="c-body">
+				<div class="cb-list-item none-ua-address as-form">
+					<table>
+						<tr><th>货品编号：</th><td id="goodsCode"></td></tr>
+						<tr><th>所属型号：</th><td id="modelName"></td></tr>
+						<tr><th>所属产品：</th><td id="productName"></td></tr>
+						<tr><th>报&nbsp;&nbsp;修&nbsp;&nbsp;人：</th><td><input id="applyUser" type="text"/></td></tr>
+						<tr><th>联系方式：</th><td><input id="contact" type="text"/></td></tr>
+						<tr><th>问题描述：</th><td><textarea id="applyReason" rows="8" cols="50"></textarea></td></tr>
+						<tr><th><span class="button as-back" id="backBtn">返回</span></th><td><span style="margin-left: 270px;" class="button as-commit" id="commitBtn">提交</span></td></tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="user-content ml0"  id="as-wxd" style="overflow: hidden;display:none;">
+			<div class="cont-title">
+				<h2>我的维修单</h2>
+			</div>
+			<div class="c-body">
+				<div class="cb-list-item none-ua-address">
+					<div class="as-title"><span>货品编号</span><input id="wxd-search" type="text"/><span id="wxd-search-btn" class="button">查询</span></div>
+					<div class="product-model">
+						<div>
+							<table id="wxd-table" style="width: 100%;">
+								<thead><tr><th>维修单编号</th><th>货品编号</th><th>报修时间</th><th style="width:115px;">状态</th></tr></thead>
+								<tbody>							
+									<tr><td colspan="4"><i class='loading-icon'></i></td></tr>
+								</tbody>
+							</table>
+							<div style="position: relative;height: 70px;">
+								<span class="button as-back" id="wxdBackBtn">返回</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="pagination_div"></div>
+	</div>
+</div>
+</#macro>

@@ -1,0 +1,28 @@
+<script data-start="${controller}" src="${staticUrl}/js/require.js"></script>
+<script>
+    requirejs.config({
+        baseUrl: '${staticUrl}/js',
+        paths: {
+            jquery: 'lib/jquery-2.1.4',
+            'validate': 'lib/jquery.validate',
+            highstock: 'lib/highstock',
+            'raphael': 'lib/raphael',
+            'Handlebars':'lib/handlebars',
+            'template': 'app/ui/template',
+            'style': 'app/ui/css',
+            'text': 'lib/text',
+            'css': 'lib/css',
+            'hbars': 'lib/hbars',
+            'iscroll': 'lib/iscroll'
+        },
+        urlArgs: '_=${version}',
+        waitSeconds: 0
+    });
+    requirejs.apiUrl = '${request.contextPath}';
+    requirejs.staticUrl = '${staticUrl}';
+    require(['jquery'], function($) {
+        var startModuleName = $("script[data-start]").attr("data-start") || 'empty';
+        require(['app/controller/' + startModuleName]);
+    });
+</script>
+<#if subScript??> <@subScript/> </#if>

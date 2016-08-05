@@ -1,0 +1,14 @@
+<#include 'layout/config_m.html'/>
+<!DOCTYPE html>
+<html style="font-size: 73%;">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <#include 'layout/css_m.html'/>
+    <title>${title}</title>
+</head>
+<body>
+<#if content ??> <@content/></#if>
+<#include 'layout/js_m.html'/>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<#assign name="企业详情"/>
+<#assign controller="CompanyDetail"/>
+<#include 'layout/layout.html'/>
+<#macro subCss>
+<link rel="stylesheet" type="text/css"
+          href="${staticUrl}/css/company.css<#if jsVersion>?${jsVersion}</#if>" />
+</#macro>
+<#macro content>
+	<div class="top">
+		<div class="container" id="container">
+			<p class="business-enter">企业管理&nbsp;&nbsp;&gt;&nbsp;&nbsp;<span class="orange" id="f1"></span></p>
+			<div class="companyInfoPanel">
+    	<div class="panelTitle">企业详细</div>
+        <div class="modTitle">
+        	<a class="companyListBtn" href="${basePath}/company/list.htm">企业列表</a>
+        	<p class="smallTitle active" id="t1">基本信息</p>
+        	<p class="smallTitle" id="t2">银行账户</p>
+        </div>
+        <!--基本信息-->
+        <div class="companyInfo mt30" style="display: block;">
+        	<div class="oneInfo">
+            	<div class="infoNme">企业全称</div>
+                <div class="infoDetail" id="f2"></div>
+            </div>
+        	<div class="oneInfo">
+            	<div class="infoNme">工商执照注册号</div>
+                <div class="infoDetail" id="f3"></div>
+            </div>
+        	<div class="oneInfo" style="height: 100px;">
+            	<div class="infoNme">组织机构代码</div>
+                <div class=""><img id="f4" height=100/></div>
+            </div>
+        	<div class="oneInfo" style="height: 100px;">
+            	<div class="infoNme">税务登记证编号</div>
+                <div class=""><img id="f5" height=100/></div>
+            </div>
+        	<div class="oneInfo">
+            	<div class="infoNme">法人</div>
+                <div class="infoDetail" id="f6"></div>
+            </div>
+        	<div class="oneInfo">
+            	<div class="infoNme">法人证件号</div>
+                <div class="infoDetail" id="f7"></div>
+            </div>
+        	<div class="oneInfo">
+            	<div class="infoNme">注册资金</div>
+                <div class="infoDetail" id="f8"></div>
+            </div>
+        	<div class="oneInfo" style="display: none;">
+            	<div class="infoNme">平台登记时间</div>
+                <div class="infoDetail" id="f9"></div>
+            </div>
+        	<div class="oneInfo">
+            	<div class="infoNme">审核结果</div>
+                <div class="infoDetail orange" id="f10"></div>
+            </div>
+            <div class="oneInfo" style="display: none;" id="f11Ctn">
+            	<div class="infoNme">结果说明</div>
+                <div class="infoDetail orange" id="f11"></div>
+            </div>
+        </div>
+        <div id="bankcard-ctn" class="companyInfo" style="display: none;margin-top: 20px;"></div>
+    </div>
+		</div>
+	</div>
+</#macro>

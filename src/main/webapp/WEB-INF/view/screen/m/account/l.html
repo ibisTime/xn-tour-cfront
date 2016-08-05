@@ -1,0 +1,34 @@
+<#assign title="交易流水"/>
+<#assign controller="accountList"/>
+<#include 'layout/layout_m.html'/>
+<#macro content>
+	<div id="wrapper1">
+		<div id="scroller">
+			<div id="scroller-content">
+				<ul id="list-ctn">
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<div class="fixft bg_fff b_bd_t pt6 pb4 lh15rem">
+			<a class="fl tc wp25 t_aaa" href="${basePath}/project/l.htm">
+				<p><i class="fa fa-pie-chart fa-3x" aria-hidden="true"></i></p>
+				<p>项目中心</p>
+			</a>
+			<a class="fl tc wp25 t_aaa active" href="${basePath}/subject/l.htm">
+				<p><i class="fa fa-pencil-square-o fa-3x" aria-hidden="true"></i></p>
+				<p>跟踪管理</p>
+			</a>
+			<a class="fl tc wp25 t_aaa" href="${basePath}/company/list.htm">
+				<p><i class="fa fa-building fa-3x" aria-hidden="true"></i></p>
+				<p>企业管理</p>
+			</a>
+			<a class="fl tc wp25 t_aaa" href="${basePath}/user/me.htm">
+				<p><i class="fa fa-list-ul fa-3x" aria-hidden="true"></i></p>
+				<p>更多</p>
+			</a>
+		</div>
+	</footer>
+</#macro>

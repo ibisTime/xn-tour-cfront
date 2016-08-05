@@ -1,0 +1,52 @@
+<#assign title="业务详情"/>
+<#assign controller="businessDetail"/>
+<#include 'layout/layout_m.html'/>
+<#macro content>
+	<div class="mb10 b_e4_t clearfix bg_fff list-item" style="position: relative; z-index: 2;">
+	    <div class="tit p10 s_12 b_e4_b b_sd clearfix">
+	        <div class="wp100 fl t_bold s_16 tc" id="name">&nbsp;</div>
+	        <input id="contractBtn" disabled style="position: absolute;right: 0;padding: 2px 10px;" type="button" class="flex1 btn btn_orange_r mr10" value="合同"/>
+	    </div>
+	    <div class="con p10 clearfix">
+	        <div class="fl wp100 s_12 t_aaa"><div class="tl wp33 t_5b re">
+	            <div>收益</div>
+	            <div class="s_14 t_orange" id="profit">&nbsp;</div>
+	        </div><div class="tc wp33 t_5b re">
+	            <div>本金</div>
+	            <div class="s_14 t_orange" id="principal">&nbsp;</div>
+	        </div><div class="tr wp33 t_5b re">
+	            <div>交易额</div>
+	            <div class="s_14 t_black" id="principal2">&nbsp;</div>
+	        </div></div>
+	    </div>
+	</div>
+	<div id="wrapper1" style="top: 120px;">
+		<div id="scroller">
+			<div id="scroller-content">
+				<ul id="list-ctn">
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<div class="fixft bg_fff b_bd_t pt6 pb4 lh15rem">
+			<a class="fl tc wp25 t_aaa" href="${basePath}/project/l.htm">
+				<p><i class="fa fa-pie-chart fa-3x" aria-hidden="true"></i></p>
+				<p>项目中心</p>
+			</a>
+			<a class="fl tc wp25 t_aaa active" href="${basePath}/subject/l.htm">
+				<p><i class="fa fa-pencil-square-o fa-3x" aria-hidden="true"></i></p>
+				<p>跟踪管理</p>
+			</a>
+			<a class="fl tc wp25 t_aaa" href="${basePath}/company/list.htm">
+				<p><i class="fa fa-building fa-3x" aria-hidden="true"></i></p>
+				<p>企业管理</p>
+			</a>
+			<a class="fl tc wp25 t_aaa" href="${basePath}/user/me.htm">
+				<p><i class="fa fa-list-ul fa-3x" aria-hidden="true"></i></p>
+				<p>更多</p>
+			</a>
+		</div>
+	</footer>
+</#macro>

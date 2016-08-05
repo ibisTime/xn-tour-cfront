@@ -1,0 +1,23 @@
+<#assign title="登录"/>
+<#assign controller="signin"/>
+<#include 'layout/layout_m.html'/>
+<#macro content>
+	<div class="flex flex-dv plr10 ptb20 hp100">
+		<form id="loginForm">
+		
+			<div class="form_ctrl nobr_b flex"><label class="t_bd mr10 icon"><i class="fa fa-user"></i></label>
+			<input type="tel" name="loginName" class="flex1" type="text" placeholder="请输入账号" autocomplete="off"></div>
+			<div class="form_ctrl flex"><label class="t_bd mr10 icon"><i class="fa fa-lock"></i></label>
+			<input name="loginPwd" class="flex1" type="password" placeholder="请输入密码" onpaste="return false"></div>
+			<a id="submitBtn" class="wp100 mt25 btn btn_orange">登录</a>
+			<p class="clearfix mt15">
+				<a class="fl" href="${basePath}/user/pwd_r.htm">忘记密码？</a>
+				<a class="fr t_blue" href="${basePath}/user/signup.htm">立即注册</a>
+			</p>
+		</form>
+		<div class="flex1 flex flex-c">
+			<img class="wp50" src="${staticUrl}/images/logo_all.png"/>
+		</div>
+	</div>
+	
+</#macro>
