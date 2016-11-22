@@ -6,12 +6,14 @@ define([
     var first = true,
         COMPANYCODE = "",
         bigCode = base.getUrlParam("b") || "",
-        smallCode = base.getUrlParam("s") || "",
+        smallCode = "",
         start = 1,
         limit = 10,
         seqArr = [],
         D2XArr = [],
-        canScrolling = false;
+        canScrolling = false,
+        width = ($(window).width() - 32) / 100 * 48 + "px",
+        myScroll;
     init();
 
     function init() {
@@ -48,12 +50,11 @@ define([
                     } else {
                         if (!D2XArr[d.parentCode] || !D2XArr[d.parentCode].length) {
                             D2XArr[d.parentCode] = [];
-                            D2XArr.push(d);
                         }
+                        D2XArr[d.parentCode].push(d);
                     }
                 }
-                var html = "",
-                    sHtml = "";
+                var html = "";
                 for (var j = 0; j < seqArr.length; j++) {
                     html += '<li code="' + seqArr[j].code + '">' + seqArr[j].name + '</li>';
                 }
@@ -61,30 +62,40 @@ define([
                 if (bigCode == "") {
                     bigCode = seqArr[0].code;
                 }
-                nowSmallArr = D2XArr[bigCode];
-                for (var j = 0; j < nowSmallArr.length; j++) {
-                    sHtml += '<a class="mb10" href="javascript:void(0)" code="' + nowSmallArr[j].code + '"><span class="mr40 s_11 ptb4 plr12">' + nowSmallArr[j].name + '</span></a>';
-                }
-                var scroller = $("#scroller"),
-                    smallCont = $("#smallCont");
+                var scroller = $("#scroller");
                 scroller.find("ul").html(html);
                 addCategory();
-                smallCont.html(sHtml);
+                //click
                 scroller.find("ul>li[code='" + bigCode + "']").click();
-                var header = $("header");
-                var time = setInterval(function() {
-                    if (scroller.css("transform") != "none") {
-                        if ((sHtml && smallCont.find("a").length) || !sHtml) {
-                            clearInterval(time);
-                            $("#mtop").css("height", $("header").height());
-                        }
-                    }
-                }, 100);
             } else {
                 doError();
                 $("header").hide();
             }
         })
+    }
+
+    function addSmallCont(code) {
+        var scroller = $("#scroller"),
+            nowSmallArr = D2XArr[bigCode],
+            smallCont = $("#smallCont"),
+            sHtml = "";
+        for (var j = 0; j < nowSmallArr.length; j++) {
+            if (!j) {
+                sHtml += '<a class="mb10 subclass" href="javascript:void(0)" code="' + nowSmallArr[j].code + '"><span class="s_11 ptb4 plr12">' + nowSmallArr[j].name + '</span></a>';
+            } else {
+                sHtml += '<a class="mb10" href="javascript:void(0)" code="' + nowSmallArr[j].code + '"><span class="s_11 ptb4 plr12">' + nowSmallArr[j].name + '</span></a>';
+            }
+        }
+        smallCont.html(sHtml);
+        smallCode = nowSmallArr[0] && nowSmallArr[0].code;
+        var time = setInterval(function() {
+            if (scroller.css("transform") != "none") {
+                if ((sHtml && smallCont.find("a").length) || !sHtml) {
+                    clearInterval(time);
+                    $("#mtop").css("height", $("header").height());
+                }
+            }
+        }, 100);
     }
 
     function addCategory() {
@@ -94,7 +105,7 @@ define([
             width += $(lis[i]).width() + 20;
         }
         $("#scroller").css("width", width);
-        var myScroll = new IScroll('#mallWrapper', { scrollX: true, scrollY: false, mouseWheel: true, click: true });
+        myScroll = new IScroll('#mallWrapper', { scrollX: true, scrollY: false, mouseWheel: true, click: true });
     }
 
     function addListeners(params) {
@@ -105,13 +116,14 @@ define([
             myScroll.scrollToElement(this);
             bigCode = me.attr("code");
             smallCode = "";
+            addSmallCont(bigCode);
             first = true;
             start = 1;
             getProduces();
         });
         $("#smallCont").on("click", "a", function() {
             var me = $(this);
-            $("#mallWrapper").find(".subclass").removeClass("subclass");
+            $("#smallCont").find(".subclass").removeClass("subclass");
             me.addClass("subclass");
             smallCode = me.attr("code");
             first = true;
@@ -135,7 +147,7 @@ define([
         if (!first) {
             $("#cont").append('<i id="loadI" class="icon-loading2"></i>');
         } else {
-            $("#cont").html('<i id="loadI" class="icon-loading"></i>');
+            $("#cont").html('<i id="loadI" class="icon-loading3"></i>');
         }
         Ajax.get(APIURL + '/commodity/product/page', {
                 "category": bigCode,
@@ -149,10 +161,11 @@ define([
                     var data = res.data.list,
                         html = "";
                     for (var i = 0; i < data.length; i++) {
-                        html += '<div class="wp48  bg_fff display" code="' + data[i].code + '">' +
-                            '<img src="' + data[i].advPic + '">' +
-                            '<div class="tc pt4">' + data[i].name + '</div>' +
-                            '<div class="tc price s_13">￥' + (+data[i].discountPrice / 1000).toFixed(2) + '</div>' +
+                        html += '<div style="width:'+width+'" class="bg_fff display" code="' + data[i].code + '">' +
+                            '<img style="width:'+width+';height:'+width+'" src="' + data[i].advPic + '">' +
+                            '<div class="pl6 pt4">' + data[i].name + '</div>' +
+                            '<div class="price pl6 s_13">￥' + (+data[i].discountPrice / 1000).toFixed(2) +
+                            '<del class="ml5 s_12 t_999"><span class="price-icon">¥</span><span class="font-num">' + (+data[i].originalPrice / 1000).toFixed(2) + '</span></del></div>' +
                             '</div>';
                     }
                     $("#loadI").remove();
@@ -171,7 +184,7 @@ define([
 
 
     function doError() {
-        $("#cont").replaceWith('<div id="cont" class="bg_fff" style="text-align: center;line-height: 150px;">暂无商品</div>');
+        $("#cont").replaceWith('<div id="cont"><div class="bg_fff" style="text-align: center;line-height: 150px;">暂无相关商品</div></div>');
     }
 
 });

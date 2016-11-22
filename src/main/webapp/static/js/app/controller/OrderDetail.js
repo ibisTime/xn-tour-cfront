@@ -62,6 +62,10 @@ define([
                             $("#applyNoteTitle, #applyNoteInfo").removeClass("hidden");
                             $("#applyNoteInfo").text(data.applyNote);
                         }
+                        if (data.remark) {
+                            $("#remarkTitle, #remarkInfo").removeClass("hidden");
+                            $("#remarkInfo").text(data.remark);
+                        }
                         addListeners();
                         if (invoiceModelLists.length) {
 
@@ -132,7 +136,7 @@ define([
                         base.showMsg("收货成功");
                         setTimeout(function() {
                             location.href = "./order_list.html";
-                        }, 1000)
+                        }, 1500)
                     } else {
                         base.showMsg(res.msg);
                     }
@@ -154,7 +158,7 @@ define([
             var url = APIURL + '/operators/cancelOrder',
                 config = {
                     code: code,
-                    applyNote: ""
+                    remark: $("#remark").val()
                 };
             $("#loaddingIcon").removeClass("hidden");
             Ajax.post(url, config)
@@ -164,7 +168,7 @@ define([
                         base.showMsg("取消订单成功！");
                         setTimeout(function() {
                             location.href = "./order_list.html";
-                        }, 1000);
+                        }, 1500);
                     } else {
                         base.showMsg(response.msg);
                     }

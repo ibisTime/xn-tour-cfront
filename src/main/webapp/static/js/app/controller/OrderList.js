@@ -38,6 +38,7 @@ define([
                 isEnd = false;
                 canScrolling = true;
                 $("#ol-ul").empty();
+                $("#noItem").addClass("hidden");
                 addLoading();
                 getOrderList();
                 e.stopPropagation();
@@ -75,14 +76,14 @@ define([
                                     code = cl.code;
                                 html += '<li class="clearfix b_bd_b b_bd_t bg_fff mt10" code="' + code + '">' +
                                     '<a class="show" href="./order_detail.html?code=' + code + '" class="show">' +
-                                    '<div class="wp100 s_09 b_bd_b clearfix  ptb10 plr10">' +
+                                    '<div class="wp100 s_12 b_bd_b clearfix  ptb10 plr10">' +
                                     '<div class="fl">订单号：<span>' + code + '</span></div>' +
                                     '</div>';
                                 if (invoices.length == 1) {
                                     invoice = invoices[0];
                                     html += '<div class="wp100 clearfix plr10 ptb4 p_r">' +
-                                        '<div class="fl wp30 tc"><img src="' + invoice.advPic + '"></div>' +
-                                        '<div class="fl wp70 pl12">' +
+                                        '<div class="fl wp90p"><img class="order-item-img" src="' + invoice.advPic + '"></div>' +
+                                        '<div class="wp100 pl102">' +
                                         '<p class="tl">' + invoice.productName + '</p>' +
                                         '<p class="tl item_totalP">￥' + (+invoice.salePrice / 1000).toFixed(2) + '</p>' +
                                         '<p class="t_80">×<span>' + invoice.quantity + '</span></p>' +
@@ -90,9 +91,16 @@ define([
                                 } else {
                                     html += '<div class="wp100 clearfix plr10 ptb4 p_r">';
                                     var arr = invoices.splice(0, 3);
-                                    arr.forEach(function(invoice) {
-                                        html += '<div class="fl wp33 tc"><img src="' + invoice.advPic + '"></div>';
-                                    });
+                                    for (var k = 0; k < arr.length; k++) {
+                                        var invoice = arr[k];
+                                        if (k == 0) {
+                                            html += '<div class="fl wp33 tl"><img class="order-item-img" src="' + invoice.advPic + '"></div>';
+                                        } else if (k == 1) {
+                                            html += '<div class="fl wp33 tc"><img class="order-item-img" src="' + invoice.advPic + '"></div>';
+                                        } else if (k == 2) {
+                                            html += '<div class="fl wp33 tr"><img class="order-item-img" src="' + invoice.advPic + '"></div>';
+                                        }
+                                    }
                                 }
                                 html += '</div>' +
                                     '<div class="wp100 clearfix plr10 ptb6">' +
@@ -103,6 +111,7 @@ define([
                             removeLoading();
                             $("#ol-ul").append(html);
                             config.start += 1;
+                            canScrolling = true;
                         } else {
                             if (first) {
                                 doError();
@@ -118,7 +127,6 @@ define([
                         }
                     }
                     first = false;
-                    canScrolling = true;
                 });
         }
 
@@ -131,7 +139,9 @@ define([
         }
 
         function doError() {
-            $("#ol-ul").html('<li class="bg_fff" style="text-align: center;line-height: 93px;">暂无数据</li>');
+            $("#ol-ul").empty();
+            $("#noItem").removeClass("hidden");
+            canScrolling = false;
         }
 
         function getStatus(status) {

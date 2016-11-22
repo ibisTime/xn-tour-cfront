@@ -1,9 +1,8 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'Handlebars',
     'lib/swiper-3.3.1.jquery.min'
-], function(base, Ajax, Handlebars) {
+], function(base, Ajax, Swiper) {
     var mySwiper = new Swiper('.swiper-container', {
         'direction': 'horizontal',
         'loop': true,
@@ -12,19 +11,21 @@ define([
         // 如果需要分页器
         'pagination': '.swiper-pagination'
     });
-    var template = __inline("../ui/index-imgs.handlebars"),
-        items = {},
+    var items = {},
         COMPANYCODE = "",
         count = 2,
         types = {},
+        width = ($(window).width() - 32) / 100 * 48 + "px",
         modelList = {};
 
     init();
 
     function init() {
+
         if (COMPANYCODE = sessionStorage.getItem("compCode")) {
             getCategory();
             getBanner();
+            addListeners();
         } else {
             base.getCompanyByUrl()
                 .then(function() {
@@ -37,6 +38,12 @@ define([
                     }
                 });
         }
+    }
+
+    function addListeners() {
+        $("#category").on("click", ".category-item", function() {
+            location.href = "../detail/mall_list.html?b=" + $(this).attr("code");
+        });
     }
 
     function getCategory() {
@@ -54,7 +61,7 @@ define([
                         }
                         html += '<div class="pt6 clearfix">';
                     }
-                    html += '<div class="wp20 plr12 fl">' +
+                    html += '<div class="wp20 plr12 fl category-item" code="' + data[i].code + '">' +
                         '<img src="' + data[i].pic + '">' +
                         '<div class="tc">' + data[i].name + '</div>' +
                         '</div>';
@@ -78,10 +85,11 @@ define([
                     var list = res.data.list,
                         html = '';
                     for (var i = 0; i < list.length; i++) {
-                        html += '<div class="wp48 bg_fff display"><a href="../operator/buy.html?code=' + list[i].code + '">' +
-                            '<img src="' + list[i].advPic + '">' +
-                            '<div class="tc pt4">' + list[i].name + '</div>' +
-                            '<div class="tc price s_13">￥' + (+list[i].discountPrice / 1000).toFixed(2) + '</div>' +
+                        html += '<div style="width:' + width + '" class="bg_fff display"><a href="../operator/buy.html?code=' + list[i].code + '">' +
+                            '<img style="width:' + width + ';height:' + width + '" src="' + list[i].advPic + '">' +
+                            '<div class="pl6 pt4">' + list[i].name + '</div>' +
+                            '<div class="price pl6 s_13">￥' + (+list[i].discountPrice / 1000).toFixed(2) +
+                            '<del class="ml5 s_12 t_999"><span class="price-icon">¥</span><span class="font-num">' + (+list[i].originalPrice / 1000).toFixed(2) + '</span></del></div>' +
                             '</a></div>';
                     }
                     $("#cont1").html(html);
@@ -104,10 +112,11 @@ define([
                     var list = res.data.list,
                         html = '';
                     for (var i = 0; i < list.length; i++) {
-                        html += '<div class="wp48 bg_fff display"><a href="../operator/buy.html?code=' + list[i].code + '">' +
-                            '<img src="' + list[i].advPic + '">' +
-                            '<div class="tc pt4">' + list[i].name + '</div>' +
-                            '<div class="tc price s_13">￥' + (+list[i].discountPrice / 1000).toFixed(2) + '</div>' +
+                        html += '<div style="width:' + width + '" class="bg_fff display"><a href="../operator/buy.html?code=' + list[i].code + '">' +
+                            '<img style="width:' + width + ';height:' + width + '" src="' + list[i].advPic + '">' +
+                            '<div class="pl6 pt4">' + list[i].name + '</div>' +
+                            '<div class="price pl6 s_13">￥' + (+list[i].discountPrice / 1000).toFixed(2) +
+                            '<del class="ml5 s_12 t_999"><span class="price-icon">¥</span><span class="font-num">' + (+list[i].originalPrice / 1000).toFixed(2) + '</span></del></div>' +
                             '</a></div>';
                     }
                     $("#cont2").html(html);
@@ -149,17 +158,5 @@ define([
 
     function doError(id, msg) {
         $("#" + id).html('<div class="bg_fff" style="text-align: center;line-height: 150px;">' + msg + '</div>');
-    }
-
-    function doSuccess() {
-        var data = [];
-        for (var name in items) {
-            if (modelList[name]) {
-                items[name].price = modelList[name].toFixed(2);
-                data.push(items[name]);
-            }
-        }
-        var content = template({ items: data });
-        $("#cont").replaceWith(content);
     }
 });

@@ -5,7 +5,7 @@ define([
 ], function(base, Ajax, Swiper) {
     var mySwiper, rspData = [],
         code = base.getUrlParam("code") || "",
-        user;
+        width = $(window).width() + "px";
     init();
 
     function init() {
@@ -21,10 +21,10 @@ define([
                     var data = res.data,
                         imgs_html = "";
                     var $swiper = $("#btlImgs");
-                    imgs_html = '<div class="swiper-slide tc"><img src="' + data.pic1 + '"></div>' +
-                        '<div class="swiper-slide tc"><img src="' + data.pic2 + '"></div>' +
-                        '<div class="swiper-slide tc"><img src="' + data.pic3 + '"></div>' +
-                        '<div class="swiper-slide tc"><img src="' + data.pic4 + '"></div>';
+                    imgs_html = '<div class="swiper-slide tc"><img style="width:' + width + ';height:' + width + '" src="' + data.pic1 + '"></div>' +
+                        '<div class="swiper-slide tc"><img style="width:' + width + ';height:' + width + '" src="' + data.pic2 + '"></div>' +
+                        '<div class="swiper-slide tc"><img style="width:' + width + ';height:' + width + '" src="' + data.pic3 + '"></div>' +
+                        '<div class="swiper-slide tc"><img style="width:' + width + ';height:' + width + '" src="' + data.pic4 + '"></div>';
                     $swiper.html(imgs_html);
                     swiperImg();
                     $("#btr-name").text(data.name);

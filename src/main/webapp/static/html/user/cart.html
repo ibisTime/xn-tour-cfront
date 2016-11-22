@@ -7,8 +7,18 @@
 </head>
 
 <body class="bg_f5">
-
-    <div class="pt10 hcont" id="od-ul">
+    <div class="hidden ptb60" id="noItem">
+        <div class="cartImg">
+            <img class="cartImg-img" src="../../images/cart-img.png" />
+            <div class="cartImg-after"></div>
+        </div>
+        <div class="tc lh16em pt14">
+            <h1 class="s_14">购物车快饿瘪了T.T</h1>
+            <p class="t_999 s_12">主人快给我挑点宝贝吧</p>
+            <p class="pt6"><a href="../detail/mall_list.html" class="cart-shop">去逛逛</a></p>
+        </div>
+    </div>
+    <div class="hcont" id="od-ul">
         <i id="cont" class="icon-loading"></i>
     </div>
     <i id="loaddingIcon" class="icon-loading bg_transparent hidden top_0"></i>
@@ -19,8 +29,8 @@
             <span class="pl10">全选</span>
         </div>
         <div class="fl wp40">合计:
-            <div class="lh1em inline_block va-m">
-                <span class="t_f64444 show"><span id="totalCnyAmount"></span><span class="t_40pe s_10">元</span></span>
+            <div class="lh1em inline_block">
+                <span class="t_f64444 show"><span id="totalCnyAmount"></span><span class="t_40pe s_12">元</span></span>
             </div>
         </div>
         <div class="fl wp35 bg_f64444 t_white tc s_13 lh3_1em" id="sbtn">结算</div>
