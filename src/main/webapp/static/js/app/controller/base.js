@@ -1,21 +1,21 @@
-define(['app/util/common', 'app/util/ajax'], function (common, Ajax) {
+define(['app/util/common', 'app/util/ajax', 'app/util/dialog'], function(common, Ajax, dialog) {
 
     //FastClick.attach(document.body);
 
     // element disabled
-    $.fn.disable = function () {
+    $.fn.disable = function() {
         this.addClass('disabled');
         this[0].disabled = true;
     };
 
-    $.fn.enable = function () {
+    $.fn.enable = function() {
         this.removeClass('disabled');
         this[0].disabled = false;
     };
 
-    $.fn.tap = function (callback) {
+    $.fn.tap = function(callback) {
         this.addClass('btn_press');
-        this.on('click', function () {
+        this.on('click', function() {
             callback(this);
         });
     };
@@ -24,13 +24,13 @@ define(['app/util/common', 'app/util/ajax'], function (common, Ajax) {
     $.fn.setData = function(data) {
         var data = data || {};
         for (var k in data) {
-            $('[data-name='+k+']', this).html(data[k]);
+            $('[data-name=' + k + ']', this).html(data[k]);
         }
     };
 
     if (Number.prototype.toFixed) {
         var ori_toFixed = Number.prototype.toFixed;
-        Number.prototype.toFixed = function () {
+        Number.prototype.toFixed = function() {
             var num = ori_toFixed.apply(this, arguments);
             if (num == 0 && num.indexOf('-') == 0) { // -0 and 0
                 num = num.slice(1);
@@ -39,14 +39,14 @@ define(['app/util/common', 'app/util/ajax'], function (common, Ajax) {
         }
     }
 
-    String.prototype.temp = function (obj) {
-        return this.replace(/\$\w+\$/gi, function (matchs) {
+    String.prototype.temp = function(obj) {
+        return this.replace(/\$\w+\$/gi, function(matchs) {
             var returns = obj[matchs.replace(/\$/g, "")];
             return (returns + "") == "undefined" ? "" : returns;
         });
     };
 
-    Date.prototype.format = function (format) {
+    Date.prototype.format = function(format) {
         var o = {
             "M+": this.getMonth() + 1, //month
             "d+": this.getDate(), //day
@@ -68,7 +68,7 @@ define(['app/util/common', 'app/util/ajax'], function (common, Ajax) {
         return format;
     };
 
-    $.prototype.serializeObject = function () {
+    $.prototype.serializeObject = function() {
         var a, o, h, i, e;
         a = this.serializeArray();
         o = {};
@@ -87,9 +87,9 @@ define(['app/util/common', 'app/util/ajax'], function (common, Ajax) {
         loadAllTpl: '<div class="all-bar tc bg_fff ptb4"><span class="sr-only">已加载全部</span></div>',
         loadingTpl: '<div class="loading-bar tc"><i class="fa fa-spinner fa-spin fa-3x fa-fw margin-bottom"></i><span class="sr-only">努力加载中...</span></div>',
         loadEmptyTpl: '<div class="flex flex-c flex-dv t_bd hp100"><i class="s_50 fa fa-calendar-o" aria-hidden="true"></i><span class="mt10">暂无相关数据</span></div>',
-        loading100Tpl: '<div class="flex flex-c flex-dv hp100 loading-bar"><img src="'+requirejs.staticUrl+'/images/pull.gif"/><span class="sr-only">努力加载中...</span></div>',
+        loading100Tpl: '<div class="flex flex-c flex-dv hp100 loading-bar"><img src="' + requirejs.staticUrl + '/images/pull.gif"/><span class="sr-only">努力加载中...</span></div>',
         // simple encrypt information with ***
-        encodeInfo: function (info, headCount, tailCount, space) {
+        encodeInfo: function(info, headCount, tailCount, space) {
             headCount = headCount || 0;
             tailCount = tailCount || 0;
             info = info.trim();
@@ -101,16 +101,17 @@ define(['app/util/common', 'app/util/ajax'], function (common, Ajax) {
             if (space) {
                 mask = '**** **** **** **** **** **** **** **** **** **** **** ****';
             }
-            return maskLen > 0 ? (header + mask.substring(0, maskLen + (space? maskLen / 4 : 0)) + (space? ' ' : '') + tailer) : info;
+            return maskLen > 0 ? (header + mask.substring(0, maskLen + (space ? maskLen / 4 : 0)) + (space ? ' ' : '') + tailer) : info;
         },
-        getUrlParam : function(name) {
+        getUrlParam: function(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
             var r = window.location.search.substr(1).match(reg);
             if (r != null) return decodeURIComponent(r[2]);
             return '';
         },
         findObj: function(array, key, value, key2, value2) {
-            var i = 0, len = array.length,
+            var i = 0,
+                len = array.length,
                 res;
             for (i; i < len; i++) {
                 if (array[i][key] == value && !key2) {
@@ -120,7 +121,7 @@ define(['app/util/common', 'app/util/ajax'], function (common, Ajax) {
                 }
             }
         },
-        fmoney: function (s, n) {
+        fmoney: function(s, n) {
             if (typeof s == 'undefined') {
                 return '0.00';
             }
@@ -136,27 +137,88 @@ define(['app/util/common', 'app/util/ajax'], function (common, Ajax) {
             var l = s.split(".")[0].split("").reverse(),
                 r = s.split(".")[1] || '';
             t = "";
-            for(i = 0; i < l.length; i ++ )
-            {
+            for (i = 0; i < l.length; i++) {
                 t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
             }
             return t.split("").reverse().join("") + (n == 0 ? "" : ("." + r)) + unit;
         },
-        getUser: function (flag) {
+        showMsg: function(msg, time) {
+            var d = dialog({
+                content: msg,
+                quickClose: true
+            });
+            d.show();
+            setTimeout(function() {
+                d.close().remove();
+            }, time || 1500);
+        },
+        makeReturnUrl: function() {
+            return encodeURIComponent(location.pathname + location.search);
+        },
+        getReturnParam: function() {
+            var re = Base.getUrlParam("return");
+            if (re) {
+                return encodeURIComponent(re);
+            }
+            return "";
+        },
+        goBackUrl: function(url) {
+            var rUrl = Base.getUrlParam("return");
+            if (rUrl) {
+                location.href = rUrl;
+            } else {
+                location.href = url || "../home/index.html";
+            }
+        },
+        addIcon: function() {
+            var icon = sessionStorage.getItem("icon");
+            if (icon && icon != "undefined") {
+                $("head").append('<link rel="shortcut icon" type="image/ico" href="' + icon + '">');
+            }
+        },
+        isLogin: function() {
+            return sessionStorage.getItem("user") ? true : false;
+        },
+        getUser: function(flag) {
             return Ajax.get(APIURL + '/user');
+        },
+        //清除sessionStorage中和用户相关的数据
+        clearSessionUser: function() {
+            sessionStorage.removeItem("compCode");
+            sessionStorage.removeItem("icon");
+            sessionStorage.removeItem("user");
+        },
+        //登出
+        logout: function() {
+            return Ajax.post(APIURL + "/user/logout")
+                .then(function(res) {
+                    Base.clearSessionUser();
+                    return res;
+                }, function(res) {
+                    Base.clearSessionUser();
+                    return res;
+                });
+        },
+        getBanner: function(code, location) {
+            return Ajax.get(APIURL + '/navigate/banner/list', { "companyCode": code, "location": location });
+        },
+        getCompanyByUrl: function(func) {
+            var url = location.href;
+            var idx = url.indexOf("/m/");
+            if (idx != -1) {
+                url = url.substring(0, idx);
+            }
+            return Ajax.get(APIURL + '/gene/byUrl', { "url": url })
+                .then(function(res) {
+                    if (res.success && !$.isEmptyObject(res.data)) {
+                        sessionStorage.setItem("compCode", res.data.code);
+                        sessionStorage.setItem("icon", res.data.icon);
+                        Base.addIcon();
+                    }
+                    return res;
+                });
         }
     };
-    var pathname = location.pathname;
-    if( (pathname.indexOf("/user/") != -1 && 
-         (pathname.indexOf("/user/login.html") == -1 && pathname.indexOf("/user/register.html") == -1 
-          && pathname.indexOf("/user/findPwd.html") == -1)) 
-        || pathname.indexOf("/account") != -1 
-        || (pathname.indexOf("/operator/") != -1 && pathname.indexOf("/operator/buy.html") == -1)){
-        Base.getUser().then(function(response){
-            if(!response.success){
-                location.href = "../user/login.html?return=" + encodeURIComponent(location.pathname + location.search);
-            }
-        });
-    }
+    Base.addIcon();
     return Base;
 });

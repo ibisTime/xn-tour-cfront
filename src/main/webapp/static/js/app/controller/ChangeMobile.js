@@ -1,172 +1,113 @@
 define([
     'app/controller/base',
-    'app/util/ajax',
-    'app/util/dialog'
-], function (base, Ajax, dialog) {
-    $(function () {
-    	initView();
-	    function initView() {
+    'app/util/ajax'
+], function(base, Ajax) {
+    init();
+
+    function init() {
+        if (!base.isLogin()) {
+            location.href = "./login.html?return=" + base.makeReturnUrl();
+        } else {
             addListeners();
-	    }
+        }
+    }
 
-	    function addListeners(){
-	    	$("#verification").on("change",validate_verification);
-	    	$("#mobile").on("change", validate_mobile);
-	    	$("#password").on("change", validate_password)
-		        .on("focus", function(){
-		            $(this).siblings(".register_verifycon")
-			            .css({
-			                "display": "block"
-			            });
-		        })
-		        .on("blur", function(){
-		            $(this).siblings(".register_verifycon")
-			            .css({
-			                "display": "none"
-			            });
-		        });
-            $("#sbtn").on("click", function (e) {
-                changeMobile();
-            });
-            
-	    }
-	    function handleSendVerifiy() {
-            $("#getVerification").addClass("cancel-send");
-            Ajax.post(APIURL + '/gene/changemobile/send',
-                {
-                    "mobile": $("#mobile").val()
-                }).then(function (response) {
-                    if (response.success) {
-                        for (var i = 0; i <= 60; i++) {
-                            (function (i) {
-                                setTimeout(function () {
-                                    if (i < 60) {
-                                        $("#getVerification").text((60 - i) + "s");
-                                    } else {
-                                    	$("#getVerification").text("获取验证码").removeClass("cancel-send")
-			                            	.one("click", handleSendVerifiy);
-                                    }
-                                }, 1000 * i);
-                            })(i);
-                        }
-                    } else {
-                    	$("#getVerification").one("click", handleSendVerifiy);
-		            	var parent = $("#verification").parent();
-	                    var span = parent.find("span.warning")[2];
-	                    $(span).fadeIn(150).fadeOut(3000);
-                    }
-                });
-        }
-        function validate_mobile(){
-            var elem = $("#mobile")[0],
-                parent = elem.parentNode,
-                span;
-            $("#getVerification").off("click");
-
-            if(elem.value == ""){
-	            span = $(parent).find("span.warning")[0];
-	            $(span).fadeIn(150).fadeOut(3000);
-	            return false;
-	        }else if(!/^1[3,4,5,7,8]\d{9}$/.test(elem.value)){
-	            span = $(parent).find("span.warning")[1];
-	            $(span).fadeIn(150).fadeOut(3000);
-	            return false;
-	        }
-	        if(!$("#getVerification").hasClass("cancel-send")){
-	        	$("#getVerification").one("click", handleSendVerifiy);
-	        }
-	        return true;
-        }
-        function validate_verification(){
-        	var elem = $("#verification")[0],
-	            parent = elem.parentNode,
-	            span;
-	        if(elem.value == ""){
-	            span = $(parent).find("span.warning")[0];
-	            $(span).fadeIn(150).fadeOut(3000);
-	            return false;
-	        }else if(!/^[\d]{4}$/.test(elem.value)){
-	            span = $(parent).find("span.warning")[1];
-	            $(span).fadeIn(150).fadeOut(3000);
-	            return false;
-	        }
-	        return true;
-        }
-
-        function validate_password(){
-        	var elem = $("#password")[0],
-	            parent = elem.parentNode,
-	            myreg = /^[^\s]{6,16}$/,
-	            span;
-	        if(elem.value == ""){
-	            span = $(parent).find("span.warning")[0];
-	            $(span).fadeIn(150).fadeOut(3000);
-	            return false;
-	        }else if(!myreg.test(elem.value)){
-	            span = $(parent).find("span.warning")[1];
-	            $(span).fadeIn(150).fadeOut(3000);
-	            return false;
-	        }
-	        return true;
-        }
-	    function validate(){
-            if(validate_mobile() && validate_verification() && validate_password()){
-                return true;
+    function addListeners() {
+        $("#sbtn").on("click", function(e) {
+            changeMobile();
+        });
+        $("#getVerification").on("click", function() {
+            if (validate_mobile()) {
+                handleSendVerifiy();
             }
+        });
+    }
+
+    function handleSendVerifiy() {
+        var verification = $("#getVerification");
+        verification.attr("disabled", "disabled");
+        Ajax.post(APIURL + '/gene/changemobile/send', {
+            "mobile": $("#mobile").val()
+        }).then(function(response) {
+            if (response.success) {
+                for (var i = 0; i <= 60; i++) {
+                    (function(i) {
+                        setTimeout(function() {
+                            if (i < 60) {
+                                verification.val((60 - i) + "s");
+                            } else {
+                                verification.val("获取验证码").removeAttr("disabled");
+                            }
+                        }, 1000 * i);
+                    })(i);
+                }
+            } else {
+                base.showMsg(response.msg);
+                verification.val("获取验证码").removeAttr("disabled");
+            }
+        });
+    }
+
+    function validate_mobile() {
+        var value = $("#mobile").val();
+
+        if (!value || value.trim() === "") {
+            base.showMsg("手机号不能为空");
+            return false;
+        } else if (!/^1[3,4,5,7,8]\d{9}$/.test(value)) {
+            base.showMsg("手机号格式错误");
             return false;
         }
-        function checkMobile (){
-            Ajax.post(APIURL + '/user/mobile/check',
-                {"loginName": $("#mobile").val()})
-                .then(function (response) {
-                    if (response.success) {
-                        finalChangeMobile();
-                    } else {
-                    	var parent = $("#mobile").parent();
-                    	var span = parent.find("span.warning")[2];
-	                    $(span).fadeIn(150).fadeOut(3000);
-                        
-                    }
-                });
+        return true;
+    }
+
+    function validate_verification() {
+        var value = $("#verification").val();
+        if (!value || value.trim() === "") {
+            base.showMsg("验证码不能为空");
+            return false;
+        } else if (!/^[\d]{4}$/.test(value)) {
+            base.showMsg("验证码格式错误");
+            return false;
         }
-        function doSuccess(){
-        	$("#sbtn").text("设置");
-	        showMsg("恭喜您，交易密码设置成功！");
-	        setTimeout(function(){
-	        	location.href = './user_info.html';
-	        }, 1000);
+        return true;
+    }
+
+    function validate() {
+        if (validate_mobile() && validate_verification()) {
+            return true;
         }
-        function finalChangeMobile() {
-        	$("#sbtn").attr("disabled", "disabled").text("设置中...");
-            var param = {
-                "newMobile": $("#mobile").val(),
-                "tradePwd": $("#password").val(),
-                "smsCaptcha": $("#verification").val()
-            };
-            Ajax.post(APIURL + '/user/mobile/change', param)
-                .then(function (response) {
-                    if (response.success) {
-                        doSuccess();
-                    } else {
-                    	$("#sbtn").removeAttr("disabled").text("设置");
-	                    showMsg(response.msg);
-                    }
-                });
+        return false;
+    }
+
+    function doSuccess() {
+        $("#sbtn").text("设置");
+        base.showMsg("手机号修改成功！");
+        setTimeout(function() {
+            location.href = './user_info.html';
+        }, 1000);
+    }
+
+    function finalChangeMobile() {
+        $("#sbtn").attr("disabled", "disabled").text("设置中...");
+        var param = {
+            "newMobile": $("#mobile").val(),
+            "smsCaptcha": $("#verification").val()
+        };
+        Ajax.post(APIURL + '/user/mobile/change', param)
+            .then(function(response) {
+                if (response.success) {
+                    doSuccess();
+                } else {
+                    $("#sbtn").removeAttr("disabled").text("设置");
+                    base.showMsg(response.msg);
+                }
+            });
+    }
+
+    function changeMobile() {
+        if (validate()) {
+            finalChangeMobile();
         }
-        function changeMobile(){
-            if(validate()){
-                checkMobile();
-            }
-        }
-        function showMsg(cont){
-    		var d = dialog({
-						content: cont,
-						quickClose: true
-					});
-			d.show();
-			setTimeout(function () {
-				d.close().remove();
-			}, 2000);
-    	}
-	});
+    }
 });

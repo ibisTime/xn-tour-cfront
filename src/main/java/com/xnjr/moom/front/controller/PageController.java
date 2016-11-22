@@ -21,7 +21,7 @@ import com.xnjr.moom.front.util.ConfigProperties;
 @Controller
 public class PageController {
 
-    private static final String SESSION_KEY_USER = "user";
+    //private static final String SESSION_KEY_USER = "user";
 
     @Autowired
     protected ISessionProvider sessionProvider;
@@ -69,52 +69,48 @@ public class PageController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String page(HttpServletRequest request) {
-        SessionUser user = (SessionUser) sessionProvider
-            .getAttribute(SESSION_KEY_USER);
-        if (JudgeIsMoblie(request)) {
-            return "redirect:" + ConfigProperties.Config.MOBILE_URL
-                    + "/home/index.html";
-        }
+//        SessionUser user = (SessionUser) sessionProvider
+//            .getAttribute(SESSION_KEY_USER);
+        //if (JudgeIsMoblie(request)) {
+            return "redirect:/m/home/index.html";
+        //}
         // if (null == user) {
-        return "redirect:home/index.htm";
+        //return "redirect:home/index.htm";
         // }
         // return (JudgeIsMoblie(request) ? "m/project/l" : "home/index");
     }
 
-    @RequestMapping(value = "/{module}.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/{module}.html", method = RequestMethod.GET)
     public String indexAction(@PathVariable String module,
             HttpServletRequest request) {
-        if (JudgeIsMoblie(request)) {
-            return "redirect:" + ConfigProperties.Config.MOBILE_URL + "/"
-                    + module + ".html";
-        }
-        String url = module;
-        System.out.println("url: " + url);
-        return url;
+        //if (JudgeIsMoblie(request)) {
+            return "redirect:/m/" + module + ".html";
+        //}
+//        String url = module;
+//        System.out.println("url: " + url);
+//        return url;
     }
 
-    @RequestMapping(value = "/{first}/{page}.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/{first}/{page}.html", method = RequestMethod.GET)
     public String commonPage1Action(@PathVariable String first,
             @PathVariable String page, HttpServletRequest request) {
-        if (JudgeIsMoblie(request)) {
-            return "redirect:" + ConfigProperties.Config.MOBILE_URL + "/"
-                    + first + "/" + page + ".html";
-        }
-        String url = first + "/" + page;
-        System.out.println("url: " + url);
-        return url;
+//        if (JudgeIsMoblie(request)) {
+            return "redirect:/m/" + first + "/" + page + ".html";
+//        }
+//        String url = first + "/" + page;
+//        System.out.println("url: " + url);
+//        return url;
     }
 
-    @RequestMapping(value = "/{first}/{second}/{page}.htm", method = RequestMethod.GET)
+    @RequestMapping(value = "/{first}/{second}/{page}.html", method = RequestMethod.GET)
     public String commonPage2Action(@PathVariable String first,
             @PathVariable String second, @PathVariable String page,
             HttpServletRequest request) {
-        if (JudgeIsMoblie(request)) {
-            return "redirect:" + ConfigProperties.Config.MOBILE_URL + "/"
-                    + first + "/" + second + "/" + page + ".html";
-        }
-        String url = first + "/" + second + "/" + page;
-        System.out.println("url: " + url);
-        return url;
+//        if (JudgeIsMoblie(request)) {
+            return "redirect:/m/" + first + "/" + second + "/" + page + ".html";
+//        }
+//        String url = first + "/" + second + "/" + page;
+//        System.out.println("url: " + url);
+//        return url;
     }
 }

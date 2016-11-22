@@ -14,8 +14,8 @@ import org.springframework.stereotype.Controller;
 
 import com.xnjr.moom.front.base.ControllerContext;
 import com.xnjr.moom.front.session.ISessionProvider;
+import com.xnjr.moom.front.session.SessionTimeoutException;
 import com.xnjr.moom.front.session.SessionUser;
-import com.xnjr.moom.front.session.UserDetailHolder;
 
 @Controller
 public class BaseController {
@@ -30,6 +30,9 @@ public class BaseController {
      */
     protected SessionUser getSessionUser() {
         SessionUser user = (SessionUser) sessionProvider.getUserDetail();
+        if(user == null){
+        	throw new SessionTimeoutException("登录链接已超时，请重新登录.");
+        }
         return user;
     }
 

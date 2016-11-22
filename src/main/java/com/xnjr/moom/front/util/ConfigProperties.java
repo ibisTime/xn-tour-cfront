@@ -27,9 +27,9 @@ public class ConfigProperties {
 
         public static String USER_URL = props.getProperty("USER_URL");
 
-        public static String IDENTIFY_URL = props.getProperty("IDENTIFY_URL");
-
-        public static String ACCOUNT_URL = props.getProperty("ACCOUNT_URL");
+//        public static String IDENTIFY_URL = props.getProperty("IDENTIFY_URL");
+//
+//        public static String ACCOUNT_URL = props.getProperty("ACCOUNT_URL");
 
         // #****** picture server config ******
         public static String URL_PREFIX = props.getProperty("URL_PREFIX");
@@ -46,6 +46,6 @@ public class ConfigProperties {
 
         public static String FILE_PRE_DIR = props.getProperty("FILE_PRE_DIR");
 
-        public static String MOBILE_URL = props.getProperty("MOBILE_URL");
+//        public static String MOBILE_URL = props.getProperty("MOBILE_URL");
     }
 }

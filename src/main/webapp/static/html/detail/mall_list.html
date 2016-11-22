@@ -1,31 +1,113 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <link rel="import" href="../head.html?__inline">
     <title>产品分类</title>
+    <style>
+        #mallWrapper {
+            position: absolute;
+            z-index: 1;
+            bottom: 48px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: #fff;
+            height: 42px;
+            line-height: 42px;
+            overflow: hidden;
+        }
+        
+        #scroller {
+            position: absolute;
+            z-index: 1;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            height: 100%;
+            background-color: #fff;
+            -webkit-transform: translateZ(0);
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            -o-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-text-size-adjust: none;
+            -moz-text-size-adjust: none;
+            -ms-text-size-adjust: none;
+            -o-text-size-adjust: none;
+        }
+        
+        #scroller ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: inline-block;
+            height: 100%;
+        }
+        
+        #scroller li {
+            float: left;
+            height: 100%;
+            font-size: 14px;
+            padding: 0 10px;
+        }
+        
+        #scroller li.current {
+            border-bottom: 2px solid #f64444;
+            color: #f64444;
+        }
+    </style>
 </head>
+
 <body class="bg_f5">
-    <header class="bg_fff">
-        <nav>
-            <ul id="ml-head-ul" class="clearfix s_14">
-                <li class="fl pl20 pt8" l_type="1"><span class="inline_block pb10">咖啡机</span></li>
-                <li class="fl pl40 pt8" l_type="3"><span class="inline_block pb10">饮水机</span></li>
-            </ul>
-        </nav>
+    <header class="wp100" style="background: #f7f7f7;position: fixed;">
+        <div id="mallWrapper">
+            <div id="scroller">
+                <ul></ul>
+            </div>
+        </div>
+        <div class="wp100 plr16 pt10" style="margin-top: 42px;" id="smallCont"></div>
     </header>
-    <div class="bg_fff m10">
-        <i id="cont" class="icon-loading"></i>
+    <div id="mtop" class="wp100"></div>
+    <div class="bg_fff">
+        <div class="b_bd_b">
+            <div class="mlr" id="cont">
+                <!--<i id="loadI" class="icon-loading"></i>-->
+                <!--<div class="wp48  bg_fff display">
+                    <img src="../../images/1(27).png">
+                    <div class="tc pt4">精细针织套衫</div>
+                    <div class="tc price s_13">￥699</div>
+                </div>-->
+            </div>
+        </div>
     </div>
     <div style="height: 80px;"></div>
     <footer class="fixft bg_fff b_bd_t hfoot s_11">
-        <a href="../home/index.html" class="wp25 fl tc"><div class="wp100 pt8"><img src="../../images/hf1.png"/></div><p class="ptb2">首页</p></a>
-        <a href="./mall_list.html" class="wp25 fl tc active"><div class="wp100 pt8"><img src="../../images/hf2_2.png"/></div><p class="ptb2">产品分类</p></a>
-        <a href="../user/cart.html" class="wp25 fl tc"><div class="wp100 pt8"><img src="../../images/hf3.png"/></div><p class="ptb2">购物车</p></a>
-        <a href="../user/user_info.html" class="wp25 fl tc"><div class="wp100 pt8"><img src="../../images/hf4.png"/></div><p class="ptb2">个人中心</p></a>
+        <a href="../home/index.html" class="wp25 fl tc">
+            <div class="wp100 pt8"><img src="../../images/hf1.png" /></div>
+            <p class="ptb2">首页</p>
+        </a>
+        <a href="./mall_list.html" class="wp25 fl tc active">
+            <div class="wp100 pt8"><img src="../../images/hf2_2.png" /></div>
+            <p class="ptb2">产品分类</p>
+        </a>
+        <a href="../user/cart.html" class="wp25 fl tc">
+            <div class="wp100 pt8"><img src="../../images/hf3.png" /></div>
+            <p class="ptb2">购物车</p>
+        </a>
+        <a href="../user/user_info.html" class="wp25 fl tc">
+            <div class="wp100 pt8"><img src="../../images/hf4.png" /></div>
+            <p class="ptb2">个人中心</p>
+        </a>
     </footer>
     <link rel="import" href="../footer.html?__inline">
+    <!--<script src="../../js/lib/iscroll.js"></script>-->
     <script>
         require(['app/controller/MallList']);
     </script>
 </body>
+
 </html>

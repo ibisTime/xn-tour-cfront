@@ -8,7 +8,7 @@
  */
 package com.xnjr.moom.front.controller;
 
-import java.util.List;
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,9 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.xnjr.moom.front.ao.IDictAO;
 import com.xnjr.moom.front.ao.IGeneralAO;
 import com.xnjr.moom.front.ao.ISmsAO;
-import com.xnjr.moom.front.ao.IUserAO;
+import com.xnjr.moom.front.base.ControllerContext;
+import com.xnjr.moom.front.captcha.MyCaptchaService;
 import com.xnjr.moom.front.enums.ESmsBizType;
-import com.xnjr.moom.front.res.XN805056Res;
+import com.xnjr.moom.front.exception.BizException;
 
 /** 
  * @author: miyb 
@@ -36,27 +37,27 @@ public class GeneralController extends BaseController {
     ISmsAO smsAO;
 
     @Autowired
-    IUserAO userAO;
-
-    @Autowired
     IDictAO dictAO;
     
     @Autowired
     IGeneralAO generalAO;
+    
+    @Resource(name = "imageCaptchaService")
+    private MyCaptchaService imageCaptchaService;
 
     // ****发送短信验证码start*******
 
-    @RequestMapping(value = "/smscaptcha/send", method = RequestMethod.POST)
-    @ResponseBody
-    public boolean sendSmsCaptcha(@RequestParam("bizType") String bizType) {
-    	XN805056Res user = userAO.doGetUser(this.getSessionUser().getUserId());
-        sendPhoneCode(bizType, user.getMobile());
-        return true;
-    }
-
     @RequestMapping(value = "/register/send", method = RequestMethod.POST)
     @ResponseBody
-    public boolean sendRegisterCode(@RequestParam("mobile") String mobile) {
+    public boolean sendRegisterCode(@RequestParam("mobile") String mobile,
+    		@RequestParam("captcha") String captcha) {
+    	String sessionId = ControllerContext.getRequest().getSession().getId();
+        boolean flag = imageCaptchaService.validateResponseForID(sessionId,
+            captcha);
+        imageCaptchaService.removeCaptcha(sessionId);
+        if (!flag) { // 验证码正确
+            throw new BizException("83099901", "图片验证码不正确");
+        }
         sendPhoneCode(ESmsBizType.REGISTER.getCode(), mobile);
         return true;
     }
@@ -92,21 +93,33 @@ public class GeneralController extends BaseController {
     private void sendPhoneCode(String bizType, String mobile) {
         smsAO.sendSmsCaptcha(mobile, bizType);
     }
-
-    // dict data
-    @RequestMapping(value = "/dict", method = RequestMethod.GET)
+    
+    //通过url找到company
+    @RequestMapping(value = "/byUrl", method = RequestMethod.GET)
     @ResponseBody
-    public List getDict(@RequestParam("type") String type) {
-        return dictAO.queryDictList(type);
+    public Object getCompanyByUrl(
+            @RequestParam("url") String url) {
+        return generalAO.getCompanyByUrl(url);
     }
     
-    // 查询银行列表
-    @RequestMapping(value = "/banks", method = RequestMethod.GET)
+    // 数据字典
+    @RequestMapping(value = "/dict", method = RequestMethod.GET)
     @ResponseBody
-    public List getBanks(@RequestParam(value = "status", required = false) String status,
+    public Object getDict(@RequestParam(value = "type", required = false) String type,
+    		@RequestParam(value = "parentKey", required = false) String parentKey,
+    		@RequestParam(value = "dkey", required = false) String dkey) {
+        return dictAO.queryDictList(type, parentKey, dkey);
+    }
+    // 数据字典
+    @RequestMapping(value = "/sys/config", method = RequestMethod.GET)
+    @ResponseBody
+    public Object getSysConfig(
+    		@RequestParam(value = "ckey", required = false) String ckey,
+    		@RequestParam(value = "start", required = true) String start,
+    		@RequestParam(value = "limit", required = true) String limit,
     		@RequestParam(value = "orderColumn", required = false) String orderColumn,
     		@RequestParam(value = "orderDir", required = false) String orderDir) {
-        return generalAO.queryBanks(status, orderColumn, orderDir);
+        return dictAO.querySysConfig(this.getSessionUser().getUserId(), 
+        		ckey, start, limit, orderColumn, orderDir);
     }
-
 }

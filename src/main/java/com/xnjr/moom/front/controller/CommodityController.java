@@ -14,60 +14,54 @@ import com.xnjr.moom.front.ao.ICommodityAO;
 public class CommodityController extends BaseController {
 	@Autowired
 	ICommodityAO commodityAO;
-	
-	//列表查询产品
-    @RequestMapping(value = "/queryProduces", method = RequestMethod.GET)
-    @ResponseBody
-	public Object queryProduces(
-			@RequestParam(value = "type", required = false) String type,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "updater", required = false) String updater,
-            @RequestParam(value = "status", required = false) String status){
-    	return commodityAO.queryProduces(type, name, updater, status);
-	}
     
-    //详情查询产品
-    @RequestMapping(value = "/queryProduce", method = RequestMethod.GET)
+    //查询列表产品
+    @RequestMapping(value = "/product/list", method = RequestMethod.GET)
     @ResponseBody
-	public Object queryProduce( 
-			@RequestParam(value = "code", required = false) String code){
-    	
-    	return commodityAO.queryProduce(code);
-	}
-    
-    //查询列表型号
-    @RequestMapping(value = "/queryListModel", method = RequestMethod.GET)
-    @ResponseBody
-    public Object queryListModel(
-    		@RequestParam(value = "code", required = false) String code,
+    public Object queryListProducts(
+    		@RequestParam(value = "category", required = false) String category,
+    		@RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "status", required = false) String status,
-            @RequestParam(value = "productCode", required = false) String productCode){
-    	return commodityAO.queryListModel(code, name, status, productCode);
+            @RequestParam(value = "companyCode", required = false) String companyCode){
+    	return commodityAO.queryListProducts(category, type,
+    			name, status, companyCode);
     }
     
 
-    //查询列表型号
-    @RequestMapping(value = "/queryPageModel", method = RequestMethod.POST)
+    //分页查询产品
+    @RequestMapping(value = "/product/page", method = RequestMethod.GET)
     @ResponseBody
-    public Object queryPageModel(
-    		@RequestParam(value = "code", required = false) String code,
+    public Object queryPageProducts(
+    		@RequestParam(value = "category", required = false) String category,
+    		@RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "status", required = false) String status,
-            @RequestParam(value = "productCode", required = false) String productCode,
+            @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "companyCode", required = true) String companyCode,
             @RequestParam("start") String start,
             @RequestParam("limit") String limit,
             @RequestParam(value = "orderColumn", required = false) String orderColumn,
-            @RequestParam(value = "orderDir", required = false) String orderDir,
-            @RequestParam(value = "productName", required = false) String productName){
-    	return commodityAO.queryPageModel(code, name, status, productCode, start, limit, orderColumn, orderDir, productName);
+            @RequestParam(value = "orderDir", required = false) String orderDir){
+    	return commodityAO.queryPageProducts(category, type, name, status,
+    			companyCode, start, limit, orderColumn, orderDir, location);
     }
     
-    //详情查询型号
-    @RequestMapping(value = "/queryModel", method = RequestMethod.GET)
+    //详情查询产品
+    @RequestMapping(value = "/product/info", method = RequestMethod.GET)
     @ResponseBody
     public Object queryModel(
     		@RequestParam("code") String code){
-    	return commodityAO.queryModel(code);
+    	return commodityAO.queryProduct(code);
+    }
+    
+    //列表查询类别
+    @RequestMapping(value = "/category/list", method = RequestMethod.GET)
+    @ResponseBody
+    public Object queryListCategory(
+    		@RequestParam(value = "parentCode", required = false) String parentCode,
+    		@RequestParam(value = "name", required = false) String name,
+    		@RequestParam(value = "companyCode", required = true) String companyCode){
+    	return commodityAO.queryListCategory(parentCode, name, companyCode);
     }
 }

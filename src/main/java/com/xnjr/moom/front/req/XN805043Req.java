@@ -6,6 +6,14 @@ public class XN805043Req {
 	//登陆密码
 	private String loginPwd;
 	
+	private String kind;
+	
+	public String getKind() {
+		return kind;
+	}
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
 	public String getLoginName() {
 		return loginName;
 	}

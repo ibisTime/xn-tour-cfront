@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <link rel="import" href="../head.html?__inline">
     <title>我的购物车</title>
 </head>
+
 <body class="bg_f5">
-    
+
     <div class="pt10 hcont" id="od-ul">
         <i id="cont" class="icon-loading"></i>
     </div>
     <i id="loaddingIcon" class="icon-loading bg_transparent hidden top_0"></i>
     <div style="height: 118px;"></div>
-    <div class="cart-foot s_11" id="cart-bottom">
+    <div class="cart-foot s_12" id="cart-bottom">
         <div class="fl wp25 tl pl10">
-            <div id="allChecked" class="radio-chose"><img class="wp20p ab" src="../../images/chose.png"/></div>
+            <div id="allChecked" class="radio-chose"><img class="wp20p ab" src="../../images/chose.png" /></div>
             <span class="pl10">全选</span>
         </div>
-        <div class="fl wp45">合计：<span class="t_f64444">￥<span id="totalAmount"></span></span></div>
-        <div class="fl wp30 bg_f64444 t_white tc" id="sbtn">结算</div>
+        <div class="fl wp40">合计:
+            <div class="lh1em inline_block va-m">
+                <span class="t_f64444 show"><span id="totalCnyAmount"></span><span class="t_40pe s_10">元</span></span>
+            </div>
+        </div>
+        <div class="fl wp35 bg_f64444 t_white tc s_13 lh3_1em" id="sbtn">结算</div>
     </div>
     <div id="od-mask" class="mask hidden"></div>
     <div id="od-tipbox" class="od-dialog wp80 mlr_auto bg_fff shadow-box hidden">
@@ -26,18 +32,32 @@
             确定删除商品吗？
         </div>
         <div class="wp100 clearfix tc lh2_5em">
-            <div class="wp50 fl od-okbtn" id="odOk">确认</div><div class="wp50 fl t_80" id="odCel">取消</div>
+            <div class="wp50 fl od-okbtn" id="odOk">确认</div>
+            <div class="wp50 fl t_80" id="odCel">取消</div>
         </div>
     </div>
     <footer class="fixft bg_fff b_bd_t hfoot s_11">
-        <a href="../home/index.html" class="wp25 fl tc"><div class="wp100 pt8"><img src="../../images/hf1.png"/></div><p class="ptb2">首页</p></a>
-        <a href="../detail/mall_list.html" class="wp25 fl tc"><div class="wp100 pt8"><img src="../../images/hf2.png"/></div><p class="ptb2">产品分类</p></a>
-        <a href="./cart.html" class="wp25 fl tc active"><div class="wp100 pt8"><img src="../../images/hf3_2.png"/></div><p class="ptb2">购物车</p></a>
-        <a href="./user_info.html" class="wp25 fl tc"><div class="wp100 pt8"><img src="../../images/hf4.png"/></div><p class="ptb2">个人中心</p></a>
+        <a href="../home/index.html" class="wp25 fl tc">
+            <div class="wp100 pt8"><img src="../../images/hf1.png" /></div>
+            <p class="ptb2">首页</p>
+        </a>
+        <a href="../detail/mall_list.html" class="wp25 fl tc">
+            <div class="wp100 pt8"><img src="../../images/hf2.png" /></div>
+            <p class="ptb2">产品分类</p>
+        </a>
+        <a href="./cart.html" class="wp25 fl tc active">
+            <div class="wp100 pt8"><img src="../../images/hf3_2.png" /></div>
+            <p class="ptb2">购物车</p>
+        </a>
+        <a href="./user_info.html" class="wp25 fl tc">
+            <div class="wp100 pt8"><img src="../../images/hf4.png" /></div>
+            <p class="ptb2">个人中心</p>
+        </a>
     </footer>
     <link rel="import" href="../footer.html?__inline">
     <script>
         require(['app/controller/Cart']);
     </script>
 </body>
+
 </html>

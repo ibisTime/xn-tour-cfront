@@ -8,9 +8,7 @@
  */
 package com.xnjr.moom.front.ao;
 
-import com.xnjr.moom.front.res.XN805041Res;
-import com.xnjr.moom.front.res.XN805043Res;
-import com.xnjr.moom.front.res.XN805056Res;
+import java.util.Map;
 
 /** 
  * @author: miyb 
@@ -37,31 +35,8 @@ public interface IUserAO {
      * @create: 2015年9月19日 上午11:24:33 myb858
      * @history:
      */
-    public XN805041Res doRegister(String mobile, String loginPwd,
-            String userReferee, String smsCaptcha);
-
-    /**
-     * 身份认证
-     * @param userId
-     * @param realName
-     * @param idKind
-     * @param idNo
-     * @create: 2015-3-22 下午3:26:44 xieyj
-     * @history:
-     */
-    public void doIdentify(String userId, String realName, String idKind,
-            String idNo);
-
-    /**
-     * 设置交易密码
-     * @param userId
-     * @param tradePwd
-     * @param smsCaptcha
-     * @return 
-     * @create: 2015年9月19日 上午11:25:35 myb858
-     * @history:
-     */
-    public void doSetTradePwd(String userId, String tradePwd, String smsCaptcha);
+    public Map doRegister(String mobile, String loginPwd,
+            String userReferee, String smsCaptcha, String companyCode);
 
     /**
      * 用户登陆
@@ -72,7 +47,7 @@ public interface IUserAO {
      * @history:
      */
 
-    public XN805043Res doLogin(String loginName, String loginPwd);
+    public Map doLogin(String loginName, String loginPwd);
 
     /**
      * 查询用户的详细信息
@@ -80,7 +55,7 @@ public interface IUserAO {
      * @create: 2014-12-10 下午7:37:18 miyb
      * @history:
      */
-    public XN805056Res doGetUser(String userId);
+    public Map doGetUser(String userId);
 
     /**
      * 找回登录密码
@@ -91,7 +66,7 @@ public interface IUserAO {
      * @create: 2015年9月18日 上午10:44:31 myb858
      * @history:
      */
-    public void doFindLoginPwd(String mobile, String newLoginPwd,
+    public Object doFindLoginPwd(String mobile, String newLoginPwd,
             String smsCaptcha);
 
     /**
@@ -105,83 +80,16 @@ public interface IUserAO {
     public void doResetLoginPwd(String userId, String oldPwd, String newPwd);
 
     /**
-     * 找回交易密码
-     * @param userId
-     * @param newTradePwd
-     * @param smsCaptcha
-     * @param idKind
-     * @param idNo
-     * @return 
-     * @create: 2015年9月18日 上午11:14:39 myb858
-     * @history:
-     */
-    public void doFindTradePwd(String userId, String newTradePwd,
-            String smsCaptcha);
-
-    /**
-     * 重置交易密码
-     * @param userId
-     * @param oldTradePwd
-     * @param newTradePwd
-     * @create: 2015-3-22 下午4:03:31 xieyj
-     * @history:
-     */
-    public void doResetTradePwd(String userId, String oldTradePwd,
-            String newTradePwd);
-
-    /**
      * 更换手机号
      * @param userId
      * @param newMobile
      * @param smsCaptcha
-     * @param tradePwd
      * @return 
      * @create: 2015年9月18日 上午11:21:26 myb858
      * @history:
      */
     public void doChangeMoblie(String userId, String newMobile,
-            String smsCaptcha, String tradePwd);
-
-    /**
-     * 检查是否实名
-     * @param userId
-     * @return 
-     * @create: 2015-3-22 下午3:26:51 xieyj
-     * @history:
-     */
-    public boolean doIdentityCheck(String userId);
-
-    /**
-     * 获取登录日志
-     * @param userId
-     * @return 
-     * @create: 2015年9月29日 上午11:53:44 myb858
-     * @history:
-     */
-    public Object doGetLog(String userId);
-
-    /**
-     * 实名认证+交易密码设置
-     * @param userId
-     * @param realName
-     * @param idKind
-     * @param idNO
-     * @param tradePwd
-     * @param tradeCaptcha 
-     * @create: 2016年1月28日 下午3:45:55 myb858
-     * @history:
-     */
-    public void doIdentifySetTradePwd(String userId, String realName,
-            String idKind, String idNO, String tradePwd, String tradeCaptcha);
-
-    /**
-     * 设置个体户
-     * @param userId
-     * @return 
-     * @create: 2016年5月5日 下午9:03:55 xieyj
-     * @history:
-     */
-    Object doKyc(String userId);
+            String smsCaptcha);
 
     /**
      * 添加收件地址

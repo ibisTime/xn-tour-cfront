@@ -2,152 +2,173 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/util/dict',
-    'app/util/dialog',
     'Handlebars'
-], function (base, Ajax, Dict, dialog, Handlebars) {
-    $(function () {
-    	var code = base.getUrlParam('code'),
-	        receiptType = Dict.get("receiptType"),
-	        orderStatus = Dict.get("orderStatus"),
-	        fastMail = Dict.get("fastMail"),
-	        companyCode = Dict.get("companyCode"),
-	        addrTmpl = __inline("../ui/order-detail-addr.handlebars"),
-	        contTmpl = __inline("../ui/pay-order-imgs.handlebars");
+], function(base, Ajax, Dict, Handlebars) {
+    $(function() {
+        var code = base.getUrlParam('code'),
+            receiptType = Dict.get("receiptType"),
+            orderStatus = Dict.get("orderStatus"),
+            fastMail = Dict.get("fastMail"),
+            addrTmpl = __inline("../ui/order-detail-addr.handlebars"),
+            contTmpl = __inline("../ui/pay-order-imgs.handlebars");
 
-	    initView();
+        init();
 
-	    function initView() {
-	    	$("#orderCode").text(code);
-	        (function () {
-	            var url = APIURL + '/operators/queryOrder',
-	                config = {
-	                    "invoiceCode": code
-	                };
-	            var modelCode = "" ,modelName, quantity, salePrice, receiveCode, productName;
-	            Ajax.post(url, config)
-	                .then(function(response) {
-	                	$("#cont").remove();
-	                    if (response.success) {
-	                        var data = response.data, html = "",
-	                            invoiceModelLists = data.invoiceModelList;
+        function init() {
+            if (!base.isLogin()) {
+                location.href = "../user/login.html?return=" + base.makeReturnUrl();
+            } else {
+                if (code) {
+                    Handlebars.registerHelper('formatPrice', function(num, options) {
+                        return (+num / 1000).toFixed(2);
+                    });
+                    $("#orderCode").text(code);
+                    getOrder();
+                } else {
+                    base.showMsg("未传入订单编号");
+                }
+            }
+        }
 
-	                        $("#orderDate").text(getMyDate(data.applyDatetime));
-	                        $("#orderStatus").text(getStatus(data.status));
-	                        if(data.status == "1"){
-	                        	$("footer").removeClass("hidden");
-	                        }
-	                        if(data.approveNote){
-	                        	$("#approveNoteTitle, #approveNoteInfo").removeClass("hidden");
-	                        	$("#approveNoteInfo").text(data.approveNote);
-	                        }
-	                        if(data.applyNote){
-	                        	$("#applyNoteTitle, #applyNoteInfo").removeClass("hidden");
-	                        	$("#applyNoteInfo").text(data.applyNote);
-	                        }
-	                        addListener();
-	                        if (invoiceModelLists.length) {
-	                            invoiceModelLists.forEach(function (invoiceModelList) {
-	                                invoiceModelList.totalAmount = (+invoiceModelList.quantity * +invoiceModelList.salePrice / 1000).toFixed(2);
-	                            });
-	                            $("#od-ul").html(contTmpl({items: invoiceModelLists}));
-	                            $("#totalAmount").html((+data.totalAmount / 1000).toFixed(2));
-	                            $("#od-rtype").html(getReceiptType(data.receiptType));
-	                            $("#od-rtitle").html(data.receiptTitle || "无");
-	                            $("#od-id").html(data.code);
+        function getOrder() {
+            var url = APIURL + '/operators/queryOrder',
+                config = {
+                    "code": code
+                },
+                quantity, salePrice;
+            Ajax.get(url, config)
+                .then(function(response) {
+                    $("#loaddingIcon").addClass("hidden");
+                    if (response.success) {
+                        var data = response.data,
+                            html = "",
+                            invoiceModelLists = data.productOrderList;
 
-	                            var addData = data.address;
-	                            $("#addressDiv").html(addrTmpl(addData));
-	                            var logistic = data.logistics;
-	                            if(logistic && logistic.code){
-	                                $("#logisticsTitle, #logisticsInfo").removeClass("hidden");
-	                                $("#logisticsComp").text(fastMail[logistic.company]);
-	                                $("#logisticsNO").text(logistic.code);
-	                            }
-	                        }else{
-	                        	showMsg("暂时无法获取商品信息！");
-	                        }
-	                    }else{
-	                    	showMsg("暂时无法获取订单信息！");
-	                    }
-	                });
-	        })();
-	    }
+                        $("#orderDate").text(getMyDate(data.applyDatetime));
+                        $("#orderStatus").text(getStatus(data.status));
+                        if (data.status == "1") {
+                            $("#zffoot").removeClass("hidden");
+                            $("#totalAmount").html(((+data.amount + (+data.yunfei)) / 1000).toFixed(2));
+                        } else if (data.status == "2") {
+                            $("#chfoot").removeClass("hidden");
+                            $("#totalAmount").html((+data.payAmount / 1000).toFixed(2));
+                        } else if (data.status == "3") {
+                            $("#shfoot").removeClass("hidden");
+                            $("#totalAmount").html((+data.payAmount / 1000).toFixed(2));
+                        } else {
+                            $("#totalAmount").html((+data.payAmount / 1000).toFixed(2));
+                        }
+                        if (data.applyNote) {
+                            $("#applyNoteTitle, #applyNoteInfo").removeClass("hidden");
+                            $("#applyNoteInfo").text(data.applyNote);
+                        }
+                        addListeners();
+                        if (invoiceModelLists.length) {
 
-	    function getMyDate(value) {
-	        var date = new Date(value);
-	        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +
-	            get2(date.getHours()) + ":" + get2(date.getMinutes()) + ":" + get2(date.getSeconds());
-	    }
+                            $("#od-ul").html(contTmpl({ items: invoiceModelLists }));
+                            // $("#od-rtype").html(getReceiptType(data.receiptType));
+                            // $("#od-rtitle").html(data.receiptTitle || "无");
+                            // $("#od-id").html(data.code);
 
-	    function get2(val) {
-	        if(val < 10){
-	            return "0" + val;
-	        }else{
-	            return val;
-	        }
-	    }
+                            $("#addressDiv").html(addrTmpl(data));
+                            if (data.logisticsCode) {
+                                $("#logisticsTitle, #logisticsInfo").removeClass("hidden");
+                                $("#logisticsComp").text(fastMail[data.logisticsCompany]);
+                                $("#logisticsNO").text(data.logisticsCode);
+                            }
+                        } else {
+                            base.showMsg("暂时无法获取订单相关商品信息！");
+                        }
+                    } else {
+                        base.showMsg("暂时无法获取订单信息！");
+                    }
+                });
+        }
 
-	    function getReceiptType(data) {
-	        return data == "" ? "无": receiptType[data];
-	    }
+        function getMyDate(value) {
+            var date = new Date(value);
+            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +
+                get2(date.getHours()) + ":" + get2(date.getMinutes()) + ":" + get2(date.getSeconds());
+        }
 
-	    function addListener() {
-	        $("#cbtn").length && $("#cbtn").on("click", function (e) {
-	        	$("#od-mask, #od-tipbox").removeClass("hidden");
-	        });
-	        $("#sbtn").length && $("#sbtn").on("click", function(){
-	        	location.href = '../operator/pay_order.html?code=' + code;
-	        });
-	        $("#odOk").on("click", function(){
-				cancelOrder();
-	        	$("#od-mask, #od-tipbox").addClass("hidden");
-	        })
-	        $("#odCel").on("click", function(){
-	        	$("#od-mask, #od-tipbox").addClass("hidden");
-	        })
-	    }
+        function get2(val) {
+            if (val < 10) {
+                return "0" + val;
+            } else {
+                return val;
+            }
+        }
 
-	    function getStatus(status){
-	        return orderStatus[status] || "未知状态";
-	    }
+        function getReceiptType(data) {
+            return data == "" ? "无" : receiptType[data];
+        }
 
-	    function trimStr(val) {
-	        if(val == undefined || val === ''){
-	            return '';
-	        }
-	        return val.replace(/^\s*|\s*$/g, "");
-	    }
+        function addListeners() {
+            $("#cbtn").length && $("#cbtn").on("click", function(e) {
+                $("#od-mask, #od-tipbox").removeClass("hidden");
+            });
+            $("#sbtn").length && $("#sbtn").on("click", function() {
+                location.href = '../operator/pay_order.html?code=' + code;
+            });
+            $("#chbtn").on("click", cuihuo);
+            $("#shbtn").on("click", shouhuo);
+            $("#odOk").on("click", function() {
+                cancelOrder();
+                $("#od-mask, #od-tipbox").addClass("hidden");
+            })
+            $("#odCel").on("click", function() {
+                $("#od-mask, #od-tipbox").addClass("hidden");
+            })
+        }
 
-	    function cancelOrder(){
-	        var url = APIURL + '/operators/cancelOrder',
-	            config = {
-	                code: code,
-	                applyNote: "用户主动取消"
-	            };
-	        $("#loaddingIcon").removeClass("hidden");
-	        Ajax.post(url, config)
-	            .then(function(response) {
-	            	$("#loaddingIcon").addClass("hidden");
-	                if (response.success) {
-	                    showMsg("取消订单成功！");
-	                    setTimeout(function(){
-	                    	location.href = "./order_list.html";
-	                    }, 1000);
-	                }else{
-	                    showMsg(response.msg);
-	                }
-	            });
-	    }
+        function cuihuo() {
+            base.showMsg("阿静还没实现催货");
+        }
 
-	    function showMsg(cont){
-	        var d = dialog({
-	                    content: cont,
-	                    quickClose: true
-	                });
-	        d.show();
-	        setTimeout(function () {
-	            d.close().remove();
-	        }, 2000);
-	    }
+        function shouhuo() {
+            Ajax.post(APIURL + "/operators/confirmOrder", { code: code, remark: "确认收货" })
+                .then(function(res) {
+                    if (res.success) {
+                        base.showMsg("收货成功");
+                        setTimeout(function() {
+                            location.href = "./order_list.html";
+                        }, 1000)
+                    } else {
+                        base.showMsg(res.msg);
+                    }
+                });
+        }
+
+        function getStatus(status) {
+            return orderStatus[status] || "未知状态";
+        }
+
+        function trimStr(val) {
+            if (val == undefined || val === '') {
+                return '';
+            }
+            return val.replace(/^\s*|\s*$/g, "");
+        }
+
+        function cancelOrder() {
+            var url = APIURL + '/operators/cancelOrder',
+                config = {
+                    code: code,
+                    applyNote: ""
+                };
+            $("#loaddingIcon").removeClass("hidden");
+            Ajax.post(url, config)
+                .then(function(response) {
+                    $("#loaddingIcon").addClass("hidden");
+                    if (response.success) {
+                        base.showMsg("取消订单成功！");
+                        setTimeout(function() {
+                            location.href = "./order_list.html";
+                        }, 1000);
+                    } else {
+                        base.showMsg(response.msg);
+                    }
+                });
+        }
     });
 });

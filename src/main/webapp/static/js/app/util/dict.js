@@ -4,8 +4,8 @@ define([
 ], function(base, ajax) {
     var dict = {
         receiptType: {
-                "1": "个人",
-                "2": "企业"
+            "1": "个人",
+            "2": "公司"
         },
         fundType: {
             '10': '虚拟币兑换',
@@ -45,7 +45,9 @@ define([
             "2": "待发货",
             "3": "待收货",
             "4": "已收货",
-            "5": "已完成"
+            "91": "用户取消",
+            "92": "商户取消",
+            "93": "快递异常"
         },
         currencyUnit: {
             '': '',
@@ -57,7 +59,8 @@ define([
     };
 
     var changeToObj = function(data) {
-        var data = data || [], obj = {};
+        var data = data || [],
+            obj = {};
         data.forEach(function(item) {
             obj[item.dkey] = item.dvalue;
         });

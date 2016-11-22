@@ -1,9 +1,8 @@
-<p><span>订单金额：</span><span class="pl_5rem">￥{{totalAmount}}</span></p>
-<p><span class="pr1em">订单号</span>：<span class="pl_5rem">{{orderCode}}</span></p>
-<p><span>配送信息：</span><span class="pl_5rem">{{addressee}}</span><span class="pl10">{{mobile}}</span></p>
-<p class="pl5_5rem t_73 s_09_5">
-    <span class="pr10">{{province}}</span>
-    <span class="pr10">{{city}}</span>
-    <span class="pr10">{{district}}</span>
-    <span>{{detailAddress}}</span>
-</p>
+<div class="">应付金额：￥{{totalAmount}}</div>
+<div class="clearfix">
+    <div class="fl">配送地址：</div>
+    <div class="wp100 pl5em">
+        <div>{{receiver}} / {{reMobile}}</div>
+        <div>{{reMobile}}</div>
+    </div>
+</div>
