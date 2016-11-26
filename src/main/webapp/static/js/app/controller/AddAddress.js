@@ -13,6 +13,8 @@ define([
             } else {
                 if (code) {
                     getAddress();
+                    $("#sbtn").text("保存修改");
+                    document.title = "修改地址";
                 } else {
                     $("#loaddingIcon").addClass("hidden");
                     addListeners();
@@ -36,6 +38,9 @@ define([
                     } else {
                         base.showMsg("暂时无法获取地址信息");
                     }
+                }, function() {
+                    $("#loaddingIcon").addClass("hidden");
+                    base.showMsg("暂时无法获取地址信息");
                 });
         }
 
@@ -75,8 +80,11 @@ define([
                     if (response.success) {
                         base.goBackUrl("./address_list.html?t=1");
                     } else {
-                        base.showMsg("收货地址添加失败！")
+                        base.showMsg(response.msg);
                     }
+                }, function() {
+                    $("#loaddingIcon").addClass("hidden");
+                    base.showMsg("收货地址添加失败！");
                 });
         }
 
@@ -88,8 +96,11 @@ define([
                     if (response.success) {
                         base.goBackUrl("./address_list.html?t=1");
                     } else {
-                        base.showMsg("收货地址修改失败！");
+                        base.showMsg(response.msg);
                     }
+                }, function() {
+                    $("#loaddingIcon").addClass("hidden");
+                    base.showMsg("收货地址修改失败！");
                 });
         }
 

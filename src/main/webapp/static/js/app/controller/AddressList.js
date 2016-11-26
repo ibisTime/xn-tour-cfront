@@ -10,7 +10,6 @@ define([
         },
         currentElem,
         code = base.getUrlParam("c"),
-        returnUrl = base.getUrlParam("return"),
         type = base.getUrlParam("t") || 0,
         contentTmpl = __inline("../ui/address-items.handlebars");
 
@@ -28,28 +27,30 @@ define([
     function getAddressList() {
         Ajax.get(url, config)
             .then(function(response) {
-                $("#cont").remove();
+                $("#loaddingIcon").addClass("hidden");
                 if (response.success) {
                     var data = response.data,
                         html = "";
                     if (data.length) {
                         var html = contentTmpl({ items: data });
-                        $("#addressDiv").append(html);
-                        $("#addressDiv").find("a[code='" + code + "'] .radio-tip").addClass("active");
-                        $("footer").removeClass("hidden");
+                        $("#addressDiv").append(html)
+                            .find("a[code='" + code + "'] .radio-tip").addClass("active");
                     } else {
                         doError("#addressDiv", 1);
                     }
                 } else {
                     doError("#addressDiv");
                 }
+            }, function() {
+                $("#loaddingIcon").addClass("hidden");
+                doError("#addressDiv");
             });
     }
 
     function addListeners() {
         $("#addressDiv").on("click", "a", function() {
             if (!type) {
-                setDefaultAddress($(this).attr("code"));
+                setDefaultAddress($(this));
             } else {
                 location.href = "./add_address.html?return=" + base.makeReturnUrl() + "&c=" + $(this).attr("code");
             }
@@ -109,7 +110,7 @@ define([
         });
 
         $("#sbtn").on("click", function() {
-            location.href = "./add_address.html?return=" + encodeURIComponent(returnUrl);
+            location.href = "./add_address.html?return=" + base.getReturnParam();
         });
 
         $("#odOk").on("click", function() {
@@ -121,17 +122,29 @@ define([
         });
     }
 
-    function setDefaultAddress(code) {
+    function setDefaultAddress(me) {
         $("#loaddingIcon").removeClass("hidden");
-        var url = APIURL + "/user/edit/setDefaultAddress",
-            config = { code: code };
-        Ajax.post(url, config)
-            .then(function(res) {
-                if (res.success) {
-                    location.href = returnUrl;
+        var config = {
+            "addressee": me.find(".a-addressee").text(),
+            "mobile": me.find(".a-mobile").text(),
+            "province": me.find(".a-province").text(),
+            "city": me.find(".a-city").text(),
+            "district": me.find(".a-district").text(),
+            "detailAddress": me.find(".a-detailAddress").text(),
+            "isDefault": "1",
+            "code": me.attr("code")
+        };
+        Ajax.post(APIURL + "/user/edit/address", config)
+            .then(function(response) {
+                if (response.success) {
+                    base.goBackUrl("../user/user_info.html");
                 } else {
+                    base.showMsg("非常抱歉，地址选择失败");
                     $("#loaddingIcon").addClass("hidden");
                 }
+            }, function() {
+                base.showMsg("非常抱歉，地址选择失败");
+                $("#loaddingIcon").addClass("hidden");
             });
     }
 
@@ -160,6 +173,9 @@ define([
                 } else {
                     base.showMsg('很遗憾，收货地址删除失败！');
                 }
+            }, function() {
+                $("#loaddingIcon").addClass("hidden");
+                base.showMsg('很遗憾，收货地址删除失败！');
             });
     }
 
@@ -167,7 +183,6 @@ define([
         var msg = "暂时无法获取数据"
         if (flag) {
             msg = "暂时没有收货地址";
-            $("footer").removeClass('hidden');
         }
         $(cc).replaceWith('<div class="bg_fff" style="text-align: center;line-height: 150px;">' + msg + '</div>');
     }

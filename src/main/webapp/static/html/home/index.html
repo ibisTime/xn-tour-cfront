@@ -8,47 +8,35 @@
 
 <body class="bg_f5">
     <header>
-        <div class="swiper-container">
+        <div class="swiper-container" id="bannerContainer">
             <div class="swiper-wrapper" id="swr" style="display: -webkit-box;display: -moz-box;"></div>
-            <!-- 如果需要分页器 -->
             <div id="swiper-pagination" class="swiper-pagination"></div>
         </div>
-        <div class="wp100 bg_fff p b_e6_b">
-            <img src="images/a.png" class="va news">
-            <div class=" display">【公告】七九商城上线啦！</div>
+        <div class="wp100 bg_fff plr16 b_e6_b swiper-container lh3em hp3em" id="gbSwiperContainer">
+            <div class="swiper-wrapper" id="gbSwrapper"></div>
         </div>
     </header>
     <div class="wp100">
-        <div class="wp100 bg_fff b_e6_b plr tc s_10 pb6" id="category"></div>
+        <div class="wp100 bg_fff b_e6_b plr tc s_13 pb6" id="category"></div>
 
         <div class="wp100 p-8" id="rqtj">
-            <img src="images/huo@2x.png" class="va hot mr4">
-            <div class=" display s_14 va">人气推荐</div>
+            <!--<img src="images/huo@2x.png" class="va hot mr4">
+            <div class=" display s_14 va">人气推荐</div>-->
         </div>
 
-        <div class="mlr index-center-div" id="cont1">
-            <!--<div class="wp48  bg_fff display">
-                <img src="images/1(27).png">
-                <div class="tc pt4">精细针织套衫</div>
-                <div class="tc price s_13">￥699</div>
-            </div>-->
-            <i class="icon-loading2"></i>
+        <div class="mlr index-center-div s_13" id="cont1">
+            <i class="icon-loading2 hidden"></i>
         </div>
         <div class="wp100 p-8" id="xpss">
-            <img src="/static/images/1(14).png" class="va hot mr4">
-            <div class=" display s_14 va">新品上市</div>
+            <!--<img src="/static/images/1(14).png" class="va hot mr4">
+            <div class=" display s_14 va">新品上市</div>-->
         </div>
-        <div class="mlr index-center-div" id="cont2">
-            <!--<div class="wp48  bg_fff display">
-                <img src="images/1(27).png">
-                <div class="tc pt4">精细针织套衫</div>
-                <div class="tc price s_13">￥699</div>
-            </div>-->
-            <i class="icon-loading2"></i>
+        <div class="mlr index-center-div s_13" id="cont2">
+            <i class="icon-loading2 hidden"></i>
         </div>
     </div>
     <div style="height: 88px;"></div>
-    <footer class="fixft bg_fff b_bd_t hfoot s_11">
+    <footer class="fixft bg_fff b_bd_t hfoot s_12">
         <a href="./index.html" class="wp25 fl tc active">
             <div class="wp100 pt8"><img src="../../images/hf1_2.png" /></div>
             <p class="ptb2">首页</p>
@@ -66,7 +54,7 @@
             <p class="ptb2">个人中心</p>
         </a>
     </footer>
-    <a class="buy-cart-icon"><i></i></a>
+    <a class="buy-cart-icon" href="../user/cart.html"><i></i></a>
     <link rel="import" href="../footer.html?__inline">
     <script>
         require(['app/controller/Index']);

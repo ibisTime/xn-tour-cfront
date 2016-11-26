@@ -8,37 +8,37 @@
 
 <body class="bg_f5">
     <div class="wp100" id="container">
-        <div class="pl10 t_80 s_12 ptb4">订单信息</div>
-        <div class="wp100 plr10 ptb20 lh2em p_r bg_fff s_12" id="orderInfo">
+        <div class="pl10 t_80 s_14 ptb4">订单信息</div>
+        <div class="wp100 plr10 ptb20 lh2em p_r bg_fff s_14" id="orderInfo">
             <p><span class="pr1em">订单号</span>：<span class="pl_5rem" id="orderCode"></span></p>
             <p><span>下单时间：</span><span class="pl_5rem" id="orderDate"></span></p>
             <p><span>订单状态：</span><span class="pl_5rem" id="orderStatus"></span></p>
         </div>
-        <div class="pl10 t_80 s_12 ptb4">商品信息</div>
-        <div id="od-ul" class="wp100 lh1_5em p_r t_323232 s_12 bg_fff"></div>
-        <div class="t_80 s_12 ptb4 bg_fff tr pr10">应付金额：<span class="t_f64444">￥<span id="totalAmount"></span></span>
+        <div class="pl10 t_80 s_14 ptb4">商品信息</div>
+        <div id="od-ul" class="wp100 lh1_5em p_r t_323232 s_14 bg_fff"></div>
+        <div class="t_80 s_14 ptb4 bg_fff tr pr10">应付金额：<span class="t_f64444">￥<span id="totalAmount"></span></span>
         </div>
-        <div class="pl10 t_80 s_12 ptb4">收货信息</div>
-        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_12 bg_fff" id="addressDiv"></div>
-        <!--<div class="pl10 t_80 s_12 ptb4">发票类型</div>
-        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_12 bg_fff">
+        <div class="pl10 t_80 s_14 ptb4">收货信息</div>
+        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_14 bg_fff" id="addressDiv"></div>
+        <!--<div class="pl10 t_80 s_14 ptb4">发票类型</div>
+        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_14 bg_fff">
             <p class="wp100">发票类型：<span class="pl10" id="od-rtype"></span></p>
             <p class="wp100 pt10">发票抬头：<span class="pl10" id="od-rtitle"></span></p>
         </div>-->
-        <div class="pl10 t_80 s_12 ptb4 hidden" id="logisticsTitle">物流信息</div>
-        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_12 bg_fff hidden" id="logisticsInfo">
+        <div class="pl10 t_80 s_14 ptb4 hidden" id="logisticsTitle">物流信息</div>
+        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_14 bg_fff hidden" id="logisticsInfo">
             <p class="wp100">物流公司：<span class="pl10" id="logisticsComp"></span></p>
             <p class="wp100 pt10">物流单号：<span class="pl10" id="logisticsNO"></span></p>
         </div>
-        <div class="pl10 t_80 s_12 ptb4 hidden" id="applyNoteTitle">买家嘱咐</div>
-        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_12 bg_fff hidden" id="applyNoteInfo"></div>
-        <div class="pl10 t_80 s_12 ptb4 hidden" id="remarkTitle">备注</div>
-        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_12 bg_fff hidden" id="remarkInfo"></div>
+        <div class="pl10 t_80 s_14 ptb4 hidden" id="applyNoteTitle">买家嘱咐</div>
+        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_14 bg_fff hidden" id="applyNoteInfo"></div>
+        <div class="pl10 t_80 s_14 ptb4 hidden" id="remarkTitle">备注</div>
+        <div class="wp100 plr10 ptb20 lh1_5em p_r t_666 s_14 bg_fff hidden" id="remarkInfo"></div>
     </div>
     <div id="od-mask" class="mask hidden"></div>
     <div id="od-tipbox" class="od-dialog wp80 mlr_auto bg_fff shadow-box hidden">
-        <div class="pl10 t_80 s_12 ptb4 b_bd_b">取消订单</div>
-        <div class="wp100 tc s_12 ptb20 b_bd_b">取消原因：<textarea id="remark" class="b_bd p6 hp6em va-tt"></textarea></div>
+        <div class="pl10 t_80 s_14 ptb4 b_bd_b">取消订单</div>
+        <div class="wp100 tc s_14 ptb20 b_bd_b">取消原因：<textarea id="remark" class="b_bd p6 hp6em va-tt"></textarea></div>
         <div class="wp100 clearfix tc lh2_5em">
             <div class="wp50 fl od-okbtn" id="odOk">确认</div>
             <div class="wp50 fl t_80" id="odCel">取消</div>
@@ -46,16 +46,17 @@
     </div>
     <i id="loaddingIcon" class="icon-loading bg_0005 top_0"></i>
     <div style="height: 60px;"></div>
-    <div class="fixft bg_fff b_bd_t s_12 tc lh3em hidden" id="zffoot">
+    <div class="fixft bg_fff b_bd_t s_15 tc lh3em hidden" id="zffoot">
         <div class="wp50 fl t_323232" id="cbtn">取消订单</div>
         <div class="wp50 fl bg_f64444 t_white" id="sbtn">支付订单</div>
     </div>
-    <div class="fixft bg_fff b_bd_t s_12 tc lh3em hidden" id="chfoot">
+    <div class="fixft bg_fff b_bd_t s_15 tc lh3em hidden" id="chfoot">
         <div class="wp100 fl bg_f64444 t_white" id="chbtn">催货</div>
     </div>
-    <div class="fixft bg_fff b_bd_t s_12 tc lh3em hidden" id="shfoot">
+    <div class="fixft bg_fff b_bd_t s_15 tc lh3em hidden" id="shfoot">
         <div class="wp100 fl bg_f64444 t_white" id="shbtn">收货</div>
     </div>
+    <a class="buy-cart-icon" href="../user/cart.html"><i></i></a>
     <link rel="import" href="../footer.html?__inline">
     <script>
         require(['app/controller/OrderDetail']);

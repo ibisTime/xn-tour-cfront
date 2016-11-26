@@ -45,6 +45,9 @@ define([
                 base.showMsg(response.msg);
                 verification.val("获取验证码").removeAttr("disabled");
             }
+        }, function() {
+            base.showMsg("验证码获取失败");
+            verification.val("获取验证码").removeAttr("disabled");
         });
     }
 
@@ -102,6 +105,9 @@ define([
                     $("#sbtn").removeAttr("disabled").text("设置");
                     base.showMsg(response.msg);
                 }
+            }, function() {
+                $("#sbtn").removeAttr("disabled").text("设置");
+                base.showMsg("手机号修改失败，请稍后重试");
             });
     }
 

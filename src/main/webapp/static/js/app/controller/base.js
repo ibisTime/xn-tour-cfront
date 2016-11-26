@@ -1,4 +1,8 @@
-define(['app/util/common', 'app/util/ajax', 'app/util/dialog'], function(common, Ajax, dialog) {
+define([
+    'app/util/common',
+    'app/util/ajax',
+    'app/util/dialog'
+], function(common, Ajax, dialog) {
 
     //FastClick.attach(document.body);
 
@@ -184,8 +188,6 @@ define(['app/util/common', 'app/util/ajax', 'app/util/dialog'], function(common,
         },
         //清除sessionStorage中和用户相关的数据
         clearSessionUser: function() {
-            sessionStorage.removeItem("compCode");
-            sessionStorage.removeItem("icon");
             sessionStorage.removeItem("user");
         },
         //登出
@@ -202,7 +204,7 @@ define(['app/util/common', 'app/util/ajax', 'app/util/dialog'], function(common,
         getBanner: function(code, location) {
             return Ajax.get(APIURL + '/navigate/banner/list', { "companyCode": code, "location": location });
         },
-        getCompanyByUrl: function(func) {
+        getCompanyByUrl: function() {
             var url = location.href;
             var idx = url.indexOf("/m/");
             if (idx != -1) {
@@ -213,10 +215,18 @@ define(['app/util/common', 'app/util/ajax', 'app/util/dialog'], function(common,
                     if (res.success && !$.isEmptyObject(res.data)) {
                         sessionStorage.setItem("compCode", res.data.code);
                         sessionStorage.setItem("icon", res.data.icon);
+                        sessionStorage.setItem("sTime", res.data.remark);
+                        sessionStorage.setItem("sMobile", res.data.mobile);
                         Base.addIcon();
                     }
                     return res;
                 });
+        },
+        getAboutus: function() {
+            return this.getCompanyByUrl();
+        },
+        getGgContent: function(code) {
+            return Ajax.get(APIURL + "/gene/broadcast/info", { code: code });
         }
     };
     Base.addIcon();

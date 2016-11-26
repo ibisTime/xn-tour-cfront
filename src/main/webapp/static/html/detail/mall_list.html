@@ -21,6 +21,8 @@
         #scroller {
             position: absolute;
             z-index: 1;
+            color: #333;
+            left: 0px;
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             height: 100%;
             background-color: #fff;
@@ -51,8 +53,8 @@
         #scroller li {
             float: left;
             height: 100%;
-            font-size: 14px;
-            padding: 0 10px;
+            font-size: 1.4rem;
+            padding: 0 14px;
         }
         
         #scroller li.current {
@@ -64,23 +66,36 @@
 
 <body class="bg_f5">
     <header class="wp100" style="background: #f7f7f7;position: fixed;">
-        <div id="mallWrapper">
+        <!--<div id="down" class="b_bd_r b_bd_b mall-up-down down-arrow"></div>
+        <div id="allCont" class="hidden bg_fff">
+            <div class="t_666 ml-top-fl plr16 bg_fff b_bd_b s_14 bg_fff">所有分类</div>
+            <div id="allItem" class="plr16 bg_fff ml-top-item s_14 b_bd_t">
+                <ul class="clearfix t_333"></ul>
+            </div>
+            <div class="mall-mask"></div>
+        </div>-->
+        <div id="mallWrapper" class="b_bd_b z_index999">
+
             <div id="scroller">
                 <ul></ul>
             </div>
         </div>
-        <div class="wp100 plr16 pt10" style="margin-top: 42px;" id="smallCont"></div>
+        <div class="p_r z_index999 bg_f5">
+            <div class="wp100 pl16 pr34 pt14 pb4 s_12" style="margin-top: 42px;overflow:hidden;" id="smallCont"></div>
+            <div class="small-up-down down-arrow hidden" id="mallUD"></div>
+        </div>
+        <div class="mask hidden" id="mask"></div>
     </header>
-    <div id="mtop" class="wp100"></div>
+    <div id="mtop" class="wp100 hp100p"></div>
     <div class="">
         <div class="">
-            <div class="mlr index-center-div" id="cont">
+            <div class="mlr index-center-div s_13" id="cont">
                 <i id="loadI" class="icon-loading"></i>
             </div>
         </div>
     </div>
     <div style="height: 80px;"></div>
-    <footer class="fixft bg_fff b_bd_t hfoot s_11">
+    <footer class="fixft bg_fff b_bd_t hfoot s_12">
         <a href="../home/index.html" class="wp25 fl tc">
             <div class="wp100 pt8"><img src="../../images/hf1.png" /></div>
             <p class="ptb2">首页</p>
@@ -98,6 +113,7 @@
             <p class="ptb2">个人中心</p>
         </a>
     </footer>
+    <a class="buy-cart-icon" href="../user/cart.html"><i></i></a>
     <link rel="import" href="../footer.html?__inline">
     <script>
         require(['app/controller/MallList']);

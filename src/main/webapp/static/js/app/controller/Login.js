@@ -3,7 +3,7 @@ define([
     'app/util/ajax',
     'lib/swiper-3.3.1.jquery.min'
 ], function(base, Ajax, Swiper) {
-    var returnUrl;
+    var returnUrl, COMPANYCODE;
 
     init();
 
@@ -12,12 +12,14 @@ define([
             addListeners();
         } else {
             base.getCompanyByUrl()
-                .then(function() {
+                .then(function(res) {
                     if (COMPANYCODE = sessionStorage.getItem("compCode")) {
                         addListeners();
                     } else {
-                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                        base.showMsg(res.msg);
                     }
+                }, function() {
+                    base.showMsg("非常抱歉，暂时无法获取公司信息!");
                 });
         }
         returnUrl = base.getReturnParam();
@@ -28,24 +30,6 @@ define([
             $("#toRegister").attr("href", './register.html');
             $("#fdPwd").attr("href", './findPwd.html');
         }
-    }
-
-    function getBanner() {
-        base.getBanner(COMPANYCODE, "B_Mobile_DL_CSH")
-            .then(function(res) {
-                if (res.success) {
-                    var data = res.data,
-                        html = "";
-                    for (var i = 0; i < data.length; i++) {
-                        html += '<div class="swiper-slide"><img class="wp100" src="' + data[i].pic + '"></div>';
-                    }
-                    if (data.length == 1) {
-                        $("#swiper-pagination").remove();
-                    }
-                    $("#swr").html(html);
-                    swiperImg();
-                }
-            });
     }
 
     function addListeners() {
@@ -85,7 +69,8 @@ define([
             $("#loginBtn").attr("disabled", "disabled").val("登录中...");
             var param = {
                     "loginName": $("#mobile").val(),
-                    "loginPwd": $("#password").val()
+                    "loginPwd": $("#password").val(),
+                    "companyCode": COMPANYCODE
                 },
                 url = APIURL + "/user/login";
 
@@ -99,17 +84,11 @@ define([
                         $("#loginBtn").removeAttr("disabled").val("登录");
                         base.showMsg(response.msg);
                     }
+                }, function() {
+                    sessionStorage.setItem("user", false);
+                    $("#loginBtn").removeAttr("disabled").val("登录");
+                    base.showMsg("登录失败");
                 });
         }
-    }
-
-    function swiperImg() {
-        var mySwiper = new Swiper('.swiper-container', {
-            direction: 'horizontal',
-            autoplay: 2000,
-            autoplayDisableOnInteraction: false,
-            // 如果需要分页器
-            pagination: '.swiper-pagination'
-        });
     }
 });

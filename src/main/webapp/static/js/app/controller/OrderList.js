@@ -76,12 +76,12 @@ define([
                                     code = cl.code;
                                 html += '<li class="clearfix b_bd_b b_bd_t bg_fff mt10" code="' + code + '">' +
                                     '<a class="show" href="./order_detail.html?code=' + code + '" class="show">' +
-                                    '<div class="wp100 s_12 b_bd_b clearfix  ptb10 plr10">' +
+                                    '<div class="wp100 s_14 b_bd_b clearfix  ptb10 plr10">' +
                                     '<div class="fl">订单号：<span>' + code + '</span></div>' +
                                     '</div>';
                                 if (invoices.length == 1) {
                                     invoice = invoices[0];
-                                    html += '<div class="wp100 clearfix plr10 ptb4 p_r">' +
+                                    html += '<div class="wp100 s_14 clearfix plr10 ptb4 p_r">' +
                                         '<div class="fl wp90p"><img class="order-item-img" src="' + invoice.advPic + '"></div>' +
                                         '<div class="wp100 pl102">' +
                                         '<p class="tl">' + invoice.productName + '</p>' +
@@ -104,7 +104,7 @@ define([
                                 }
                                 html += '</div>' +
                                     '<div class="wp100 clearfix plr10 ptb6">' +
-                                    '<span class="fr inline_block bg_f64444 t_white s_10 plr8 ptb4 b_radius4 ' + (cl.status == "1" ? "ol-tobuy" : "") + '">' + getStatus(cl.status) + '</span>' +
+                                    '<span class="fr inline_block bg_f64444 t_white s_14 plr8 ptb4 b_radius4 ' + (cl.status == "1" ? "ol-tobuy" : "") + '">' + getStatus(cl.status) + '</span>' +
                                     '</div>' +
                                     '</a></li>';
                             });
@@ -125,6 +125,13 @@ define([
                         } else {
                             removeLoading();
                         }
+                    }
+                    first = false;
+                }, function() {
+                    if (first) {
+                        doError();
+                    } else {
+                        removeLoading();
                     }
                     first = false;
                 });

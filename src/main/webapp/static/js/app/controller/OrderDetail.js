@@ -86,6 +86,9 @@ define([
                     } else {
                         base.showMsg("暂时无法获取订单信息！");
                     }
+                }, function() {
+                    $("#loaddingIcon").addClass("hidden");
+                    base.showMsg("暂时无法获取订单信息！");
                 });
         }
 
@@ -126,7 +129,16 @@ define([
         }
 
         function cuihuo() {
-            base.showMsg("阿静还没实现催货");
+            Ajax.post(APIURL + "/operators/xpeditePurchase", { code: code })
+                .then(function(res) {
+                    if (res.success) {
+                        base.showMsg("催货请求发送成功");
+                    } else {
+                        base.showMsg(res.msg);
+                    }
+                }, function() {
+                    base.showMsg("非常抱歉，催货请求发送失败");
+                });
         }
 
         function shouhuo() {
@@ -140,6 +152,8 @@ define([
                     } else {
                         base.showMsg(res.msg);
                     }
+                }, function() {
+                    base.showMsg("非常抱歉，确认收货失败");
                 });
         }
 
@@ -172,6 +186,9 @@ define([
                     } else {
                         base.showMsg(response.msg);
                     }
+                }, function() {
+                    $("#loaddingIcon").addClass("hidden");
+                    base.showMsg("非常抱歉，取消订单失败");
                 });
         }
     });

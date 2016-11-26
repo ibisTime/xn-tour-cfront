@@ -4,8 +4,8 @@ define([
     'lib/swiper-3.3.1.jquery.min'
 ], function(base, Ajax, Swiper) {
     var mySwiper, rspData = [],
-        code = base.getUrlParam("code") || "",
-        width = $(window).width() + "px";
+        quantity = 0,
+        code = base.getUrlParam("code") || "";
     init();
 
     function init() {
@@ -17,14 +17,15 @@ define([
                 code: code
             }, true)
             .then(function(res) {
+                getKeys();
                 if (res.success) {
                     var data = res.data,
                         imgs_html = "";
                     var $swiper = $("#btlImgs");
-                    imgs_html = '<div class="swiper-slide tc"><img style="width:' + width + ';height:' + width + '" src="' + data.pic1 + '"></div>' +
-                        '<div class="swiper-slide tc"><img style="width:' + width + ';height:' + width + '" src="' + data.pic2 + '"></div>' +
-                        '<div class="swiper-slide tc"><img style="width:' + width + ';height:' + width + '" src="' + data.pic3 + '"></div>' +
-                        '<div class="swiper-slide tc"><img style="width:' + width + ';height:' + width + '" src="' + data.pic4 + '"></div>';
+                    imgs_html = '<div class="swiper-slide tc"><img src="' + data.pic1 + '"></div>' +
+                        '<div class="swiper-slide tc"><img src="' + data.pic2 + '"></div>' +
+                        '<div class="swiper-slide tc"><img src="' + data.pic3 + '"></div>' +
+                        '<div class="swiper-slide tc"><img src="' + data.pic4 + '"></div>';
                     $swiper.html(imgs_html);
                     swiperImg();
                     $("#btr-name").text(data.name);
@@ -32,8 +33,15 @@ define([
                     $("#description").html(data.description);
                     $("#unit-price").val(data.discountPrice);
                     $("#btr-price").text("￥" + (+data.discountPrice / 1000).toFixed(2));
+                    quantity = +data.quantity;
+                    $("#quantity").text(data.quantity);
                     $("#buyBtn").click(function() {
                         if (!$(this).hasClass("no-buy-btn")) {
+                            var count = +$("#buyCount").val();
+                            if (count > quantity) {
+                                base.showMsg("库存不足，无法购买");
+                                return;
+                            }
                             location.href = "./submit_order.html?code=" + code + "&q=" + $("#buyCount").val();
                         }
                     });
@@ -47,14 +55,36 @@ define([
                 } else {
                     doError();
                 }
+            }, function() {
+                getKeys();
+                doError();
             });
+    }
+
+    function getKeys() {
+        var compCode = sessionStorage.getItem("compCode");
+        if (compCode) {
+            $.when(
+                Ajax.get(APIURL + "/gene/info/key", { key: "yunfei", companyCode: compCode }),
+                Ajax.get(APIURL + "/gene/info/key", { key: "byje", companyCode: compCode })
+            ).then(function(res1, res2) {
+                res1 = res1[0];
+                res2 = res2[0];
+                if (res1.success && res2.success) {
+                    $("#yunfei").text(res1.data);
+                    $("#byje").text(res2.data);
+                } else {
+                    base.showMsg("获取库存和运费信息失败！");
+                }
+            }, function() {
+                base.showMsg("获取库存和运费信息失败！");
+            });
+        }
     }
 
     function swiperImg() {
         var mySwiper = new Swiper('.swiper-container', {
             direction: 'horizontal',
-            autoplay: 2000,
-            autoplayDisableOnInteraction: false,
             // 如果需要分页器
             pagination: '.swiper-pagination'
         });
@@ -137,6 +167,8 @@ define([
                     msg = "添加购物车失败!";
                 }
                 base.showMsg(msg);
+            }, function() {
+                base.showMsg("添加购物车失败!");
             });
     }
 });

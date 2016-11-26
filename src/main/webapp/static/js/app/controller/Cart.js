@@ -12,8 +12,24 @@ define([
         if (!base.isLogin()) {
             location.href = "../user/login.html?return=" + base.makeReturnUrl();
         } else {
-            getMyCart();
-            addListeners();
+            if (sessionStorage.getItem("compCode")) {
+                getMyCart();
+                addListeners();
+            } else {
+                base.getCompanyByUrl()
+                    .then(function(res) {
+                        if (sessionStorage.getItem("compCode")) {
+                            getMyCart();
+                            addListeners();
+                        } else {
+                            base.showMsg(res.msg);
+                            doError();
+                        }
+                    }, function() {
+                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                        doError();
+                    });
+            }
         }
     }
     //获取购物车商品
@@ -29,7 +45,7 @@ define([
                         html = '<ul class="b_bd_b bg_fff">';
                         data.forEach(function(cl) {
                             var amount = (+cl.salePrice) * (+cl.quantity);
-                            html += '<li class="ptb8 plr10 clearfix b_bd_b p_r" code="' + cl.code + '" cnyP="' + (cl.salePrice || 0) + '">' +
+                            html += '<li class="ptb8 plr10 clearfix b_bd_b p_r s_14" code="' + cl.code + '" cnyP="' + (cl.salePrice || 0) + '">' +
                                 '<div class="wp100 p_r z_index0">' +
                                 '<div class="clearfix bg_fff cart-content-left">';
                             //如果已经下架，则无法点击进入购买页，并在页面上提示
@@ -45,8 +61,8 @@ define([
                             }
                             html += '<img src="' + cl.advPic + '"/></a></div>' +
                                 '<div class="fl wp60 pl12">' +
-                                '<p class="t_323232 s_12 line-tow">' + cl.productName + '</p>' +
-                                '<p class="t_f64444 s_12"><span>￥' + (+cl.salePrice / 1000).toFixed(2) + '</span></p>';
+                                '<p class="t_323232 s_14 line-tow">' + cl.productName + '</p>' +
+                                '<p class="t_f64444 s_14 pt4"><span>￥' + (+cl.salePrice / 1000).toFixed(2) + '</span></p>';
                             html += '<div class="t_666 ptb10">' +
                                 '<span class="subCount a_s_span t_bold tc"><img src="/static/images/sub-icon.png" style="width: 20px;height: 20px;"/></span>' +
                                 '<input type="hidden" value="' + (+cl.quantity) + '"/>' +
@@ -66,6 +82,8 @@ define([
                 } else {
                     doError();
                 }
+            }, function() {
+                doError();
             });
     }
 
@@ -124,9 +142,9 @@ define([
             if (!isSpecialCode(keyCode) && !isNumber(keyCode)) {
                 me.val(me.val().replace(/[^\d]/g, ""));
             }
-            if (!me.val()) {
-                me.change();
-            }
+            // if (!me.val()) {
+            //     me.change();
+            // }
         }).on("change", "input[type=text]", function(e) {
             e.stopPropagation();
             var keyCode = e.charCode || e.keyCode;
@@ -161,7 +179,7 @@ define([
                             new_cnyAmount = cnyUnit * (+count),
                             info = infos[gp.index()],
                             //当前商品老的人民币总价
-                            ori_cnyAmount = info[1],
+                            ori_cnyAmount = info,
                             //已经勾选的商品老的人民币总价
                             ori_cnyTotal = +$("#totalCnyAmount").text() * 1000,
                             //已经勾选的商品最新的人民币总价
@@ -176,8 +194,12 @@ define([
                         }
                     } else {
                         me.value = $(me).prev().val();
-                        base.showMsg("数量修改失败，请重试！");
+                        base.showMsg("数量修改失败，请稍后重试！");
                     }
+                }, function() {
+                    $("#loaddingIcon").addClass("hidden");
+                    me.value = $(me).prev().val();
+                    base.showMsg("数量修改失败，请稍后重试！");
                 });
         });
         /********监测数量输入框的变化end*******/
@@ -329,8 +351,11 @@ define([
                         $("#od-ul").html('<div class="bg_fff" style="text-align: center;line-height: 150px;">购物车内暂无商品</div>');
                     }
                 } else {
-                    base.showMsg("删除失败，请重试！");
+                    base.showMsg("删除失败，请稍后重试！");
                 }
+            }, function() {
+                $("#loaddingIcon").addClass("hidden");
+                base.showMsg("删除失败，请稍后重试！");
             });
     }
 

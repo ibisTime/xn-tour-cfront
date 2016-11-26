@@ -64,8 +64,12 @@ define([
                         $("#noAddressDiv").removeClass("hidden");
                     }
                 } else {
-                    doError("#addressDiv");
+                    $("#noAddressDiv").removeClass("hidden");
                 }
+            }, function() {
+                $("#cont").hide();
+                base.showMsg("地址信息获取失败");
+                $("#noAddressDiv").removeClass("hidden");
             });
     }
 
@@ -106,6 +110,9 @@ define([
                     $("#cont").hide();
                     doError("#items-cont");
                 }
+            }, function() {
+                $("#cont").hide();
+                doError("#items-cont");
             });
     }
 
@@ -134,6 +141,8 @@ define([
                 } else {
                     doError("#items-cont");
                 }
+            }, function() {
+                doError("#items-cont");
             });
     }
 
@@ -141,7 +150,7 @@ define([
         $("#addressDiv").on("click", "a", function() {
             location.href = "./address_list.html?c=" + $(this).attr("code") + "&return=" + base.makeReturnUrl();
         });
-        $("#add-addr").on("click", "a", function() {
+        $("#noAddressDiv").on("click", function(e) {
             location.href = "./add_address.html?return=" + base.makeReturnUrl();
         });
         $("#sbtn").on("click", function() {
@@ -205,6 +214,8 @@ define([
                 } else {
                     base.showMsg(response.msg);
                 }
+            }, function() {
+                base.showMsg("非常抱歉，订单提交失败");
             });
     }
 });

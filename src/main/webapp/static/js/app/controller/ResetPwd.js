@@ -64,6 +64,9 @@ define([
                         $("#sbtn").removeAttr("disabled").text("设置");
                         base.showMsg(response.msg);
                     }
+                }, function() {
+                    $("#sbtn").removeAttr("disabled").text("设置");
+                    base.showMsg("非常抱歉，登录密码修改失败");
                 });
         }
 

@@ -8,8 +8,24 @@ define([
         if (!base.isLogin()) {
             location.href = "./login.html?return=" + base.makeReturnUrl();
         } else {
-            getUserInfo();
-            getTimeAndMobile();
+            if (sessionStorage.getItem("compCode")) {
+                getUserInfo();
+                getTimeAndMobile();
+            } else {
+                base.getCompanyByUrl()
+                    .then(function(res) {
+                        if (sessionStorage.getItem("compCode")) {
+                            getUserInfo();
+                            getTimeAndMobile();
+                        } else {
+                            base.showMsg(res.msg);
+                            $("#loadI").hide();
+                        }
+                    }, function() {
+                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                        $("#loadI").hide();
+                    });
+            }
         }
     }
 
@@ -24,21 +40,14 @@ define([
                 } else {
                     base.showMsg("暂时无法获取用户信息！");
                 }
+            }, function() {
+                $("#loadI").hide();
+                base.showMsg("暂时无法获取用户信息！");
             });
     }
 
     function getTimeAndMobile() {
-        Ajax.get(APIURL + "/gene/sys/config", { start: 1, limit: 10 })
-            .then(function(res) {
-                if (res.success && res.data.list) {
-                    $.each(res.data.list, function(i, l) {
-                        if (l.ckey == "sysMobile") {
-                            $("#fwMobile").text(l.cvalue);
-                        } else if (l.ckey == "serviceTime") {
-                            $("#fwTime").text(l.cvalue);
-                        }
-                    });
-                }
-            })
+        $("#fwMobile").text(sessionStorage.getItem("sMobile"));
+        $("#fwTime").text(sessionStorage.getItem("sTime"));
     }
 });

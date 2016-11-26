@@ -56,11 +56,14 @@ define([
                     $("#cont").remove();
                     doError("#container");
                 }
+            }, function() {
+                $("#cont").remove();
+                doError("#container");
             });
     }
 
     function doError(cc) {
-        $(cc).html('<div class="bg_fff" style="text-align: center;line-height: 150px;">暂时无法获取数据</div>');
+        $(cc).html('<div class="bg_fff" style="text-align: center;line-height: 150px;">暂时无法获取订单信息</div>');
     }
 
     // function getReceiptType(data) {
@@ -80,6 +83,9 @@ define([
                     $("#loaddingIcon").addClass("hidden");
                     base.showMsg(response.msg);
                 }
+            }, function() {
+                $("#loaddingIcon").addClass("hidden");
+                base.showMsg("非常抱歉，订单支付失败");
             });
         });
     }

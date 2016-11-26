@@ -9,41 +9,23 @@ define([
 
     function init() {
         if (COMPANYCODE = sessionStorage.getItem("compCode")) {
-            getBanner();
             addListeners();
             $("#captchaImg").click();
         } else {
             base.getCompanyByUrl()
-                .then(function() {
+                .then(function(res) {
                     if (COMPANYCODE = sessionStorage.getItem("compCode")) {
-                        getBanner();
                         addListeners();
                         $("#captchaImg").click();
                     } else {
-                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                        base.showMsg(res.msg);
                     }
+                }, function() {
+                    base.showMsg("非常抱歉，暂时无法获取公司信息!");
                 });
         }
         var url = "./login.html?return=" + base.getReturnParam();
         $("#toLogin").attr("href", url);
-    }
-
-    function getBanner() {
-        base.getBanner(COMPANYCODE, "B_Mobile_ZC_CSH")
-            .then(function(res) {
-                if (res.success) {
-                    var data = res.data,
-                        html = "";
-                    for (var i = 0; i < data.length; i++) {
-                        html += '<div class="swiper-slide"><img class="wp100" src="' + data[i].pic + '"></div>';
-                    }
-                    if (data.length == 1) {
-                        $("#swiper-pagination").remove();
-                    }
-                    $("#swr").html(html);
-                    swiperImg();
-                }
-            });
     }
 
     function addListeners() {
@@ -95,6 +77,9 @@ define([
                 base.showMsg(response.msg);
                 $("#getVerification").val("获取验证码").removeAttr("disabled");
             }
+        }, function() {
+            base.showMsg('验证码获取失败');
+            $("#getVerification").val("获取验证码").removeAttr("disabled");
         });
     }
 
@@ -168,13 +153,18 @@ define([
                 if (response.success) {
                     loginUser({
                         "loginName": param.mobile,
-                        "loginPwd": param.loginPwd
+                        "loginPwd": param.loginPwd,
+                        "companyCode": COMPANYCODE
                     });
                 } else {
                     $("#captchaImg").attr('src', APIURL + '/captcha?_=' + new Date().getTime());
                     base.showMsg(response.msg);
                     $("#registerBtn").removeAttr("disabled").val("注册");
                 }
+            }, function() {
+                base.showMsg("非常抱歉，注册失败");
+                $("#captchaImg").attr('src', APIURL + '/captcha?_=' + new Date().getTime());
+                $("#registerBtn").removeAttr("disabled").val("注册");
             });
     }
 
@@ -192,6 +182,12 @@ define([
                         location.href = "./login.html?return=" + base.getReturnParam();
                     }, 1000);
                 }
+            }, function() {
+                base.showMsg("注册成功！");
+                sessionStorage.setItem("user", false);
+                setTimeout(function() {
+                    location.href = "./login.html?return=" + base.getReturnParam();
+                }, 1000);
             });
     }
 
