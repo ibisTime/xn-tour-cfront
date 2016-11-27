@@ -74,10 +74,12 @@ define([
                     })(i);
                 }
             } else {
+                $("#captchaImg").click();
                 base.showMsg(response.msg);
                 $("#getVerification").val("获取验证码").removeAttr("disabled");
             }
         }, function() {
+            $("#captchaImg").click();
             base.showMsg('验证码获取失败');
             $("#getVerification").val("获取验证码").removeAttr("disabled");
         });
@@ -85,7 +87,6 @@ define([
 
     function validate_mobile() {
         var value = $("#mobile").val();
-        $("#getVerification").off("click");
         if (value == "") {
             base.showMsg('手机号不能为空');
             return false;
@@ -196,15 +197,5 @@ define([
             $("#registerBtn").attr("disabled", "disabled").val("注册中...");
             finalRegister();
         }
-    }
-
-    function swiperImg() {
-        var mySwiper = new Swiper('.swiper-container', {
-            direction: 'horizontal',
-            autoplay: 2000,
-            autoplayDisableOnInteraction: false,
-            // 如果需要分页器
-            pagination: '.swiper-pagination'
-        });
     }
 });

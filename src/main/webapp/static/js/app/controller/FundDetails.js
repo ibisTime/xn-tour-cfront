@@ -53,14 +53,13 @@ define([
                                     prev_f = flag && "+" || "";
 
                                 html += '<li class="plr20 ptb20 b_bd_b clearfix lh15rem">' +
-                                    '<div class="wp60 fl s_10">' +
+                                    '<div class="wp40 fl s_10">' +
                                     '<p class="t_4d">' + (fundType[ll.bizType] || "未知类型") + '</p>' +
                                     '<p class="s_09 t_999 pt10">' + getMyDate(ll.createDatetime) + '</p>' +
                                     '</div>' +
-                                    '<div class="wp40 fl tr ' + t_class + ' s_10">' +
-                                    '<span class="inline_block va-m pt1em">' + prev_f + (+ll.transAmount / 1000).toFixed(2) + '积分</span>' +
-                                    '</div>' +
-                                    '</li>';
+                                    '<div class="wp60 fl tr ' + t_class + ' s_10">' +
+                                    '<span class="inline_block">' + prev_f + (+ll.transAmount / 1000).toFixed(2) + '积分</span>' +
+                                    '<div class="pt10 t_4d">' + ll.remark + '</div></div></li>';
                             });
                             if (first) {
                                 $("#fd-ul").html(html);

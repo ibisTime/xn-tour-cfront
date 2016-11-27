@@ -50,7 +50,7 @@ define([
 
     function validate_password() {
         var password = $("#password").val();
-        if (password.value == "") {
+        if (password == "") {
             base.showMsg("密码不能为空");
             return false;
         }

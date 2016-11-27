@@ -129,10 +129,10 @@ public class GeneralController extends BaseController {
 	@ResponseBody
 	public Object getPageBroadcast(
 			@RequestParam(value = "title", required = false) String title,
-			@RequestParam(value = "toCompany", required = false) String toCompany,
+			@RequestParam(value = "toCompany", required = true) String toCompany,
 			@RequestParam(value = "toLevel", required = false) String toLevel,
 			@RequestParam(value = "toUser", required = false) String toUser,
-			@RequestParam(value = "companyCode", required = true) String companyCode,
+			@RequestParam(value = "companyCode", required = false) String companyCode,
 			@RequestParam(value = "updater", required = false) String updater,
 			@RequestParam(value = "start", required = true) String start,
 			@RequestParam(value = "limit", required = true) String limit) {

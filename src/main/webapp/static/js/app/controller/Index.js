@@ -172,7 +172,7 @@ define([
     }
 
     function getGongGao() {
-        Ajax.get(APIURL + "/gene/broadcast/page", { start: 1, limit: 5, companyCode: COMPANYCODE })
+        Ajax.get(APIURL + "/gene/broadcast/page", { start: 1, limit: 5, toCompany: COMPANYCODE })
             .then(function(res) {
                 if (res.success && res.data.list.length) {
                     for (var i = 0, list = res.data.list, html = ""; i < list.length; i++) {
@@ -221,11 +221,7 @@ define([
             direction: 'horizontal',
             autoplay: 5000,
             pagination: '.swiper-pagination',
-            autoplayDisableOnInteraction: false,
-            effect: 'fade',
-            fade: {
-                crossFade: false,
-            }
+            autoplayDisableOnInteraction: false
         });
     }
 
