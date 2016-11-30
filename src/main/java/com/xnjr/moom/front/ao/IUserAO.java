@@ -193,4 +193,18 @@ public interface IUserAO {
 	 * @history:
 	 */
 	public Object addCoupon(String userId, String couponCode);
+
+	/**
+	 * 绑定手机号
+	 * 
+	 * @param userId
+	 * @param mobile
+	 * @param smsCaptcha
+	 * @param companyCode
+	 * @return
+	 * @create: 2016年11月29日 下午4:13:33 wulq
+	 * @history:
+	 */
+	public Object doBindMoblie(String userId, String mobile, String smsCaptcha,
+			String companyCode);
 }

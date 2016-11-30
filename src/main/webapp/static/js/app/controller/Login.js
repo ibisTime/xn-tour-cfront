@@ -34,6 +34,27 @@ define([
 
     function addListeners() {
         $("#loginBtn").on('click', loginAction);
+
+        $("#wechat").on("click", function() {
+            $("#loading").removeClass("hidden");
+            Ajax.get(APIURL + "/gene/pwd/list", {
+                    companyCode: COMPANYCODE,
+                    account: "AppID"
+                })
+                .then(function(res) {
+                    if (res.success && res.data.length) {
+                        var appid = res.data[0].password,
+                            redirect_uri = base.getDomain() + "/m/user/redirect.html";
+                        location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid + "&redirect_uri=" + redirect_uri + "&response_type=code&scope=snsapi_userinfo#wechat_redirect";
+                    } else {
+                        $("#loading").addClass("hidden");
+                        base.showMsg("非常抱歉，微信登录失败");
+                    }
+                }, function() {
+                    $("#loading").addClass("hidden");
+                    base.showMsg("非常抱歉，微信登录失败");
+                });
+        });
     }
 
     function validate_username() {
@@ -77,15 +98,17 @@ define([
             Ajax.post(url, param)
                 .then(function(response) {
                     if (response.success) {
-                        sessionStorage.setItem("user", true);
+                        localStorage.setItem("user", true);
+                        //不是微信登录
+                        localStorage.removeItem("kind");
                         base.goBackUrl("./user_info.html");
                     } else {
-                        sessionStorage.setItem("user", false);
+                        localStorage.setItem("user", false);
                         $("#loginBtn").removeAttr("disabled").val("登录");
                         base.showMsg(response.msg);
                     }
                 }, function() {
-                    sessionStorage.setItem("user", false);
+                    localStorage.setItem("user", false);
                     $("#loginBtn").removeAttr("disabled").val("登录");
                     base.showMsg("登录失败");
                 });

@@ -30,7 +30,7 @@ define([
                 });
                 cache[cache_url].then(function(res) {
                     if (res.timeout) {
-                        sessionStorage.removeItem("user");
+                        localStorage.removeItem("user");
                         location.href = "../user/login.html?return=" + encodeURIComponent(location.pathname + location.search);
                     }
                 }, function(res) {});
@@ -61,7 +61,7 @@ define([
             //var promise = $.post(url, param);
             promise.then(function(res) {
                 if (res.timeout) {
-                    sessionStorage.removeItem("user");
+                    localStorage.removeItem("user");
                     location.href = "../user/login.html?return=" + encodeURIComponent(location.pathname + location.search);
                 }
             }, function(res) {});

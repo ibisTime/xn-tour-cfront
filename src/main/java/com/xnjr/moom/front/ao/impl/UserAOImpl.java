@@ -12,6 +12,7 @@ import com.xnjr.moom.front.req.XN805043Req;
 import com.xnjr.moom.front.req.XN805047Req;
 import com.xnjr.moom.front.req.XN805049Req;
 import com.xnjr.moom.front.req.XN805076Req;
+import com.xnjr.moom.front.req.XN805153Req;
 import com.xnjr.moom.front.req.XN805160Req;
 import com.xnjr.moom.front.req.XN805162Req;
 import com.xnjr.moom.front.req.XN805163Req;
@@ -173,6 +174,18 @@ public class UserAOImpl implements IUserAO {
 		req.setCouponCode(couponCode);
 		req.setUserId(userId);
 		return BizConnecter.getBizData("805321", JsonUtils.object2Json(req),
+				Object.class);
+	}
+
+	@Override
+	public Object doBindMoblie(String userId, String mobile, String smsCaptcha,
+			String companyCode) {
+		XN805153Req req = new XN805153Req();
+		req.setUserId(userId);
+		req.setMobile(mobile);
+		req.setSmsCaptcha(smsCaptcha);
+		req.setCompanyCode(companyCode);
+		return BizConnecter.getBizData("805153", JsonUtils.object2Json(req),
 				Object.class);
 	}
 }

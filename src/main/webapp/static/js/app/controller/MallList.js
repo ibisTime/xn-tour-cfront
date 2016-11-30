@@ -103,26 +103,40 @@ define([
         }
         smallCont.html(sHtml);
         smallCode = nowSmallArr[0] && nowSmallArr[0].code;
-        var time = setInterval(function() {
-            if (scroller.css("transform") != "none") {
-                if ((sHtml && smallCont.find("a").length) || !sHtml) {
-                    clearInterval(time);
-                    if (smallCont.height() > 42) {
-                        $("#mallUD").removeClass("up-arrow").addClass("down-arrow").removeClass("hidden");
-                        smallCont.css("height", "47px");
-                        $('#mtop').removeClass("hp60p").addClass("hp100p");
-                    } else {
-                        $("#mallUD").removeClass("down-arrow").addClass("up-arrow").addClass("hidden");
-                        smallCont.css("height", "auto");
-                        if (!sHtml) {
-                            $('#mtop').addClass("hp60p").removeClass("hp100p");
-                        } else {
-                            $('#mtop').removeClass("hp60p").addClass("hp100p");
-                        }
-                    }
-                }
+        if (!sHtml || smallCont.height() <= 42) {
+            //sHtml && smallCont.removeClass("hidden");
+            $("#mallUD").addClass("up-arrow").removeClass("down-arrow").addClass("hidden");
+            smallCont.css("height", "auto");
+            if (!sHtml) {
+                $('#mtop').addClass("hp60p").removeClass("hp100p");
+            } else {
+                $('#mtop').removeClass("hp60p").addClass("hp100p");
             }
-        }, 100);
+        } else if (smallCont.height() > 42) {
+            $("#mallUD").removeClass("up-arrow").addClass("down-arrow").removeClass("hidden");
+            smallCont.css("height", "47px");
+            $('#mtop').removeClass("hp60p").addClass("hp100p");
+        }
+        // var time = setInterval(function() {
+        //     if (scroller.css("transform") != "none") {
+        //         if ((sHtml && smallCont.find("a").length) || !sHtml) {
+        //             clearInterval(time);
+        //             if (smallCont.height() > 42) {
+        //                 $("#mallUD").removeClass("up-arrow").addClass("down-arrow").removeClass("hidden");
+        //                 smallCont.css("height", "47px");
+        //                 $('#mtop').removeClass("hp60p").addClass("hp100p");
+        //             } else {
+        //                 $("#mallUD").removeClass("down-arrow").addClass("up-arrow").addClass("hidden");
+        //                 smallCont.css("height", "auto");
+        //                 if (!sHtml) {
+        //                     $('#mtop').addClass("hp60p").removeClass("hp100p");
+        //                 } else {
+        //                     $('#mtop').removeClass("hp60p").addClass("hp100p");
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }, 100);
     }
 
     function addCategory() {
@@ -136,6 +150,42 @@ define([
     }
 
     function addListeners(params) {
+        /**大类start */
+        $("#down").on("click", function() {
+            var me = $(this);
+            if (me.hasClass("down-arrow")) {
+                $("#allCont").removeClass("hidden");
+                me.removeClass("down-arrow").addClass("up-arrow");
+            } else {
+                $("#allCont").addClass("hidden");
+                me.removeClass("up-arrow").addClass("down-arrow");
+            }
+        });
+        $("#mall-mask").on("click", function() {
+            $("#down").click();
+        });
+        $("#allItem").on("click", "li", function() {
+            var code = $(this).attr("code");
+            $("#scroller").find("li[code='" + code + "']").click();
+            $("#down").click();
+        });
+        $("#scroller").on("click", "li", function() {
+            var me = $(this);
+            $("#mallWrapper").find(".current").removeClass("current");
+            me.addClass("current");
+            myScroll.scrollToElement(this);
+            bigCode = me.attr("code");
+            smallCode = "";
+            addSmallCont(bigCode);
+            first = true;
+            start = 1;
+            getProduces();
+            var allItem = $("#allItem");
+            allItem.find("li.current").removeClass("current");
+            allItem.find("li[code='" + bigCode + "']").addClass("current");
+        });
+        /**大类end */
+        /**小类start */
         $("#mallUD").on("click", function() {
             var me = $(this),
                 smallCont = $("#smallCont");
@@ -152,57 +202,6 @@ define([
         $("#mask").on("click", function() {
             $("#mallUD").click();
         })
-        $("#allItem").on("click", "li", function() {
-            var code = $(this).attr("code");
-            //$("#down").click();
-            $("#scroller").find("li[code='" + code + "']").click();
-        });
-        var time, scroller = $("#scroller"),
-            mallWrapper = $("#mallWrapper"); //winWidth
-        $("#scroller").on("click", "li", function() {
-            var me = $(this);
-            $("#mallWrapper").find(".current").removeClass("current");
-            me.addClass("current");
-            myScroll.scrollToElement(this);
-            // setTimeout(function() {
-            //     scroller.trigger("touchend", true);
-            // }, 150)
-            bigCode = me.attr("code");
-            smallCode = "";
-            addSmallCont(bigCode);
-            first = true;
-            start = 1;
-            getProduces();
-        });
-        // scroller.on("touchend", function(e, isclick) {
-        //     var scrollWidth = $("#scroller").width(),
-        //         now = scroller.find("li.current");
-        //     //time && clearTimeout(time);
-        //     if (isclick) {
-        //         if (now.offset().left < 0 && now.width() + 28 >= now.offset().left) {
-        //             mallWrapper.css("right", "0px");
-        //         }
-        //     } else {
-        //         if (-scroller.offset().left + winWidth + 1 >= scrollWidth) {
-
-        //             mallWrapper.css("right", "40px");
-
-        //         } else {
-        //             var nowLeft = now.offset().left;
-        //             if (nowLeft <= 1) {
-        //                 mallWrapper.css("right", "0px");
-        //             }
-        //         }
-        //     }
-
-        //     // time = setTimeout(function() {
-        //     //     if (scroller.offset().left < 0) {
-        //     //         mallWrapper.css("left", "0");
-        //     //     } else {
-        //     //         mallWrapper.css("left", "40px");
-        //     //     }
-        //     // }, 200);
-        // });
         $("#smallCont").on("click", "a", function() {
             var me = $(this);
             $("#smallCont").find(".subclass").removeClass("subclass");
@@ -216,9 +215,7 @@ define([
             $("#smallCont").css("height", "47px");
             $("#mask").addClass("hidden");
         });
-        $("#cont").on("click", ".display", function() {
-            location.href = "../operator/buy.html?code=" + $(this).attr("code");
-        });
+        /**小类end */
         $(window).on("scroll", function() {
             var me = $(this);
             if (canScrolling && ($(document).height() - $(window).height() - 10 <= $(document).scrollTop())) {
@@ -258,15 +255,16 @@ define([
                     html = "";
                 for (var i = 0; i < data.length; i++) {
                     if (i < 2) {
-                        html += '<div style="width:' + width + '" class="bg_fff display" code="' + data[i].code + '">';
+                        html += '<div style="width:' + width + '" class="bg_fff display">';
                     } else {
-                        html += '<div style="width:' + width + ';margin-top:' + width4 + 'px" class="bg_fff display" code="' + data[i].code + '">';
+                        html += '<div style="width:' + width + ';margin-top:' + width4 + 'px" class="bg_fff display">';
                     }
-                    html += '<img class="va-b" style="width:' + width + ';height:' + width + '" src="' + data[i].advPic + '">' +
-                        '<div class="pl6 pt4">' + data[i].name + '</div>' +
+                    html += '<a class="wp100" href="../operator/buy.html?code=' + data[i].code + '">' +
+                        '<img class="va-b" style="width:' + width + ';height:' + width + '" src="' + data[i].advPic + '">' +
+                        '<div class="pl6 pt4 t_3dot">' + data[i].name + '</div>' +
                         '<div class="price pl6 s_15">￥' + (+data[i].discountPrice / 1000).toFixed(2) +
                         '<del class="ml5 s_13 t_999"><span class="price-icon">¥</span><span class="font-num">' + (+data[i].originalPrice / 1000).toFixed(2) + '</span></del></div>' +
-                        '</div>';
+                        '</a></div>';
                 }
                 $("#cont").append(html);
                 start++;

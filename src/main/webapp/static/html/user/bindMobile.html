@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>绑定手机号</title>
+</head>
+
+<body class="bg_f5">
+    <div class="m20">
+        <div class="mt10 bg_fff login_input b_e6">
+            <div class="wp100 b_e6_b">
+                <div class="l_icon tc"><img class="va-m" src="../../images/m-icon.png" /></div>
+                <input placeholder="输入手机号码" type="tel" id="mobile" />
+            </div>
+            <div class="wp100 b_e6_b">
+                <div class="l_icon tc"><img class="va-m" src="../../images/v-icon.png" /></div>
+                <input type="number" placeholder="短信验证码" class="pr110p" id="verification" />
+                <div class="mobile-verification"><input type="button" class="smsBtn" id="getVerification" value="获取验证码" /></div>
+            </div>
+        </div>
+        <div class="mt30">
+            <div class="wp100">
+                <input type="button" class="lh3em wp100 bg_f64444 t_white b_radius4 s_15" value="设置" id="sbtn" />
+            </div>
+        </div>
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['app/controller/BindMobile']);
+    </script>
+</body>
+
+</html>

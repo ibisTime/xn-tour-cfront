@@ -25,11 +25,6 @@ import com.xnjr.moom.front.captcha.MyCaptchaService;
 import com.xnjr.moom.front.enums.ESmsBizType;
 import com.xnjr.moom.front.exception.BizException;
 
-/**
- * @author: miyb
- * @since: 2015-3-22 下午8:23:09
- * @history:
- */
 @Controller
 @RequestMapping(value = "/gene")
 public class GeneralController extends BaseController {
@@ -87,6 +82,13 @@ public class GeneralController extends BaseController {
 	@ResponseBody
 	public boolean sendFindTradePwdCode(@RequestParam("mobile") String mobile) {
 		sendPhoneCode(ESmsBizType.FINDTRADEPWD.getCode(), mobile);
+		return true;
+	}
+
+	@RequestMapping(value = "/bindmobile/send", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean bindMobileCode(@RequestParam("mobile") String mobile) {
+		sendPhoneCode(ESmsBizType.BINDMOBILE.getCode(), mobile);
 		return true;
 	}
 
@@ -155,5 +157,19 @@ public class GeneralController extends BaseController {
 			@RequestParam(value = "key", required = true) String key,
 			@RequestParam(value = "companyCode", required = true) String companyCode) {
 		return generalAO.getInfoByKey(key, companyCode);
+	}
+
+	// 列表查询密码记录(微信公众号配置)
+	@RequestMapping(value = "/pwd/list", method = RequestMethod.GET)
+	@ResponseBody
+	public Object queryPasswordList(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "account", required = true) String account,
+			@RequestParam(value = "companyCode", required = false) String companyCode) {
+		// 控制前端只能取appid
+		if (!account.equals("AppID")) {
+			return false;
+		}
+		return generalAO.queryPasswordList(type, account, companyCode);
 	}
 }

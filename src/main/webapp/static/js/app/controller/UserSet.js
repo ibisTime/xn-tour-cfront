@@ -7,6 +7,16 @@ define([
         if (!base.isLogin()) {
             location.href = "./login.html?return=" + base.makeReturnUrl();
         } else {
+            if (base.isWxLogin()) {
+                var mobile = "";
+                if (mobile = localStorage.getItem("m")) {
+                    $("#xgsjh").removeClass("hidden");
+                } else {
+                    $("#bdsjh").removeClass("hidden");
+                }
+            } else {
+                $("#dlmm, #xgsjh").removeClass("hidden");
+            }
             addListeners();
         }
     }

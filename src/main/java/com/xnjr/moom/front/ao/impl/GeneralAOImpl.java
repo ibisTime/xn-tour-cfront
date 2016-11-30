@@ -1,11 +1,14 @@
 package com.xnjr.moom.front.ao.impl;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.xnjr.moom.front.ao.IGeneralAO;
 import com.xnjr.moom.front.http.BizConnecter;
 import com.xnjr.moom.front.http.JsonUtils;
 import com.xnjr.moom.front.req.XN805130Req;
+import com.xnjr.moom.front.req.XN806031Req;
 import com.xnjr.moom.front.req.XN808917Req;
 
 @Service
@@ -51,4 +54,14 @@ public class GeneralAOImpl implements IGeneralAO {
 				Object.class);
 	}
 
+	@Override
+	public Map[] queryPasswordList(String type, String account,
+			String companyCode) {
+		XN806031Req req = new XN806031Req();
+		req.setAccount(account);
+		req.setCompanyCode(companyCode);
+		req.setType(type);
+		return BizConnecter.getBizData("806031", JsonUtils.object2Json(req),
+				Map[].class);
+	}
 }

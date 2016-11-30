@@ -44,9 +44,9 @@ define([
     }
 
     function addListeners() {
-        $("#category").on("click", ".category-item", function() {
-            location.href = "../detail/mall_list.html?b=" + $(this).attr("code");
-        });
+        // $("#category").on("click", ".category-item", function() {
+        //     location.href = "../detail/mall_list.html?b=" + $(this).attr("code");
+        // });
     }
 
     function getCategory() {
@@ -73,11 +73,11 @@ define([
                         }
                         html += '<div class="pt6 clearfix">';
                     }
-                    html += '<div class="wp25 fl p_r tc category-item" code="' + data[i].code + '">' +
+                    html += '<a href="../detail/mall_list.html?b=' + data[i].code + '" class="wp25 fl p_r tc category-item" code="' + data[i].code + '">' +
                         '<div style="width:' + cateWidth + 'px;height:' + cateWidth + 'px;border-radius:100%;overflow:hidden;margin:0 auto;">' +
                         '<img src="' + data[i].pic + '" style="width:' + cateWidth + 'px;height:' + cateWidth + 'px;"></div>' +
                         '<div class="index-category-name">' + data[i].name + '</div>' +
-                        '</div>';
+                        '</a>';
                 }
                 if (codes.length) {
                     getRqtj(codes[0]);
@@ -116,9 +116,9 @@ define([
                         } else {
                             html += '<div style="width:' + width + ';margin-top:' + width4 + 'px" class="bg_fff display">';
                         }
-                        html += '<a href="../operator/buy.html?code=' + list[i].code + '">' +
+                        html += '<a class="wp100" href="../operator/buy.html?code=' + list[i].code + '">' +
                             '<img style="width:' + width + ';height:' + width + '" src="' + list[i].advPic + '">' +
-                            '<div class="pl6 pt4">' + list[i].name + '</div>' +
+                            '<div class="pl6 pt4 t_3dot">' + list[i].name + '</div>' +
                             '<div class="price pl6 s_15">￥' + (+list[i].discountPrice / 1000).toFixed(2) +
                             '<del class="ml5 s_13 t_999"><span class="price-icon">¥</span><span class="font-num">' + (+list[i].originalPrice / 1000).toFixed(2) + '</span></del></div>' +
                             '</a></div>';
@@ -155,9 +155,9 @@ define([
                         } else {
                             html += '<div style="width:' + width + ';margin-top:' + width4 + 'px" class="bg_fff display">';
                         }
-                        html += '<a href="../operator/buy.html?code=' + list[i].code + '">' +
+                        html += '<a class="wp100" href="../operator/buy.html?code=' + list[i].code + '">' +
                             '<img style="width:' + width + ';height:' + width + '" src="' + list[i].advPic + '">' +
-                            '<div class="pl6 pt4">' + list[i].name + '</div>' +
+                            '<div class="pl6 pt4 t_3dot">' + list[i].name + '</div>' +
                             '<div class="price pl6 s_15">￥' + (+list[i].discountPrice / 1000).toFixed(2) +
                             '<del class="ml5 s_13 t_999"><span class="price-icon">¥</span><span class="font-num">' + (+list[i].originalPrice / 1000).toFixed(2) + '</span></del></div>' +
                             '</a></div>';

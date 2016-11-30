@@ -35,8 +35,17 @@ define([
                 $("#loadI").hide();
                 if (response.success) {
                     var data = response.data;
-                    $("#mobile").text(data.mobile);
-                    sessionStorage.setItem("m", data.mobile);
+                    if (base.isWxLogin()) {
+                        $("#mobile").text(data.nickname);
+                        data.userExt.photo && $("#photo").attr("src", data.userExt.photo);
+                        if (data.mobile) {
+                            localStorage.setItem("m", data.mobile);
+                        } else {
+                            localStorage.removeItem("m");
+                        }
+                    } else {
+                        $("#mobile").text(data.mobile);
+                    }
                 } else {
                     base.showMsg("暂时无法获取用户信息！");
                 }

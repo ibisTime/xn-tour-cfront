@@ -189,4 +189,16 @@ public class MemberController extends BaseController {
 		userAO.addCoupon(this.getSessionUser().getUserId(), couponCode);
 		return true;
 	}
+
+	// 绑定手机号
+	@RequestMapping(value = "/mobile/bind", method = RequestMethod.POST)
+	@ResponseBody
+	public Object doBindMobile(@RequestParam("mobile") String mobile,
+			@RequestParam("smsCaptcha") String smsCaptcha,
+			@RequestParam("companyCode") String companyCode) {
+
+		return userAO.doBindMoblie(this.getSessionUser().getUserId(), mobile,
+				smsCaptcha, companyCode);
+
+	}
 }

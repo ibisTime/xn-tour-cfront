@@ -180,15 +180,21 @@ define([
                 $("head").append('<link rel="shortcut icon" type="image/ico" href="' + icon + '">');
             }
         },
+        isWxLogin: function() {
+            if (Base.isLogin() && localStorage.getItem("kind") == "wx") {
+                return true;
+            }
+            return false;
+        },
         isLogin: function() {
-            return sessionStorage.getItem("user") ? true : false;
+            return localStorage.getItem("user") ? true : false;
         },
         getUser: function(flag) {
             return Ajax.get(APIURL + '/user');
         },
         //清除sessionStorage中和用户相关的数据
         clearSessionUser: function() {
-            sessionStorage.removeItem("user");
+            localStorage.removeItem("user");
         },
         //登出
         logout: function() {
@@ -204,12 +210,16 @@ define([
         getBanner: function(code, location) {
             return Ajax.get(APIURL + '/navigate/banner/list', { "companyCode": code, "location": location });
         },
-        getCompanyByUrl: function() {
+        getDomain: function() {
             var url = location.href;
             var idx = url.indexOf("/m/");
             if (idx != -1) {
                 url = url.substring(0, idx);
             }
+            return url
+        },
+        getCompanyByUrl: function() {
+            var url = Base.getDomain();
             return Ajax.get(APIURL + '/gene/byUrl', { "url": url })
                 .then(function(res) {
                     if (res.success && !$.isEmptyObject(res.data)) {

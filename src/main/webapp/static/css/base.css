@@ -1293,6 +1293,12 @@ textarea {
     overflow: hidden;
 }
 
+.t_3dot {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .t_bold {
     font-weight: bold;
 }
@@ -1528,6 +1534,10 @@ textarea {
 
 .wp27p {
     width: 27px;
+}
+
+.wp40p {
+    width: 40px;
 }
 
 .wp44p {
@@ -1827,6 +1837,8 @@ textarea {
 
 .flex {
     display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
 }
 
@@ -1866,9 +1878,13 @@ textarea {
 }
 
 .flex-c {
-    -webkit-box-align: center;
     -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
     justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
     align-items: center;
 }
 
@@ -2064,8 +2080,8 @@ table td {
 
 .l_icon {
     display: inline-block;
-    width: 70px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     position: absolute;
     left: 0;
     top: 0;
@@ -2080,7 +2096,7 @@ table td {
 }
 
 .login_input {
-    line-height: 60px;
+    line-height: 50px;
 }
 
 .login_input>div {
@@ -2089,13 +2105,12 @@ table td {
 
 .login_input input {
     width: 100%;
-    padding-left: 70px;
+    padding-left: 50px;
     font-size: 1.4rem;
-    line-height: 1.4rem;
 }
 
 .login_input img {
-    width: 26px;
+    width: 20px;
 }
 
 .r-login {
@@ -2804,10 +2819,14 @@ footer {
     z-index: 10;
     text-align: center;
     height: 42px;
-    border-right: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     right: 0;
+}
+
+.mall-up-down.down-arrow {
+    border-bottom: 1px solid #e6e6e6;
 }
 
 .up-arrow {
@@ -2820,7 +2839,7 @@ footer {
 
 .small-up-down {
     position: absolute;
-    width: 34px;
+    width: 40px;
     height: 34px;
     background-repeat: no-repeat;
     background-position: 50% 50%;
@@ -2842,17 +2861,17 @@ footer {
     line-height: 42px;
     position: fixed;
     top: 0;
-    left: 40px;
+    left: 0;
     background: #fff;
-    z-index: 100;
+    z-index: 1000;
     width: 100%;
 }
 
 .ml-top-item {
-    line-height: 4em;
+    line-height: 3em;
     width: 100%;
     position: fixed;
-    z-index: 100;
+    z-index: 1000;
     top: 42px;
 }
 
@@ -2910,4 +2929,10 @@ footer {
 
 .z_index999 {
     z-index: 999 !important;
+}
+
+.dottedtop {
+    border-top: 0.8px #aaa solid;
+    flex: 1;
+    display: block;
 }

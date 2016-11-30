@@ -174,18 +174,20 @@ define([
         Ajax.post(url, param)
             .then(function(response) {
                 if (response.success) {
-                    sessionStorage.setItem("user", true);
+                    localStorage.setItem("user", true);
+                    //不是微信登录
+                    localStorage.removeItem("kind");
                     base.goBackUrl("./user_info.html");
                 } else {
                     base.showMsg("注册成功！");
-                    sessionStorage.setItem("user", false);
+                    localStorage.setItem("user", false);
                     setTimeout(function() {
                         location.href = "./login.html?return=" + base.getReturnParam();
                     }, 1000);
                 }
             }, function() {
                 base.showMsg("注册成功！");
-                sessionStorage.setItem("user", false);
+                localStorage.setItem("user", false);
                 setTimeout(function() {
                     location.href = "./login.html?return=" + base.getReturnParam();
                 }, 1000);
