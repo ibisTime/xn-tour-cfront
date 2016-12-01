@@ -1571,8 +1571,16 @@ textarea {
     height: 100%;
 }
 
+.hp40p {
+    height: 40px;
+}
+
 .hp42p {
     height: 42px;
+}
+
+.hp84p {
+    height: 84px;
 }
 
 .hp1em {
