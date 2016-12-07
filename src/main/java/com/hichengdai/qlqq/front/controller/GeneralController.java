@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hichengdai.qlqq.front.ao.IDictAO;
 import com.hichengdai.qlqq.front.ao.IGeneralAO;
 import com.hichengdai.qlqq.front.ao.ISmsAO;
-import com.hichengdai.qlqq.front.base.ControllerContext;
 import com.hichengdai.qlqq.front.captcha.MyCaptchaService;
 import com.hichengdai.qlqq.front.enums.ESmsBizType;
-import com.hichengdai.qlqq.front.exception.BizException;
 
 @Controller
 @RequestMapping(value = "/gene")
@@ -44,15 +42,7 @@ public class GeneralController extends BaseController {
 
 	@RequestMapping(value = "/register/send", method = RequestMethod.POST)
 	@ResponseBody
-	public boolean sendRegisterCode(@RequestParam("mobile") String mobile,
-			@RequestParam("captcha") String captcha) {
-		String sessionId = ControllerContext.getRequest().getSession().getId();
-		boolean flag = imageCaptchaService.validateResponseForID(sessionId,
-				captcha);
-		imageCaptchaService.removeCaptcha(sessionId);
-		if (!flag) { // 验证码正确
-			throw new BizException("83099901", "图片验证码不正确");
-		}
+	public boolean sendRegisterCode(@RequestParam("mobile") String mobile) {
 		sendPhoneCode(ESmsBizType.REGISTER.getCode(), mobile);
 		return true;
 	}
@@ -113,7 +103,7 @@ public class GeneralController extends BaseController {
 		return dictAO.queryDictList(type, parentKey, dkey);
 	}
 
-	// 数据字典
+	// 系统参数
 	@RequestMapping(value = "/sys/config", method = RequestMethod.GET)
 	@ResponseBody
 	public Object getSysConfig(
@@ -166,10 +156,6 @@ public class GeneralController extends BaseController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "account", required = true) String account,
 			@RequestParam(value = "companyCode", required = false) String companyCode) {
-		// 控制前端只能取appid
-		if (!account.equals("AppID")) {
-			return false;
-		}
 		return generalAO.queryPasswordList(type, account, companyCode);
 	}
 }
