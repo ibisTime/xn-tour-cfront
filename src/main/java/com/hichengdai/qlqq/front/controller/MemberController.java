@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hichengdai.qlqq.front.ao.IAccountAO;
 import com.hichengdai.qlqq.front.ao.ISmsAO;
 import com.hichengdai.qlqq.front.ao.IUserAO;
-import com.hichengdai.qlqq.front.base.ControllerContext;
 import com.hichengdai.qlqq.front.captcha.MyCaptchaService;
 import com.hichengdai.qlqq.front.exception.BizException;
 import com.hichengdai.qlqq.front.localToken.TokenDO;
@@ -54,16 +53,8 @@ public class MemberController extends BaseController {
 			@RequestParam("mobile") String mobile,
 			@RequestParam("loginPwd") String loginPwd,
 			@RequestParam("smsCaptcha") String smsCaptcha,
-			@RequestParam("captcha") String captcha,
 			@RequestParam(value = "companyCode", required = false) String companyCode,
 			@RequestParam(value = "userReferee", required = false) String userReferee) {
-		String sessionId = ControllerContext.getRequest().getSession().getId();
-		boolean flag = imageCaptchaService.validateResponseForID(sessionId,
-				captcha);
-		imageCaptchaService.removeCaptcha(sessionId);
-		if (!flag) { // 验证码正确
-			throw new BizException("83099901", "图片验证码不正确");
-		}
 		return userAO.doRegister(mobile, loginPwd, userReferee, smsCaptcha,
 				companyCode);
 	}
