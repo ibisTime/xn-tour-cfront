@@ -19,12 +19,12 @@
 <context:property-placeholder
 		ignore-resource-not-found="true"  ignore-unresolvable="true" location="classpath*:application.properties" />
 	<!-- 扫描package进行注解 -->
-	<context:component-scan base-package="com.xnjr" >
+	<context:component-scan base-package="com.hichengdai.qlqq" >
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>
        	<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"></context:exclude-filter>
 	</context:component-scan>
 	
-	<bean id="applicationProperties" class="com.xnjr.moom.front.base.ApplicationProperties" />
+	<bean id="applicationProperties" class="com.hichengdai.qlqq.front.base.ApplicationProperties" />
 	
 	<!-- 404页面 -->
 	<mvc:view-controller path="/404" view-name="error/404"/>
@@ -33,8 +33,8 @@
 	
 	<!-- 验证码配置 start -->
 	<bean id="fastHashMapCaptchaStore" class="com.octo.captcha.service.captchastore.FastHashMapCaptchaStore"/>
-	<bean id="captchaEngineEx" class="com.xnjr.moom.front.captcha.MyCaptchaEngine"/>
-    <bean id="imageCaptchaService" class="com.xnjr.moom.front.captcha.MyCaptchaService">
+	<bean id="captchaEngineEx" class="com.hichengdai.qlqq.front.captcha.MyCaptchaEngine"/>
+    <bean id="imageCaptchaService" class="com.hichengdai.qlqq.front.captcha.MyCaptchaService">
         <constructor-arg type="com.octo.captcha.service.captchastore.CaptchaStore" index="0">
             <ref bean="fastHashMapCaptchaStore"/>
         </constructor-arg>
@@ -56,7 +56,7 @@
 	<!-- redis start -->
 	<context:property-placeholder  ignore-unresolvable="true" location="classpath*:/redis.properties" />
 	<!-- 扫描注解Bean -->
- 	<context:component-scan base-package="com.xnjr.moom.front.localToken">
+ 	<context:component-scan base-package="com.hichengdai.qlqq.front.localToken">
 	</context:component-scan>	
 	<!-- 初始化属性文件 -->
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
@@ -77,6 +77,6 @@
 		<property name="connectionFactory" ref="connectionFactory" />
 	</bean>
 
-	<bean id="userDAO" class="com.xnjr.moom.front.localToken.UserDAOImpl" />
+	<bean id="userDAO" class="com.hichengdai.qlqq.front.localToken.UserDAOImpl" />
 	<!-- redis end -->
 </beans>

@@ -16,7 +16,7 @@
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd"
 	default-autowire="default">
 	<!-- 扫描package进行注解 -->
-	<context:component-scan base-package="com.xnjr">
+	<context:component-scan base-package="com.hichengdai.qlqq">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:include-filter>
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"></context:include-filter>
 	</context:component-scan>
@@ -36,7 +36,7 @@
 	</bean>
 	<!-- 转json所支持的头信息类型  -->
    	<bean id="messageConverter"
-		class="com.xnjr.moom.front.json.JsonConverter">
+		class="com.hichengdai.qlqq.front.json.JsonConverter">
 		<property name="supportedMediaTypes">
 			<list>
 				<value>application/json;charset=UTF-8</value>
@@ -92,7 +92,7 @@
 		</property>
 	</bean>
 	<!-- 视图找不到不会有异常信息 -->
-	<bean id="handlerExceptionResolver" class="com.xnjr.moom.front.exception.ExceptionResolver">
+	<bean id="handlerExceptionResolver" class="com.hichengdai.qlqq.front.exception.ExceptionResolver">
 		<property name="warnLogCategory" value="INFO" />
 		<property name="defaultStatusCode" value="500" />
 		<property name="defaultErrorView" value="error/error" />
@@ -119,18 +119,18 @@
 		<property name="defaultLocale" value="zh_CN" />
 	</bean>
 	
-	<bean id="sessionProvider" class="com.xnjr.moom.front.session.HttpSessionProvider" />
+	<bean id="sessionProvider" class="com.hichengdai.qlqq.front.session.HttpSessionProvider" />
 	
 	<!-- 会话管理器
-	com.xnjr.moom.front.localToken.TokenContextInterceptor
+	com.hichengdai.qlqq.front.localToken.TokenContextInterceptor
 	 -->
-	<bean id="sessionInterceptor" class="com.xnjr.moom.front.session.SessionContextInterceptor" >
+	<bean id="sessionInterceptor" class="com.hichengdai.qlqq.front.session.SessionContextInterceptor" >
 		<property name="sessionProvider" ref="sessionProvider" />
 	</bean>
 	
 	<mvc:interceptors>
 		 <!-- 拦截HttpServletRequest、 HttpServletResponse -->
-		<bean class="com.xnjr.moom.front.base.ContextInterceptor"/>
+		<bean class="com.hichengdai.qlqq.front.base.ContextInterceptor"/>
 		
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 			<!-- 改变语言时所用的参数名称 -->
