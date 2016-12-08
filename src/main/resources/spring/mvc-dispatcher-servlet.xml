@@ -139,15 +139,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/gene/smscaptcha/send" />
 			<mvc:mapping path="/user/**" />
-			<mvc:mapping path="/company/**" />
 			<mvc:mapping path="/account/**" />
-			<mvc:mapping path="/project/**" />
-			<mvc:mapping path="/subject/**" />
-			<mvc:mapping path="/business/**" />
-			<mvc:mapping path="/operators/**" />
-			<mvc:mapping path="/operator/**" />
-			
-			<mvc:exclude-mapping path="/operator/buy.htm"/>
 			
 			<!-- 注册相关 start  -->
 			<mvc:exclude-mapping path="/gene/register/send" />
@@ -156,14 +148,13 @@
 		 	<!-- 注册相关 end 
 		 	登录登出相关 start  -->
 		 	<mvc:exclude-mapping path="/user/login"/>
+		 	<mvc:exclude-mapping path="/user/login-t"/>
 		 	<mvc:exclude-mapping path="/user/logout"/>
 		 	<!-- 登录登出相关 end 
 		 	找回登录密码相关 start  -->
 		 	<mvc:exclude-mapping path="/user/loginpwd/find"/>
 		 	<mvc:exclude-mapping path="/gene/findloginpwd/send" />
 		 	<mvc:exclude-mapping path="/user/loginpwd/find"/>
-		 	<mvc:exclude-mapping path="/user/login.htm"/>
-		 	<mvc:exclude-mapping path="/user/findPwd.htm"/>
 		 <!-- 	找回登录密码相关 end  -->
 			<ref bean="sessionInterceptor" />
 		</mvc:interceptor>
