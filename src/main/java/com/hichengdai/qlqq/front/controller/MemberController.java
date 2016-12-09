@@ -75,7 +75,7 @@ public class MemberController extends BaseController {
 		setSessionUser(sessionUser);
 		String userId = (String) res.get("userId");
 		TokenDO tokenDO = new TokenDO();
-		// tokenDO.setUserId(userId);
+		tokenDO.setUserId(userId);
 		tokenDO.setTokenId(pwdUserId(userId));
 		tokenDO.setIsExist("0");
 		return tokenDO;
@@ -105,7 +105,7 @@ public class MemberController extends BaseController {
 		setSessionUser(sessionUser);
 
 		TokenDO tokenDO = new TokenDO();
-		// tokenDO.setUserId(userId);
+		tokenDO.setUserId(userId);
 		tokenDO.setTokenId(pwdUserId(userId));
 		tokenDO.setIsExist("1");
 		tokenDO.setMobile((String) (map.get("mobile")));
