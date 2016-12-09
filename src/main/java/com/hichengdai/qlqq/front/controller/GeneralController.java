@@ -116,30 +116,6 @@ public class GeneralController extends BaseController {
 				start, limit, orderColumn, orderDir);
 	}
 
-	// 分页查询广播
-	@RequestMapping(value = "/broadcast/page", method = RequestMethod.GET)
-	@ResponseBody
-	public Object getPageBroadcast(
-			@RequestParam(value = "title", required = false) String title,
-			@RequestParam(value = "toCompany", required = true) String toCompany,
-			@RequestParam(value = "toLevel", required = false) String toLevel,
-			@RequestParam(value = "toUser", required = false) String toUser,
-			@RequestParam(value = "companyCode", required = false) String companyCode,
-			@RequestParam(value = "updater", required = false) String updater,
-			@RequestParam(value = "start", required = true) String start,
-			@RequestParam(value = "limit", required = true) String limit) {
-		return generalAO.getPageBroadcast(title, toCompany, toLevel, toUser,
-				companyCode, updater, start, limit);
-	}
-
-	// 详情查询广播
-	@RequestMapping(value = "/broadcast/info", method = RequestMethod.GET)
-	@ResponseBody
-	public Object getBroadcastInfo(
-			@RequestParam(value = "code", required = true) String code) {
-		return generalAO.getBroadcastInfo(code);
-	}
-
 	// 根据key查询配置
 	@RequestMapping(value = "/info/key", method = RequestMethod.GET)
 	@ResponseBody

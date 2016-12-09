@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.hichengdai.qlqq.front.ao.IGeneralAO;
 import com.hichengdai.qlqq.front.http.BizConnecter;
 import com.hichengdai.qlqq.front.http.JsonUtils;
-import com.hichengdai.qlqq.front.req.XN805130Req;
 import com.hichengdai.qlqq.front.req.XN806031Req;
 import com.hichengdai.qlqq.front.req.XN808917Req;
 
@@ -18,31 +17,6 @@ public class GeneralAOImpl implements IGeneralAO {
 	public Object getCompanyByUrl(String url) {
 		return BizConnecter.getBizData("806015",
 				JsonUtils.string2Json("domain", url), Object.class);
-	}
-
-	@Override
-	public Object getPageBroadcast(String title, String toCompany,
-			String toLevel, String toUser, String companyCode, String updater,
-			String start, String limit) {
-		XN805130Req req = new XN805130Req();
-		req.setCompanyCode(companyCode);
-		req.setLimit(limit);
-		req.setStart(start);
-		req.setStatus("1");
-		req.setTitle(title);
-		req.setToCompany(toCompany);
-		req.setToLevel(toLevel);
-		req.setToUser(toUser);
-		req.setType("1");
-		req.setUpdater(updater);
-		return BizConnecter.getBizData("805130", JsonUtils.object2Json(req),
-				Object.class);
-	}
-
-	@Override
-	public Object getBroadcastInfo(String code) {
-		return BizConnecter.getBizData("805132",
-				JsonUtils.string2Json("code", code), Object.class);
 	}
 
 	@Override
