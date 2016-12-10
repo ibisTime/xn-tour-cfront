@@ -3,7 +3,6 @@ package com.hichengdai.qlqq.front.exception;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Properties;
@@ -25,10 +24,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.hichengdai.qlqq.front.base.BaseRuntimeException;
 
 /**
- * 功能说明: 异常统一拦截器 继承springmvc 提供的统一异常处理类 在此基础上增加 ajax请求场景和国际化支持
- * 异常处理类型如下：
- * 1、前台抛出的基于BaseRuntimeException的异常
- * 2、其它异常
+ * 功能说明: 异常统一拦截器 继承springmvc 提供的统一异常处理类 在此基础上增加 ajax请求场景和国际化支持 异常处理类型如下：
+ * 1、前台抛出的基于BaseRuntimeException的异常 2、其它异常
  * 以上异常统一包装成BaseRuntimeException，方便前台统一获取
  * <p>
  * 系统版本: v1.0。0<br>
@@ -38,151 +35,155 @@ import com.hichengdai.qlqq.front.base.BaseRuntimeException;
  */
 
 public class ExceptionResolver extends SimpleMappingExceptionResolver {
-    private static final Logger logger = LoggerFactory
-        .getLogger(ExceptionResolver.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(ExceptionResolver.class);
 
-    @Autowired
-    MessageSource messageSource;
-    
-    private String defaultErrorView;
+	@Autowired
+	MessageSource messageSource;
+
+	private String defaultErrorView;
 	private Properties exceptionMappings;
-    private Class<?>[] excludedExceptions;
+	private Class<?>[] excludedExceptions;
 
-    @Override
-    protected ModelAndView doResolveException(HttpServletRequest request,
-            HttpServletResponse response, Object handler, Exception ex) {
-        /** 统一转换成BaseRuntimeException,主要是转换运行时异常为SyetemException*/
-        BaseRuntimeException exception = exceptionWapper(ex);
-        /** 错误信息转换：如果是体系内异常则使用错误号寻找错误信息，体系外的不处理 */
-        convertErrorMessage(request, exception);
-        /** 如果请求是ajax的，则将异常信息字符串直接输出 */
-        if (isAjaxRequest(request, handler)) {
-            return doResolveAjaxException(response, exception);
-        }
-        /** 使用spring mvc自带的异常处理 */
-        // 设置异常信息到Message对象中
-        exception.toMessage();
-        return super.doResolveException(request, response, handler, exception);
-    }
+	@Override
+	protected ModelAndView doResolveException(HttpServletRequest request,
+			HttpServletResponse response, Object handler, Exception ex) {
+		/** 统一转换成BaseRuntimeException,主要是转换运行时异常为SyetemException */
+		BaseRuntimeException exception = exceptionWapper(ex);
+		/** 错误信息转换：如果是体系内异常则使用错误号寻找错误信息，体系外的不处理 */
+		convertErrorMessage(request, exception);
+		/** 如果请求是ajax的，则将异常信息字符串直接输出 */
+		// if (isAjaxRequest(request, handler)) {
+		return doResolveAjaxException(response, exception);
+		// }
+		/** 使用spring mvc自带的异常处理 */
+		// 设置异常信息到Message对象中
+		// exception.toMessage();
+		// return super.doResolveException(request, response, handler,
+		// exception);
+	}
 
-    /**
-     * 判断是否是ajax请求
-     * 
-     * @param request
-     * @param handler
-     * @return
-     */
-    private boolean isAjaxRequest(HttpServletRequest request, Object handler) {
-        if (request.getHeader("accept").indexOf("application/json") > -1) {
-            return true;
-        }
-        if (request.getHeader("X-Requested-With") == null) {
-            return false;
-        }
-        if (request.getHeader("X-Requested-With").indexOf("XMLHttpRequest") > -1) {
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * 判断是否是ajax请求
+	 * 
+	 * @param request
+	 * @param handler
+	 * @return
+	 */
+	private boolean isAjaxRequest(HttpServletRequest request, Object handler) {
+		if (request.getHeader("accept").indexOf("application/json") > -1) {
+			return true;
+		}
+		if (request.getHeader("X-Requested-With") == null) {
+			return false;
+		}
+		if (request.getHeader("X-Requested-With").indexOf("XMLHttpRequest") > -1) {
+			return true;
+		}
+		return false;
+	}
 
-    /**
-     * 把除BaseException和 DataValidationException异常包装为 BaseRuntimeException
-     * 作者:xuebj07252 
-     * 创建时间:2014-3-26 下午12:18:24
-     * @param exception
-     * @return
-     */
-    private BaseRuntimeException exceptionWapper(Exception exception) {
-        if (exception instanceof BindException) {
-            BaseRuntimeException ex = new DataValidationException();
-            BindException bindException = (BindException) exception;
-            for (FieldError filed : bindException.getFieldErrors()) {
-                ex.addErrorMessage(filed.getField(), filed.getDefaultMessage());
-            }
-            return ex;
-        }
-        if (isNotBaseRuntimeException(exception)) {
-            BaseRuntimeException ex = new SystemException(
-                "sys.default.error.info", "服务器发生内部错误，请稍后再试或报告给网站管理员。");
-            return ex;
-        }
-        return (BaseRuntimeException) exception;
-    }
+	/**
+	 * 把除BaseException和 DataValidationException异常包装为 BaseRuntimeException
+	 * 作者:xuebj07252 创建时间:2014-3-26 下午12:18:24
+	 * 
+	 * @param exception
+	 * @return
+	 */
+	private BaseRuntimeException exceptionWapper(Exception exception) {
+		if (exception instanceof BindException) {
+			BaseRuntimeException ex = new DataValidationException();
+			BindException bindException = (BindException) exception;
+			for (FieldError filed : bindException.getFieldErrors()) {
+				ex.addErrorMessage(filed.getField(), filed.getDefaultMessage());
+			}
+			return ex;
+		}
+		if (isNotBaseRuntimeException(exception)) {
+			BaseRuntimeException ex = new SystemException(
+					"sys.default.error.info", "服务器发生内部错误，请稍后再试或报告给网站管理员。");
+			return ex;
+		}
+		return (BaseRuntimeException) exception;
+	}
 
-    /**
-     * 异常信息国际化支持。出去DataValidationException 其他都需要做信息处理
-     * @param request
-     * @param ex
-     */
-    private void convertErrorMessage(HttpServletRequest request,
-            BaseRuntimeException ex) {
-        Locale locale = RequestContextUtils.getLocale(request);
-        if (isNotDataValidationException(ex)) {
-            if (null != ex.getExceptions()) {
-                for (Object er : ex.getExceptions()) {
-                    ErrorMessage error = (ErrorMessage) er;
-                    if (StringUtils.isNotBlank(error.getNo())) {
-                        String message = messageSource.getMessage(
-                            error.getNo(), null, error.getInfo(), locale);
-                        error.setInfo(message);
-                    }
-                }
-            }
-        }
-    }
+	/**
+	 * 异常信息国际化支持。出去DataValidationException 其他都需要做信息处理
+	 * 
+	 * @param request
+	 * @param ex
+	 */
+	private void convertErrorMessage(HttpServletRequest request,
+			BaseRuntimeException ex) {
+		Locale locale = RequestContextUtils.getLocale(request);
+		if (isNotDataValidationException(ex)) {
+			if (null != ex.getExceptions()) {
+				for (Object er : ex.getExceptions()) {
+					ErrorMessage error = (ErrorMessage) er;
+					if (StringUtils.isNotBlank(error.getNo())) {
+						String message = messageSource.getMessage(
+								error.getNo(), null, error.getInfo(), locale);
+						error.setInfo(message);
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     * ajax时，写出异常信息到response中
-     * @param response
-     * @param ex
-     * @return
-     */
-    private ModelAndView doResolveAjaxException(HttpServletResponse response,
-            BaseRuntimeException ex) {
-        setResponse(response);
-        try {
-            PrintWriter writer = response.getWriter();
-            String jsonStr = JacksonUtils.toJsonString(ex, ex.packProperties());
-            if (StringUtils.isNotBlank("jsonStr")) {
-                writer.write(jsonStr);
-            }
-            writer.flush();
-        } catch (IOException e) {
-            logger.error("处理ajax请求 返回异常信息失败:" + e);
-        }
-        return new ModelAndView();
-    }
+	/**
+	 * ajax时，写出异常信息到response中
+	 * 
+	 * @param response
+	 * @param ex
+	 * @return
+	 */
+	private ModelAndView doResolveAjaxException(HttpServletResponse response,
+			BaseRuntimeException ex) {
+		setResponse(response);
+		try {
+			PrintWriter writer = response.getWriter();
+			String jsonStr = JacksonUtils.toJsonString(ex, ex.packProperties());
+			if (StringUtils.isNotBlank("jsonStr")) {
+				writer.write(jsonStr);
+			}
+			writer.flush();
+		} catch (IOException e) {
+			logger.error("处理ajax请求 返回异常信息失败:" + e);
+		}
+		return new ModelAndView();
+	}
 
-    /**
-     * 设置response 编码及头信息
-     * @param response
-    */
-    private void setResponse(HttpServletResponse response) {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json;charset=UTF-8");
-    }
+	/**
+	 * 设置response 编码及头信息
+	 * 
+	 * @param response
+	 */
+	private void setResponse(HttpServletResponse response) {
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json;charset=UTF-8");
+	}
 
-    private Boolean isNotBaseRuntimeException(Exception exception) {
-        return !isBaseRuntimeException(exception);
-    }
+	private Boolean isNotBaseRuntimeException(Exception exception) {
+		return !isBaseRuntimeException(exception);
+	}
 
-    private Boolean isNotDataValidationException(Exception exception) {
-        return !isDataValidationException(exception);
-    }
+	private Boolean isNotDataValidationException(Exception exception) {
+		return !isDataValidationException(exception);
+	}
 
-    private Boolean isBaseRuntimeException(Exception exception) {
-        return exception instanceof BaseRuntimeException;
-    }
+	private Boolean isBaseRuntimeException(Exception exception) {
+		return exception instanceof BaseRuntimeException;
+	}
 
-    private Boolean isDataValidationException(Exception exception) {
-        return exception instanceof DataValidationException;
-    }
-    
-    /**
-     * session过期url带return参数
-     * */
-    @Override
-    protected String determineViewName(Exception ex, HttpServletRequest request) {
+	private Boolean isDataValidationException(Exception exception) {
+		return exception instanceof DataValidationException;
+	}
+
+	/**
+	 * session过期url带return参数
+	 * */
+	@Override
+	protected String determineViewName(Exception ex, HttpServletRequest request) {
 
 		String viewName = null;
 		if (this.excludedExceptions != null) {
@@ -199,7 +200,9 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
 				try {
 					viewName += "?return=" + request.getRequestURI();
 					if (request.getQueryString() != null) {
-						viewName += "%3F" + URLEncoder.encode(request.getQueryString(), "UTF-8");
+						viewName += "%3F"
+								+ URLEncoder.encode(request.getQueryString(),
+										"UTF-8");
 					}
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
@@ -210,14 +213,15 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
 		// Return default error view else, if defined.
 		if (viewName == null && this.defaultErrorView != null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Resolving to default view '" + this.defaultErrorView + "' for exception of type [" +
-						ex.getClass().getName() + "]");
+				logger.debug("Resolving to default view '"
+						+ this.defaultErrorView + "' for exception of type ["
+						+ ex.getClass().getName() + "]");
 			}
 			viewName = this.defaultErrorView;
 		}
 		return viewName;
-	
-    }
+
+	}
 
 	public String getDefaultErrorView() {
 		return defaultErrorView;

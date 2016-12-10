@@ -17,7 +17,7 @@ import com.hichengdai.qlqq.front.ao.INewsAO;
  * @history:
  */
 @Controller
-@RequestMapping(value = "/complaints")
+@RequestMapping(value = "/news")
 public class NewsController extends BaseController {
 	@Autowired
 	INewsAO newsAO;
