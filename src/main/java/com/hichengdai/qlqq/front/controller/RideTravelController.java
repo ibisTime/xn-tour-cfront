@@ -109,13 +109,13 @@ public class RideTravelController extends BaseController {
 			@RequestParam("label2") String label2,
 			@RequestParam("label3") String label3,
 			@RequestParam("status") String status,
+			@RequestParam(value = "publisher", required = false) String publisher,
 			@RequestParam("start") String start,
 			@RequestParam("limit") String limit,
 			@RequestParam(value = "orderColumn", required = false) String orderColumn,
 			@RequestParam(value = "orderDir", required = false) String orderDir) {
 		return rideTravelAO.queryPage(title, label1, label2, label3, status,
-				this.getSessionUser().getUserId(), start, limit, orderColumn,
-				orderDir);
+				publisher, start, limit, orderColumn, orderDir);
 	}
 
 	// 1.11、 详情查询骑游记
