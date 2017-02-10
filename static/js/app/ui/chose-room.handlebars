@@ -1,0 +1,17 @@
+{{#each items}}
+    <div class="croom-item" data-code="{{code}}">
+        <div class="croom-left">
+            <div class="chose-icon circle-icon"></div>
+        </div>
+        <div class="croom-middle">
+            <div class="croom-middle-top t_norwrap">标准大床房</div>
+            <div class="croom-middle-center t_norwrap">
+                {{formatDesc description}}
+            </div>
+            <div class="croom-middle-bottom t_norwrap">
+                剩余：<span class="room-count">{{remain}}间</span>
+            </div>
+        </div>
+        <div class="croom-right">¥{{formatZeroMoney price}}</div>
+    </div>
+{{/each}}

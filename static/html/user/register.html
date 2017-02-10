@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <link rel="stylesheet" href="../../css/mobiscroll.core.css">
+    <title>注册</title>
+</head>
+
+<body class="bg_f3f3f3">
+	<form class="register-wrap" id="registForm">
+		<div class="wp100 bg_fff">
+			<div class="reg-item b-b-e9 reg-item-user">
+				<div class="p_r wp100">
+					<input type="text" placeholder="请输入手机号码" id="mobile" name="mobile" class="reg-input"/>
+				</div>
+			</div>
+			<div class="reg-item b-b-e9 reg-item-captcha">
+				<div class="p_r wp100">
+					<input type="text" placeholder="请输入验证码" id="verification" name="verification" class="reg-input"/>
+				</div>
+				<input type="button" value="获取验证码" id="getVerification" class="captcha-btn">
+				<!-- #dddddd -->
+			</div>
+			<div class="reg-item b-b-e9 reg-item-password">
+				<div class="p_r wp100">
+					<input type="password" placeholder="请输入密码" id="password" name="password" class="reg-input"/>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="special-button">
+		<input type="button" id="registerBtn" value="注册"/>
+		<div class="reg-b-tip">
+			<a class="reg-bl-tip" href="#" id="toLogin">已有账号？去登录</a>
+		</div>
+	</div>
+    <link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/user/Register']);
+    </script>
+</body>
+
+</html>

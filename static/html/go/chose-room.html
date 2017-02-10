@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <link rel="stylesheet" href="../../css/mobiscroll.core.css">
+    <title>详情</title>
+</head>
+
+<body class="bg_f3f3f3">
+    <div class="swiper-container wp100 top-banner" id="swiper">
+        <div class="swiper-wrapper">
+        </div>
+    </div>
+    <div class="chose-date-wrap">
+        <div class="chose-date">
+            <div class="chose-date-item">
+                <input id="choseStartDate" class="spec-top-date" data-target="startDate" data-val="1" data-target1="startSpan"/>
+                <span class="chose-hotel-tip">入住时间</span>
+                <span class="chose-date-time" id="startSpan"></span>
+                <input id="startDate" type="hidden" />
+            </div>
+            <div class="chose-date-item">
+                <input id="choseEndDate" class="spec-top-date1" data-target="endDate" data-val="1" data-target1="endSpan"/>
+                <span class="chose-hotel-tip">离开时间</span>
+                <span class="chose-date-time" id="endSpan"></span>
+                <input id="endDate" type="hidden" />
+            </div>
+            <div class="total-days">共<span id="totalDays">0</span>晚</div>
+        </div>
+    </div>
+    <div id="wrapper" class="room-wrapper">
+        <div id="scroll">
+            <div id="content" class="bg_fff cr-content">
+                <!-- <div class="croom-item active">
+                    <div class="croom-left">
+                        <div class="chose-icon circle-icon"></div>
+                    </div>
+                    <div class="croom-middle">
+                        <div class="croom-middle-top t_norwrap">标准大床房</div>
+                        <div class="croom-middle-center t_norwrap">
+                            <span>不含早</span><span class="plr4">|</span><span>舒适型</span>
+                        </div>
+                        <div class="croom-middle-bottom t_norwrap">
+                            剩余：<span class="room-count">2间</span>
+                        </div>
+                    </div>
+                    <div class="croom-right">¥2340</div>
+                </div> -->
+            </div>
+            <div id="pullUp" class="idle">
+                <div class="pullUpLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                    <div class="bounce4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fix-b1">
+        <div href="http://kefu.easemob.com/webim/im.html?tenantId=26192" id="kefuIcon" class="kefu-icon"></div>
+        <div class="croom-buy"><input type="button" class="croom-buy-btn" id="buyBtn" value="立即购买"></div>
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script src="../../js/lib/date/mobiscroll.core.js"></script>
+    <script src="../../js/lib/date/mobiscroll.datetime.js"></script>
+    <script src="../../js/lib/date/mobiscroll.i18n.zh.js"></script>
+    <script data-loader>
+        require(['app/controller/go/ChoseRoom']);
+    </script>
+</body>
+
+</html>

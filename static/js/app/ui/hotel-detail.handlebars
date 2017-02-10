@@ -1,0 +1,14 @@
+{{#each items}}    
+    <div class="plun-cont-item flex">
+        <div class="plun-left">
+            <div class="plun-left-wrap">
+                <img class="center-img wp100" src="{{formatImage pic 1}}" />
+            </div>
+        </div>
+        <div class="plun-right">
+            <div class="plun-right-title">{{username}}</div>
+            <div class="plun-right-cont twoline-ellipsis">{{content}}</div>
+            <div class="plun-right-datetime">{{formateDateTime datetime}}</div>
+        </div>
+    </div>
+{{/each}}
