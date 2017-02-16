@@ -660,7 +660,7 @@ define(['jquery'], function($) {
 
 
         /** 当前叠加高度 */
-        Popup.zIndex = 1024;
+        Popup.zIndex = 9999;
 
 
         /** 顶层浮层的实例 */

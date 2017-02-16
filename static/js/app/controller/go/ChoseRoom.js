@@ -21,6 +21,7 @@ define([
         roomCode = "",
         pic_suffix = '?imageMogr2/auto-orient/thumbnail/!375x180r';
     var roomTmpl = __inline("../../ui/chose-room.handlebars");
+    var returnUrl = base.getReturnParam();
 
     init();
     var hmType2 = {}, ssType = {};
@@ -32,7 +33,7 @@ define([
     function getHotelAndRoom(){
         loading.createLoading("加载中...");
         $.when(
-            base.getDictList("hm-type2"),
+            base.getDictList("hh_type"),
             base.getDictList("ss_type")
         ).then(function (res1, res2) {
             if(res1.success && res2.success){
@@ -158,8 +159,8 @@ define([
     function addListener() {
         $("#buyBtn").on("click", function(){
             if(start_date && end_date && roomCode){
-                location.href = '../user/submit-order.html?hotelcode=' + hotelCode + 
-                    '&roomcode=' + roomCode + '&start=' + start_date + '&end=' + end_date;
+                location.href = './submit-order.html?hotelcode=' + hotelCode + 
+                    '&roomcode=' + roomCode + '&start=' + start_date + '&end=' + end_date + '&return=' + returnUrl;
             }else if(!start_date){
                 base.showMsg("未选择入住时间");
             }else if(!end_date){
@@ -222,7 +223,6 @@ define([
             $("#totalDays").html( base.calculateDays(startDate, date) );
         });
     }
-
 
     function hidePullUp(){
         $("#pullUp").css("visibility", "hidden");

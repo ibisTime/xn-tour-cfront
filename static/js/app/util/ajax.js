@@ -2,9 +2,6 @@ define(["jquery"], function($) {
     var cache = {};
 
     function getUrl(code) {
-        // if (/^(805)/.test(code) || "802182" == code) {
-        //     return '/wxapi';
-        // }
         return "/api";
     }
 
@@ -80,7 +77,7 @@ define(["jquery"], function($) {
             token && (param["token"] = token);
             userId && (param["userId"] = userId);
             param["systemCode"] = SYSTEM_CODE;
-            param["companyCode"] = COMPANY_CODE;
+            // param["companyCode"] = COMPANY_CODE;
 
             var sendUrl = getUrl(code) + "/api";
             var sendParam = {
@@ -102,8 +99,8 @@ define(["jquery"], function($) {
             return cache[cache_url].then(function(res) {
                 if (res.errorCode == "4") {
                     clearSessionUser();
-                    // location.href = "../user/login.html?return=" + encodeURIComponent(location.pathname + location.search);
-                    // base.showMsg("登录超时");
+                    base.showMsg("登录超时");
+                    location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
                 }
                 var result = {};
                 res.errorCode == "0" ? (result.success = true, result.data = res.data) :

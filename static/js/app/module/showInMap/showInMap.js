@@ -56,6 +56,7 @@ define([
                     map.addOverlay(marker);             // 将标注添加到地图中
                     //marker.disableDragging();           // 不可拖拽
                     map.enableScrollWheelZoom(true);
+                    first = false;
                 }
                 
             }

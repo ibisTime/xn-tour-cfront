@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>详情</title>
+</head>
+
+<body class="bg_f3f3f3">
+    <div class="order-small-item">订单信息</div>
+    <div class="p10 bg_fff b-b-ed">
+    	<div class="font-99-m">订单号：<span id="code"></span></div>
+    	<div class="font-99-m ptb6">下单时间：<span id="createDatetime"></span></div>
+    	<div class="font-99-m">订单状态：<span id="status"></span></div>
+    </div>
+    <div class="order-small-item">线路信息</div>
+    <div class="content order-detail-content">
+    	<div class="item">
+	        <a class="block_wp100" id="orderA">
+	            <div class="item-c-div item-l">
+	                <img class="center-img" id="hotelPic">
+	            </div>
+	            <div class="item-c">
+	                <div class="item-c-top t_norwrap" id="name"></div>
+	                <div class="item-c-center item-c-center1 t_norwrap" id="addr"></div>
+
+	                <div class="item-c-bottom t_norwrap" id="type"></div>
+	            </div>
+	            <div class="item-c-div item-r item-r2">¥<span class="fs-15" id="amount">2340</span></div>
+	        </a>
+	    </div>
+    </div>
+    <div class="order-small-item">买家嘱托</div>
+    <div class="p10 bg_fff b-b-ed">
+    	<div class="font-66-m" id="applyNote"></div>
+    </div>
+    <div class="hp50"></div>
+    <div class="fix-b p0 hidden order-hotel-detail-btn0">
+        <input type="button" value="取消" id="cancelBtn" class="order-detail-btn order-detail-cancel" />
+        <input type="button" value="付款" id="payBtn" class="order-detail-btn order-detail-pay" />
+    </div>
+    <div class="fix-b hidden order-hotel-detail-btn1">
+        <input type="button" value="退款" id="tuikBtn" class="default-big-btn" />
+    </div>
+    <div class="fix-b hidden order-hotel-detail-btn2">
+        <input type="button" value="退款撤回" id="tuikchBtn" class="default-big-btn" />
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/user/OrderLineDetail']);
+    </script>
+</body>
+
+</html>

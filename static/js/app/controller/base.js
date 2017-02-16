@@ -89,6 +89,11 @@ define([
                     Base.showMsg("定位失败");
                     errFun && errFun();
                 }else{
+                    //直辖市
+                    if(area == ""){
+                        area = city;
+                        city = province;
+                    }
                     sessionStorage.setItem("province", province);
                     sessionStorage.setItem("city", city);
                     sessionStorage.setItem("area", area);
@@ -115,9 +120,15 @@ define([
             }
             return maskLen > 0 ? (header + mask.substring(0, maskLen + (space ? maskLen / 4 : 0)) + (space ? ' ' : '') + tailer) : info;
         },
-        getUrlParam: function(name) {
+        formatDate: function(date, format){
+            return date ? new Date(date).format(format) : "--";
+        },
+        getImg: function(pic){
+            return pic ? (PIC_PREFIX + pic + THUMBNAIL_SUFFIX) : "";
+        },
+        getUrlParam: function(name, locat) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            var r = window.location.search.substr(1).match(reg);
+            var r = (locat || window.location.search).substr(1).match(reg);
             if (r != null) return decodeURIComponent(r[2]);
             return '';
         },
@@ -132,6 +143,9 @@ define([
                     return array[i];
                 }
             }
+        },
+        formatMoney: function(s, t) {
+            return $.isNumeric(s) ? (+s / 1000).toFixed(t || 2) : "--";
         },
         fZeroMoney: function(s) {
             if(!$.isNumeric(s))
@@ -190,10 +204,29 @@ define([
             return name1 == name2 || name2.indexOf(name1) != -1 || name1.indexOf(name2) != -1 || false
         },
         getPic: function(pic, suffix){
-            return PIC_PREFIX + pic + (suffix || "");
+            if(pic){
+                pic = pic.split(/\|\|/)[0];
+            }
+            if(!/^http/i.test(pic)){
+                pic = PIC_PREFIX + pic + (suffix || THUMBNAIL_SUFFIX);
+            }
+            return pic;
+        },
+        getAvatar: function(pic){
+            var defaultAvatar = __inline("../images/default-avatar.png");
+            return pic ? (PIC_PREFIX + pic + THUMBNAIL_SUFFIX) : defaultAvatar;
+        },
+        getWXAvatar: function(pic){
+            var defaultAvatar = __inline("../images/default-avatar.png");
+            var suffix = '?imageMogr2/auto-orient/thumbnail/!65x65r';
+            if(!pic){
+                pic = defaultAvatar;
+            }else if(!/^http/i.test(pic)){
+                pic = PIC_PREFIX + pic + suffix;
+            }
+            return pic;
         },
         initLocation: function initLocation(initFun, errFun) {
-            loading.createLoading("定位中...");
             var province = sessionStorage.getItem("province") || "",
                 city = sessionStorage.getItem("city") || "",
                 area = sessionStorage.getItem("area") || "",
@@ -201,6 +234,7 @@ define([
                 latitude = sessionStorage.getItem("latitude", latitude);
 
             if (!province) {
+                loading.createLoading("定位中...");
                 var geolocation = new BMap.Geolocation();
                 geolocation.getCurrentPosition(function(r) {
                     if (this.getStatus() == BMAP_STATUS_SUCCESS) {
@@ -226,7 +260,6 @@ define([
                     }
                 }, { enableHighAccuracy: true });
             }else{
-                loading.hideLoading();
                 initFun();
             }
         },
@@ -277,8 +310,20 @@ define([
                 d.close().remove();
             }, time || 1500);
         },
-        makeReturnUrl: function() {
-            return encodeURIComponent(location.pathname + location.search);
+        makeReturnUrl: function(param) {
+            var url = location.pathname + location.search;
+            if(param){
+                var str = "";
+                for(var n in param){
+                    str += "&" + n + "=" + param[n];
+                }
+                if(/\?/i.test(url)){
+                    url = url + str;
+                }else{
+                    url = url + "?" + str.substr(1, str.length);
+                }
+            }
+            return encodeURIComponent(url);
         },
         getReturnParam: function() {
             var re = Base.getUrlParam("return");
@@ -302,17 +347,32 @@ define([
             }
         },
         isLogin: function() {
-            return sessionStorage.getItem("user") ? true : false;
+            return !!sessionStorage.getItem("user");
         },
-        getUser: function() {
-            return Ajax.get("805056");
+        getUser: function(refresh) {
+            return Ajax.get("805056", {}, !refresh)
+                .then(function(res){
+                    if(res.success){
+                        Base.setSessionUserInfo(res.data);
+                    }
+                    return res;
+                }, function(res){
+                    return res;
+                });
         },
         getUserId: function() {
-            return sessionStorage.getItem("user");
+            return sessionStorage.getItem("user") || "";
         },
         setSessionUser: function(res) {
             sessionStorage.setItem("user", res.data.userId);
             sessionStorage.setItem("tk", res.data.token);
+        },
+        setSessionUserInfo: function(data){
+            data && sessionStorage.setItem("u_info", JSON.stringify(data));
+        },
+        getSessionUserInfo: function(){
+            var info = sessionStorage.getItem("u_info");
+            return info && $.parseJSON(info) || {};
         },
         //清除sessionStorage中和用户相关的数据
         clearSessionUser: function() {
@@ -322,6 +382,16 @@ define([
         //登出
         logout: function() {
             Base.clearSessionUser();
+        },
+        hidePullUp: function(){
+            $("#pullUp").css("visibility", "hidden");
+        },
+
+        showPullUp: function(){
+            $("#pullUp").css("visibility", "visible");
+        },
+        goLogin: function(){
+            location.href = "../user/login.html?return=" + base.makeReturnUrl();
         }
     };
     Base.addIcon();

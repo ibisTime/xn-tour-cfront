@@ -3,16 +3,17 @@ define([
     'app/util/ajax',
     'iScroll',
     'app/module/foot/foot',
-    'app/util/handlebarsHelpers'
-], function(base, Ajax, iScroll, Foot, Handlebars) {
+    'app/util/handlebarsHelpers',
+    'app/module/loading/loading'
+], function(base, Ajax, iScroll, Foot, Handlebars, loading) {
 
     var hotelTmpl = __inline("../../ui/go-hotel.handlebars");
         // outtingTmpl = __inline("../../ui/go-outting.handlebars"),
-        // foodTmpl = __inline("../../ui/go-food.handlebars");
+    var foodTmpl = __inline("../../ui/go-food.handlebars");
 
     var index = base.getUrlParam("idx") || 0;
 
-    var myScroll, province, city, area, longitude, latitude;
+    var myScroll;
 
     var config = {
         outting: {
@@ -50,17 +51,20 @@ define([
         outting: {
             isEnd: false,
             isLoading: false,
-            first: true
+            first: true,
+            module: []
         },
         hotel: {
             isEnd: false,
             isLoading: false,
-            first: true
+            first: true,
+            module: []
         },
         food: {
             isEnd: false,
             isLoading: false,
-            first: true
+            first: true,
+            module: []
         }
     }
 
@@ -73,15 +77,79 @@ define([
         base.initLocation(initConfig);
     }
 
+    function getModuleNav(){
+        loading.createLoading();
+        Ajax.get("806052", {type: 3})
+            .then(function(res){
+                if(res.success){
+                    var data = res.data;
+                    var html0 = "", html1 = "", html2 = "";
+                    $.each(data, function(i, d){
+                        //出行-酒店
+                        if(d.location == "depart_hotel" || d.location == "depart_deli" || d.location == "goout"){
+                            var url = d.url;
+                            if(/^page:/.test(url)){
+                                url = url.replace(/^page:/, "../")
+                                         .replace(/\?/, ".html?");
+                                if(!/\?/.test(url)){
+                                    url = url + ".html";
+                                }
+                            }
+                            //酒店
+                            if(d.location == "depart_hotel"){
+                                config1.hotel.module.push(d);
+                                html1 +='<li class="nav-li nav-li-4">'+
+                                        '<a class="wp100 show" href="'+url+'">'+
+                                            '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
+                                            '<div class="nav-li-text">'+d.name+'</div>'+
+                                        '</a>'+
+                                    '</li>';
+                            //美食
+                            }else if(d.location == "depart_deli"){
+                                config1.food.module.push(d);
+                                html2 +='<li class="nav-li nav-li-4">'+
+                                        '<a class="wp100 show" href="'+url+'">'+
+                                            '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
+                                            '<div class="nav-li-text">'+d.name+'</div>'+
+                                        '</a>'+
+                                    '</li>';
+                            //出行
+                            }else if(d.location == "goout"){
+                                config1.outting.module.push(d);
+                                html0 +='<li class="nav-li nav-li-4">'+
+                                        '<a class="wp100 show" href="'+url+'">'+
+                                            '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
+                                            '<div class="nav-li-text">'+d.name+'</div>'+
+                                        '</a>'+
+                                    '</li>';
+                            }
+                        }
+                    });
+                    // $("#top-content").find(".J_Content0").html(html0);
+                    $("#top-content").find(".J_Content1").html(html1);
+                    $("#top-content").find(".J_Content2").html(html2);
+                    Handlebars.registerHelper('formatCategory', function(category, options){
+                        return base.findObj(config1.hotel.module, "code", category)["name"];
+                    });
+                    $("#top-nav").find(".go-top-li").eq(index).click();
+                }else{
+                    base.showMsg(res.msg || "加载失败");
+                    loading.hideLoading();
+                }
+            }, function(){
+                loading.hideLoading();
+                base.showMsg("加载失败");
+            });
+    }
+
     function initConfig(){
 
-        config.outting.province = config.hotel.province = config.food.province = province = sessionStorage.getItem("province") || "";
-        config.outting.city = config.hotel.city = config.food.city = city = sessionStorage.getItem("city") || "";
-        config.outting.area = config.hotel.area = config.food.area = area = sessionStorage.getItem("area") || "";
-        config.outting.longitude = config.hotel.longitude = config.food.longitude = longitude = sessionStorage.getItem("longitude", longitude);
-        config.outting.latitude = config.hotel.latitude = config.food.latitude = latitude = sessionStorage.getItem("latitude", latitude);
-
-        $("#top-nav").find(".go-top-li").eq(index).click();
+        config.outting.province = config.hotel.province = config.food.province = sessionStorage.getItem("province") || "";
+        config.outting.city = config.hotel.city = config.food.city = sessionStorage.getItem("city") || "";
+        config.outting.area = config.hotel.area = config.food.area = sessionStorage.getItem("area") || "";
+        config.outting.longitude = config.hotel.longitude = config.food.longitude = sessionStorage.getItem("longitude") || "";
+        config.outting.latitude = config.hotel.latitude = config.food.latitude = sessionStorage.getItem("latitude") || "";
+        getModuleNav();
     }
 
 
@@ -99,10 +167,13 @@ define([
     function pullDownAction () {
         var idx = $("#top-nav").find(".go-top-li.active").index();
         if(idx == 0){
+            config1.outting.isEnd = false;
             getOuttingData(true);
         }else if(idx == 1){
+            config1.hotel.isEnd = false;
             getHotelData(true);
         }else if(idx == 2){
+            config1.food.isEnd = false;
             getFoodData(true);
         }
     }
@@ -129,7 +200,7 @@ define([
                 } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
                     $pullDownEl.removeClass("flip");
                     this.minScrollY = -pullDownOffset;
-                } else if (this.y - 20 < this.maxScrollY) {
+                } else if (this.y - 120 < this.maxScrollY) {
                     getMoreData();
                 }
             },
@@ -144,11 +215,12 @@ define([
 
     function getOuttingData(refresh){
         config1.outting.isEnd = true;
+        loading.hideLoading();
         myScroll.refresh();
     }
 
     function getHotelData(refresh){
-        if(!config1.hotel.isLoading){
+        if(!config1.hotel.isLoading || refresh){
             config1.hotel.isLoading = true;
             showPullUp();
             config.hotel.start = refresh && 1 || config.hotel.start;
@@ -174,19 +246,60 @@ define([
                     }
                     config1.hotel.first = false;
                     config1.hotel.isLoading = false;
+                    config1.hotel.isEnd = true;
                     myScroll.refresh();
+                    loading.hideLoading();
                 }, function(){
                     config1.hotel.first = false;
+                    config1.hotel.isEnd = true;
                     config1.hotel.isLoading = false;
                     $("#content").find(".J_Content1").html('<div class="item-error">附近暂无酒店</div>');
                     myScroll.refresh();
+                    loading.hideLoading();
                 });
         }
     }
 
     function getFoodData(refresh) {
-        config1.food.isEnd = true;
-        myScroll.refresh();
+
+        if(!config1.food.isLoading || refresh){
+            config1.food.isLoading = true;
+            showPullUp();
+            config.food.start = refresh && 1 || config.food.start;
+            Ajax.get("618070", config.food, !refresh)
+                .then(function (res) {
+                    if(res.success && res.data.list.length){
+                        var data = res.data.list;
+                        if(data.length < config.food.limit){
+                            config1.food.isEnd = true;
+                            hidePullUp();
+                        }else{
+                            showPullUp();
+                        }
+                        $("#content").find(".J_Content2")
+                            [refresh ? "html" : "append"](foodTmpl({items: data}));
+                        config.food.start++;
+                    }else{
+                        if(config1.food.first){
+                            $("#content").find(".J_Content2").html('<div class="item-error">附近暂无美食</div>');
+                        }
+                        hidePullUp();
+                        res.msg && base.showMsg(res.msg);
+                    }
+                    config1.food.first = false;
+                    config1.food.isLoading = false;
+                    config1.food.isEnd = true;
+                    myScroll.refresh();
+                    loading.hideLoading();
+                }, function(){
+                    config1.food.first = false;
+                    config1.food.isEnd = true;
+                    config1.food.isLoading = false;
+                    $("#content").find(".J_Content2").html('<div class="item-error">附近暂无美食</div>');
+                    myScroll.refresh();
+                    loading.hideLoading();
+                });
+        }
     }
 
     function addListener() {
@@ -196,7 +309,7 @@ define([
             $("#top-content").find(".top-nav").removeClass("active");
             $("#top-nav").find(".active").removeClass("active");
             $(".J_Content" + idx).addClass("active");
-            myScroll.refresh();
+            // myScroll.refresh();
             if(idx == 0){
                 if(config1.outting.first){
                     getOuttingData();
@@ -225,7 +338,7 @@ define([
                     showPullUp();
                 }
             }
-        })
+        });
     }
 
     function hidePullUp(){

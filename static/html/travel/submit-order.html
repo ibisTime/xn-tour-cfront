@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>旅游</title>
+</head>
+
+<body class="bg_f3f3f3">
+    <div class="order-small-item" id="jdxx-t">酒店信息</div>
+    <div class="content order-detail-content" id="jdxx">
+        <div class="item">
+            <a class="block_wp100" id="orderA">
+                <div class="item-c-div item-l">
+                    <img class="center-img" id="hotelPic">
+                </div>
+                <div class="item-c">
+                    <div class="item-c-top t_norwrap" id="name"></div>
+                    <div class="item-c-center item-c-center1 t_norwrap" id="addr"></div>
+                    <div class="item-c-center order-item-center t_norwrap" id="datetime"></div>
+                    <div class="item-c-bottom t_norwrap" id="type"></div>
+                </div>
+                <div class="item-c-div item-r item-r2">¥<span class="fs-15" id="amount"></span></div>
+            </a>
+        </div>
+    </div>
+	<form id="submitForm" class="wp100">
+		<div class="bg_fff plr10 mt10 pb10 b-tb-ed">
+            <div class="submit-textarea-wrap">
+                <div class="p_r wp100">
+                    <textarea class="submit-textarea" name="applyNote" id="applyNote"></textarea>
+                    <div class="placeholder-text" id="applyPlaceholder">有什么特殊要求，写在这里！</div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="hp50"></div>
+    <div class="fix-b2 font-9e">
+        合计：<span class="normal_ffa800">¥</span><span class="big_ffa800" id="price"></span>
+        <input type="button" id="submitBtn" value="提交订单" class="small-btn-ffa800" />
+    </div>
+	<link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/travel/SubmitOrder']);
+    </script>
+</body>
+
+</html>

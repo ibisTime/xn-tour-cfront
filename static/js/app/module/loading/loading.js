@@ -10,6 +10,7 @@ define([
     }
     return {
         createLoading: function(msg){
+            msg = msg || "加载中...";
             if(_hasLoading()){
                 $(".loading-module-wrap")
                     .find(".loading-module-text").text(msg)

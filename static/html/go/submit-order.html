@@ -4,7 +4,7 @@
 <head>
     <link rel="import" href="../head.html?__inline">
     <link rel="stylesheet" href="../../css/mobiscroll.core.css">
-    <title>详情</title>
+    <title>确认房间信息</title>
 </head>
 
 <body class="bg_f3f3f3">
@@ -36,19 +36,24 @@
         <div class="bg_fff mt10">
             <div class="submit-item">
                 房间数
+                <!-- <div class="submit-item-cont pr40_i">
+                    <div class="p_r hp100">
+                        <select class="submit-item-select" id="quantity" name="quantity"></select>
+                        <span class="font-33" id="quaty"></span>
+                    </div>
+                </div>
+                <div class="submit-item-arrow"></div> -->
                 <div class="submit-item-cont pr40_i">
                     <div class="p_r">
-                        <select class="submit-item-select" id="quantity" name="quantity"></select>
+                        <input type="number" class="order-input font-33" placeholder="请输入房间数" id="quantity" name="quantity">
                     </div>
-                    <span class="font-33" id="quaty"></span>
                 </div>
-                <div class="submit-item-arrow"></div>
             </div>
             <div class="submit-item">
                 入住人
                 <div class="submit-item-cont pr40_i">
                     <div class="p_r">
-                        <input type="text" class="order-input font-33" placeholder="请输入入住人姓名" id="people" name="people">
+                        <input type="text" class="order-input font-33" placeholder="请输入入住人姓名" id="checkInName" name="checkInName">
                     </div>
                 </div>
             </div>
@@ -56,15 +61,15 @@
                 手机号
                 <div class="submit-item-cont pr40_i">
                     <div class="p_r">
-                        <input type="text" class="order-input font-33" placeholder="用于接收通知" id="mobile" name="mobile">
+                        <input type="text" class="order-input font-33" placeholder="用于接收通知" id="checkInMobile" name="checkInMobile">
                     </div>
                 </div>
             </div>
         </div>
-        <div class="bg_fff plr10 mt10 pb10 b-tb-ed">
+        <div id="areaWrap" class="bg_fff plr10 mt10 pb10 b-tb-ed">
             <div class="submit-textarea-wrap">
                 <div class="p_r wp100">
-                    <textarea class="submit-textarea" id="applyNote"></textarea>
+                    <textarea class="submit-textarea" name="applyNote" id="applyNote"></textarea>
                     <div class="placeholder-text" id="applyPlaceholder">有什么特殊要求，写在这里！</div>
                 </div>
             </div>
@@ -78,7 +83,7 @@
     <link rel="import" href="../footer.html?__inline">
     <script src="//api.map.baidu.com/api?v=2.0&ak=GtNrG008U04GONzKSDHiW70GxurUUhlU&s=1"></script>
     <script data-loader>
-        require(['app/controller/user/SubmitOrder']);
+        require(['app/controller/go/SubmitOrder']);
     </script>
 </body>
 

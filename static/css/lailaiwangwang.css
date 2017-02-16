@@ -1,0 +1,121 @@
+/*设置*/
+.green{color:#06cdb8;}
+.fs11{font-size:11px;}
+.fs12{font-size:12px;}
+.fs13{font-size:13px;}
+.fs14{font-size:14px;}
+.fs15{font-size:15px;}
+.fs16{font-size:16px;}
+.fs18{font-size:18px;}
+.fs30{font-size:30px;}
+.lh44{line-height: 44px;}
+.ba{background-color:#ffffff;}
+.bc{background-color:#f3f3f3;}
+.ptb18{padding-top:18px;padding-bottom:18px;}
+.bb{border-bottom:0.5px solid #ededed;}
+.lh50{line-height:50px;}
+.p-a{position:absolute;}
+.p-r{position:relative;}
+
+.but{line-height:40px;background-color:#06cdb8;color:#ffffff;border-radius:6px;}
+.more{width:8px; position: absolute;right: 10px;top: 50%;margin-top: -7.5px;}
+
+/*账号安全*/
+.head-img{width:44px;position: absolute;right: 28px;top: 50%;margin-top: -22px;}
+.lh60{line-height:60px;}
+.coc{color:#cccccc;}
+.co9{color:#999999;}
+.wid{width:90px;}
+.pl80{padding-left:80px;}
+
+/*投诉反馈*/
+.text-h{height:130px;}
+.a-rea{background-color:transparent;}
+.pt8{padding-top:8px;}
+
+/*修改手机号码*/
+.delete{width:20px; position: absolute;right: 10px;top: 50%;margin-top: -10px;}
+.gain{width:75px;height:30px;background:#06cdb8;border-radius:3px;line-height: 30px;float: right;margin-top: 10px;
+margin-right: 10px;color:#ffffff;}
+
+/*编写游记*/
+.take{width:19px; position: absolute;right: 10px;top: 50%;margin-top: -7.75px;}
+
+.pl12{padding-left:16px;}
+.upload{}
+.shan{width:18px; position: absolute;top: -8px; right: 0;}
+
+/*不能编写*/
+.nopay{width:56px;}
+.pt100{padding-top:100px;}
+.nopay-f{color:#c8c8c8;}
+
+/*我的积分*/
+.point{background-color:#06CDB8;color:#ffffff;}
+.hig54{height:54px;}
+.lh54{line-height:54px;}
+.yellow{color:#ffcc00;}
+
+/*我的游记*/
+
+.image{width:100px; height:75px;}
+.check-in{float:right;color:#06cdb8;}
+.hig99{height:99px;}
+.ptb12{padding-top:12px;padding-bottom:12px;}
+.black{color:#000000;}
+.travel-font{    padding-right: 10px;width: 100%;left: 0; padding-left: 120px;}
+.hp{height:100%;}
+.travel-time{position:absolute;bottom:12px;}
+.add{width:44px;position: fixed;bottom: 30px;left: 50%;margin-left: -22px;}
+
+
+/*旅游专线*/
+.border{border-top:0.5px solid #ededed;border-bottom:0.5px solid #ededed;}
+.price{color:#ffa800;}
+.first{background:url(../images/%E8%B5%B7@2x.png) no-repeat ;background-size:15px; background-position: left center;padding-left:20px;}
+.last{background:url(../images/%E8%BE%BE@2x.png) no-repeat ;background-size:15px; background-position: left center;padding-left:20px;}
+.hig71{height:71px;}
+.xxx:after{
+	display: inline-block;
+	width:0;
+	height:100%;
+	vertical-align:middle;
+	content: "";
+}
+
+/*拼车*/
+.release{width:99px;line-height:40px;background-color:#ffa800;color:#ffffff;border-radius:6px; margin-top:5px;}
+.hig50{height:50px;}
+
+/*拼车提示*/
+.check{line-height:40px;background-color:#06cdb8;color:#ffffff;border-radius:6px; margin-top:30px;}
+.gou{width:44px;}
+.plr60{padding-left:60px;padding-right:60px;}
+
+/*专线详情*/
+.zhida{background:url(../images/%E7%9B%B4%E8%BE%BE.png) no-repeat center;}
+.Station-add{background:url(../images/%E5%AE%9A%E4%BD%8D%E5%9C%B0%E5%9D%80@2x.png) no-repeat left center;background-size:15px;padding-left:20px;}
+.writ{background:url(../images/%E8%B4%AD%E7%A5%A8%E6%95%B0%E9%87%8F@2x.png) no-repeat left center;background-size:15px;padding-left:20px;}
+.jian{width:25px;}
+.jia{width:25px;}
+.chat{position:fixed;bottom:64px;right:0;}
+
+/*每日签到*/
+.re-turn{background:url(../images/%E6%AF%8F%E6%97%A5%E7%AD%BE%E5%88%B0%EF%BC%8D%E8%BF%94%E5%9B%9E@2x.png) no-repeat 10px center;background-size:9px;}
+.sign-in{background:url(../images/%E8%83%8C%E6%99%AF@2x.png) no-repeat center;height:430px;background-size:100%;}
+.sky-y{color:#ffa902;}
+.all-sky{position: absolute;left: 50%;top: 20%; margin-left: -30px}
+.plr110{padding:0 110px;}
+.qiandao{line-height:44px;background:#ffa902;border-radius:44px;color:#ffffff;}
+.a-qiandao{line-height:44px;background:#e6e6e6;border-radius:44px;color:#ffffff;}
+
+/*攻略详情*/
+.zan{width:16px;}
+.hig35{height:35px;}
+.gong-img{height:75px;}
+
+/*潮汛*/
+.banner-one{height:176px;}
+.news-p{background:url(../images/%E6%BD%AE%E6%B1%9B%EF%BC%8D%E5%AE%9A%E4%BD%8D@2x.png) no-repeat left center;background-size:12px;padding-left:20px;}
+.news-t{background:url(../images/%E6%BD%AE%E6%B1%9B%EF%BC%8D%E6%97%B6%E9%97%B4@2x.png) no-repeat left center;background-size:12px;padding-left:20px;};
+.ptp12{padding-top:12px;padding-bottom:12px;}

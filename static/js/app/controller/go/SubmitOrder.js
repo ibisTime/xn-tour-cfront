@@ -10,21 +10,32 @@ define([
 	var roomCode = base.getUrlParam("roomcode") || "";
 	var startDate = base.getUrlParam("start") || getNow();
 	var endDate = base.getUrlParam("end") || getNow();
-	var hmType2 = {}, ssType = {}, price = 0;
+	var hmType2 = {}, ssType = {}, price = 0, roomType = 1,
+        roomDescription = "", roomPic = "", hotelAddr = "",
+        roomTypeName = "", roomPrice;
+    var returnUrl = base.getUrlParam("return");
 
 	init();
 
 	function init() {
-        $("#startDate").html(startDate);
-        $("#endDate").html(endDate);
-        $("#totalDays").html(base.calculateDays(startDate, endDate));
-        getRoomAndHotel();
+        if(base.isLogin()){
+            if(returnUrl){
+                $("#areaWrap").hide();
+                $("#submitBtn").val("确认");
+            }
+            $("#startDate").html(startDate);
+            $("#endDate").html(endDate);
+            $("#totalDays").html(base.calculateDays(startDate, endDate));
+            getRoomAndHotel();
+        }else{
+            location.href = "../user/login.html?return=" + base.makeReturnUrl();
+        }
 	}
 
 	function getRoomAndHotel(){
 		loading.createLoading("加载中...");
 		$.when(
-            base.getDictList("hm-type2"),
+            base.getDictList("hh_type"),
             base.getDictList("ss_type")
         ).then(function (res1, res2) {
             if(res1.success && res2.success){
@@ -59,17 +70,16 @@ define([
                 quantity: {
                     required: true
                 },
-                people: {
+                checkInName: {
                     required: true,
                     maxlength: 16,
                     isNotFace: true
                 },
-                mobile: {
+                checkInMobile: {
                 	required: true,
                 	mobile: true
                 },
                 applyNote: {
-                	required: true,
                 	isNotFace: true,
                 	maxlength: 255
                 }
@@ -78,29 +88,77 @@ define([
         });
         $("#submitBtn").on("click", function(){
         	if($("#submitForm").valid()){
-        		console.log("xxx");
+                if(returnUrl){
+                    setHotel();
+                    location.href = returnUrl;
+                    return;
+                }
+                submitOrder();
         	}
         });
-        $("#quantity").on("change", function(){
-        	var val = +$(this).val();
-        	$("#quaty").html(val + "间");
-        	$("#price").html(base.fZeroMoney(price * val));
+        $("#quantity").on("keyup", function(){
+        	var val = $(this).val();
+            if($("#quantity").valid()){
+                val = +val;
+                $("#price").html(base.fZeroMoney(price * val));
+            }
         });
         $("#addr-wrap").on("click", function(){
         	showInMap.showMap();
         });
 	}
 
+    function submitOrder(){
+        loading.createLoading("提交中...");
+        var data = $("#submitForm").serializeObject();
+        data.startDate = startDate;
+        data.endDate = endDate;
+        data.applyUser = base.getUserId();
+        data.hotalCode = hotelCode;
+        data.roomType = roomType;
+        Ajax.get("618040", data).then(function(res){
+            if(res.success){
+                location.href = "../pay/pay.html?code=" + res.data;
+            }else{
+                loading.hideLoading();
+                base.showMsg(res.msg || "订单提交失败");
+            }
+        })
+    }
+    function setHotel(){
+        var lineInfo = sessionStorage.getItem("line-info");
+        if(!lineInfo){
+            lineInfo = {};
+        }else{
+            lineInfo = $.parseJSON(lineInfo);
+        }
+        var lCode = base.getUrlParam("lineCode", returnUrl.replace(/(.+)\?/i, "?"));
+        var obj = {};
+        obj.hotalCode = hotelCode;
+        obj.roomType = roomType;
+        obj.startDate = startDate;
+        obj.endDate = endDate;
+        obj.quantity = $("#quantity").val();
+        obj.hotelName = $("#name").html();
+        obj.checkInMobile = $("#checkInMobile").val();
+        obj.checkInName = $("#checkInName").val();
+        obj.roomDescription = roomDescription;
+        obj.roomPic = roomPic;
+        obj.hotelAddr = hotelAddr;
+        obj.roomTypeName = roomTypeName;
+        obj.roomPrice = roomPrice;
+        lineInfo[lCode] = obj;
+        sessionStorage.setItem("line-info", JSON.stringify(lineInfo));
+    }
 	function getHotel(){
         Ajax.get("618012", {
             code: hotelCode
         }).then(function(res){
             if(res.success){
                 var data = res.data;
-
                 $("#name").html(data.name);
-                $("#addr").html(getAddr(data));
-
+                hotelAddr = getAddr(data);
+                $("#addr").html(hotelAddr);
                 $("#addr").data("addr", {
                     longitude: data.longitude,
                     latitude: data.latitude
@@ -112,7 +170,7 @@ define([
             }else{
                 base.showMsg("酒店信息加载失败");
             }
-        })
+        });
     }
 
     function getRoom(){
@@ -121,23 +179,19 @@ define([
         }).then(function(res){
             if(res.success){
                 var data = res.data;
-                $("#hmType").html(hmType2[data.type] || "--");
+                roomTypeName = hmType2[data.type] || "--";
+                $("#hmType").html(roomTypeName);
                 var arr = data.description.split(/,/), str = "";
                 $.each(arr, function(i, a){
                     str += ssType[a] + "、";
                 });
-                $("#ssType").html(str && str.substr(0, str.length - 1) || "--");
+                roomDescription = str = str && str.substr(0, str.length - 1);
+                roomPic = base.getPic(data.picture);
+                $("#ssType").html(str || "--");
                 price = data.price;
-                $("#price").html(base.fZeroMoney(price))
-                remain = data.remain || 0;	//剩余房间数
-                // if(remain){
-                // 	createSelect(remain);
-                // }else{
-                // 	base.showMsg('非常抱歉，您要预定的房间已经被订完了。', 2000);
-                // 	setTimeout(function(){
-                // 		history.back();
-                // 	}, 2000)
-                // }
+                roomType = data.type;
+                roomPrice = price;
+                $("#price").html(base.formatMoney(price));
             }else{
                 base.showMsg("房间信息加载失败");
             }

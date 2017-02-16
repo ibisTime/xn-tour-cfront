@@ -1,150 +1,132 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'app/module/validate/validate',
-    'app/module/addSub/addSub'
-], function(base, Ajax, Validate, addSub) {
+    'app/module/loading/loading'
+], function(base, Ajax, loading) {
 
     var code = base.getUrlParam("code");
+    // 0:酒店 1:线路
+    var type = base.getUrlParam("type") || 0;
+    var choseIdx = 0;
 
     init();
 
     function init() {
-        if (code) {
-            getCont();
-            getActTip();
-            base.getUser()
-                .then(function(res) {
-                    if (res.success) {
-                        res.data.idNo && $("#idNo").val(res.data.idNo);
-                        res.data.realName && $("#realName").val(res.data.realName);
-                        res.data.mobile && $("#mobile").val(res.data.mobile);
-                    }
-                });
-            addListener();
-        } else {
-            $("#loading").hide();
-            base.showMsg("未传入活动编号");
+        if(!code){
+            base.showMsg("未传入订单编号");
+            return;
+        }
+        if(!base.isLogin()){
+            location.href = "../user/login.html?return=" + base.makeReturnUrl();
+            return;
+        }
+        if(type == 0){
+            getCont0();
+        }else if(type == 1){
+            getCont1();
         }
     }
 
-    function getActTip() {
-        Ajax.get("616913", {
-            "ckey": "actTip"
-        }).then(function(res) {
-            if (res.success) {
-                $("#actTip").html(res.data.cvalue);
-            }
-        });
-    }
-
     function addListener() {
-        $("#applyForm").validate({
-            'rules': {
-                realName: {
-                    required: true,
-                    isNotFace: true
-                },
-                idNo: {
-                    required: true,
-                    isIdCardNo: true
-                },
-                mobile: {
-                    required: true,
-                    mobile: true
-                },
-                bookNum: {
-                    required: true,
-                    "Z+": true
-                },
-                hotelName: {
-                    required: false,
-                    isNotFace: true
+        $("#content").on("click", ".pay-item", function(){
+            var _self = $(this), idx = _self.index();
+            _self.siblings(".active").removeClass("active");
+            _self.addClass("active");
+            choseIdx = idx;
+        });
+        $("#payBtn").on("click", function() {
+            // 微信支付
+            if(choseIdx == 0){
+                if(type == 0){
+                    wxPayOrder0();
+                }else if(type == 1){
+                    wxPayOrder1();
+                }else{
+                    wxPayOrder0();
                 }
-            }
+            // 支付宝支付
+            }else{}
         });
-        $("#back").on("click", function() {
-            location.href = "../activity.html";
-        });
-        $("#applyBtn").on("click", function() {
-            if ($("#applyForm").valid()) {
-                $("#loading").show();
-                var userId = base.getUserId();
-                if (!userId) {
-                    base.showMsg("登录超时，请重新登录");
-                    setTimeout(function() {
-                        location.href = "../activity.html";
-                    }, 2000);
-                } else {
-                    $("#applyUser").val(userId);
-                    applyOrder(userId);
-                }
-            }
-        });
-        $("#hotelName").on("keyup", function() {
-            var me = $(this),
-                value = me.val();
-            if (value == undefined || value == "") {
-                me.siblings(".prompt").removeClass("hidden");
-            } else {
-                me.siblings(".prompt").addClass("hidden");
-            }
-        });
-        addSub.createByEle({
-            sub: $("#subCount"),
-            add: $("#addCount"),
-            input: $("#bookNum"),
-            changeFn: function() {
-                var unit = +$("#fee").val();
-                var value = +this.value;
-                $("#count1").html((+unit / 1000) + "*" + value);
-                $("#count2").html((unit * value) / 1000 + "元");
-            }
-        });
+        // addSub.createByEle({
+        //     sub: $("#subCount"),
+        //     add: $("#addCount"),
+        //     input: $("#bookNum"),
+        //     changeFn: function() {
+        //         var unit = +$("#fee").val();
+        //         var value = +this.value;
+        //         $("#count1").html((+unit / 1000) + "*" + value);
+        //         $("#count2").html((unit * value) / 1000 + "元");
+        //     }
+        // });
     }
 
-    function getCont() {
-        Ajax.get("616121", { code: code })
+    function getCont0() {
+        loading.createLoading("加载中...");
+        Ajax.get("618052", { code: code })
             .then(function(res) {
-                $("#loading").hide();
+                loading.hideLoading();
                 if (res.success) {
-                    $("#productCode").val(res.data.code);
-                    $("#fee").val(res.data.fee);
-                    $("#bookNum").val("1").trigger("change");
+                    $("#price").html(base.formatMoney(res.data.amount));
+                    addListener();
                 } else {
                     base.showMsg("订单信息获取失败");
                 }
             });
     }
-
-    function applyOrder(userId) {
-        Ajax.post("616130", { json: $("#applyForm").serializeObject() })
+    function getCont1() {
+        loading.createLoading("加载中...");
+        Ajax.get("618152", { code: code })
             .then(function(res) {
+                loading.hideLoading();
                 if (res.success) {
-                    var code = res.data.code;
-                    payOrder(code, userId);
+                    $("#price").html(base.formatMoney(res.data.amount));
+                    addListener();
                 } else {
-                    $("#loading").hide();
-                    base.showMsg("订单提交失败");
+                    base.showMsg("订单信息获取失败");
                 }
             });
     }
-
-    function payOrder(code, userId) {
+    function wxPayOrder0(){
         Ajax.getIp()
-            .then(function(res) {
-                Ajax.post("616131", {
+            .then(function(res){
+                Ajax.post("618042", {
                     json: {
                         code: code,
+                        payType: "2",
                         ip: res.ip
                     }
+                }).then(function(res){
+                    if(res.success){
+                        base.showMsg("支付成功");
+                        setTimeout(function(){
+                            location.href = "../user/user.html";
+                        }, 1000);
+                    }else{
+                        base.showMsg("支付失败");
+                    }
+                }, function(){
+                    base.showMsg("支付失败");
+                });
+        });
+    }
+    function wxPayOrder1() {
+        loading.createLoading("支付中...");
+        Ajax.getIp()
+            .then(function(res) {
+                Ajax.post("618141", {
+                    json: {
+                        code: code,
+                        ip: res.ip,
+                        payType: "2"
+                    }
                 }).then(wxPay, function() {
-                    $("#loading").hide();
-                    base.showMsg("非常抱歉，活动订单提交失败");
+                    loading.hideLoading();
+                    base.showMsg("非常抱歉，支付请求提交失败");
                 });
             }, function() {
+                loading.hideLoading();
                 base.showMsg("ip获取失败");
-                $("#loading").hide();
+                // base.showMsg("非常抱歉，支付请求提交失败");
             });
 
     }
@@ -161,11 +143,12 @@ define([
                 "paySign": response.data.paySign //微信签名 
             },
             function(res) {
-                $("#loading").hide();
+                loading.hideLoading();
+                base.showMsg(res.err_msg, 100000);
                 if (res.err_msg == "get_brand_wcpay_request:ok") { // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
                     base.showMsg("支付成功");
                     setTimeout(function() {
-                        location.href = "../activity.html";
+                        location.href = "../user/user.html";
                     }, 2000);
                 } else {
                     base.showMsg("支付失败");
@@ -191,6 +174,7 @@ define([
                 onBridgeReady();
             }
         } else {
+            loading.hideLoading();
             base.showMsg("微信支付失败");
         }
     }

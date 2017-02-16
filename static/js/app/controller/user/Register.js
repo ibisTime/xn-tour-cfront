@@ -3,7 +3,8 @@ define([
     'app/util/ajax',
     'app/module/validate/validate',
     'app/module/smsCaptcha/smsCaptcha',
-], function(base, Ajax, Validate, smsCaptcha) {
+    'app/module/loading/loading'
+], function(base, Ajax, Validate, smsCaptcha, loading) {
     init();
 
     function init() {
@@ -35,7 +36,7 @@ define([
             checkInfo: function () {
                 return $("#mobile").valid();
             },
-            bizType: "805076"
+            bizType: "805041"
         });
         $("#registerBtn").on("click", function(e) {
             register();
@@ -47,9 +48,11 @@ define([
             "mobile": $("#mobile").val(),
             "loginPwd": $("#password").val(),
             "smsCaptcha": $("#verification").val(),
-            "loginPwdStrength": base.calculateSecurityLevel($("#password").val())
+            "loginPwdStrength": base.calculateSecurityLevel($("#password").val()),
+            "kind": "f1",
+            "isRegHx": 0
         };
-        Ajax.post("805076", { json: param })
+        Ajax.post("805041", { json: param })
             .then(function(response) {
                 if (response.success) {
                     loginUser({
@@ -58,20 +61,22 @@ define([
                         "kind": "f1"
                     });
                 } else {
-                    base.showMsg(response.msg);
-                    $("#registerBtn").removeAttr("disabled").val("注册");
+                    loading.hideLoading();
+                    base.showMsg(response.msg || "非常抱歉，注册失败");
+                    // $("#registerBtn").removeAttr("disabled").val("注册");
                 }
             }, function() {
+                loading.hideLoading();
                 base.showMsg("非常抱歉，注册失败");
-                $("#registerBtn").removeAttr("disabled").val("注册");
+                // $("#registerBtn").removeAttr("disabled").val("注册");
             });
     }
-
     function loginUser(param) {
         Ajax.post("805043", { json: param })
             .then(function(response) {
+                loading.hideLoading();
                 if (response.success) {
-                    base.setCommonSessionUser(response);
+                    base.setSessionUser(response);
                     base.goBackUrl("./user.html");
                 } else {
                     base.showMsg("注册成功！");
@@ -81,6 +86,7 @@ define([
                     }, 1000);
                 }
             }, function() {
+                loading.hideLoading();
                 base.showMsg("注册成功！");
                 base.clearSessionUser();
                 setTimeout(function() {
@@ -91,7 +97,8 @@ define([
 
     function register() {
         if ($("#registForm").valid()) {
-            $("#registerBtn").attr("disabled", "disabled").val("注册中...");
+            // $("#registerBtn").attr("disabled", "disabled").val("注册中...");
+            loading.createLoading("注册中...");
             finalRegister();
         }
     }

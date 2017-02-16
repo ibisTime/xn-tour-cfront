@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>我的收藏</title>
+</head>
+
+<body class="bg_f3f3f3">
+	<div id="collection-top-nav" class="order-list-top-nav1 collection-top-nav">
+		<div class="order-list-top-nav1-item">线路</div>
+		<div class="order-list-top-nav1-item">攻略</div>
+		<div class="order-list-top-nav1-item">酒店</div>
+		<div class="order-list-top-nav1-item">美食</div>
+	</div>
+	<div id="wrapper" class="scroll-wrapper">
+        <div id="scroll" class="wp100">
+            <!-- <div id="pullDown" class="pullDown hidden">
+                <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span>
+            </div> -->
+            <div id="pullDown" class="idle">
+                <div class="pullDownLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div> 
+                    <div class="bounce4"></div> 
+                </div>
+            </div>
+            <div id="content" class="content bg_f3f3f3_i b_t_none">
+                <div class="jcont J_Content0"></div>
+                <div class="jcont J_Content1"></div>
+                <div class="jcont J_Content2"></div>
+                <div class="jcont J_Content3"></div>
+            </div>
+            <div id="pullUp" class="idle">
+                <div class="pullUpLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                    <div class="bounce4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/user/Collection']);
+    </script>
+</body>
+
+</html>

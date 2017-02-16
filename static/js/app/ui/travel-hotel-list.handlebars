@@ -1,0 +1,17 @@
+{{#each items}}
+    <div class="item">
+        <a class="block_wp100" href="../go/hotel-detail.html?code={{formatReturn code}}">
+            <div class="item-c-div item-l">
+                <img class="center-img" src="{{formatImage pic1}}"/>
+            </div>
+            <div class="item-c">
+                <div class="item-c-top1 t_norwrap">{{name}}</div>
+                <div class="item-c-center item-c-center1 t_norwrap">{{detail}}</div>
+                <div class="item-c-bottom1 t_norwrap">
+                	{{formatCategory category}}
+                </div>
+            </div>
+            <div class="item-c-div item-r item-r1">¥{{formatMoney lowPrice}}<span class="smf">起</span></div>
+        </a>
+    </div>
+{{/each}}

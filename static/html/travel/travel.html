@@ -3,11 +3,12 @@
 
 <head>
     <link rel="import" href="../head.html?__inline">
-    <title>来来旺旺</title>
+    <title>旅游</title>
 </head>
 
 <body class="bg_f3f3f3">
-	<div id="wrapper" class="index-wrapper">
+    <header class="nav-head">旅游<div id="sxIcon" class="travel-sx-icon"></div></header>
+	<div id="wrapper" class="travel-wrapper">
         <div id="scroll">
         	<div id="pullDown" class="idle">
                 <div class="pullDownLabel">
@@ -18,64 +19,54 @@
                 </div>
             </div>
 		    <div class="wp100">
-				<ul class="top-nav clearfix J_Content0 active">
-		            <li class="nav-li nav-li-4">
+				<ul id="topNav" class="top-nav clearfix J_Content0 active">
+		            <!-- <li class="nav-li nav-li-4">
 		                <a href="#">
-		                    <div class="nav-li-img"><img src="../../images/mrqd-icon.png?__inline"/></div>
-		                    <div class="nav-li-text">每日签到</div>
+		                    <div class="nav-li-img"><img src="../../images/cy-icon.png?__inline"/></div>
+		                    <div class="nav-li-text">春游</div>
 		                </a>
 		            </li>
 		            <li class="nav-li nav-li-4">
-		                <div class="nav-li-img"><img src="../../images/jrcx-icon.png?__inline"/></div>
-		                <div class="nav-li-text">今日潮汛</div>
+		                <div class="nav-li-img"><img src="../../images/qy-icon.png?__inline"/></div>
+		                <div class="nav-li-text">秋游</div>
 		            </li>
 		            <li class="nav-li nav-li-4">
-		                <div class="nav-li-img"><img src="../../images/jfsc-icon.png?__inline"/></div>
-		                <div class="nav-li-text">积分商城</div>
+		                <div class="nav-li-img"><img src="../../images/gny-icon.png?__inline"/></div>
+		                <div class="nav-li-text">国内游</div>
 		            </li>
 		            <li class="nav-li nav-li-4">
-		                <div class="nav-li-img"><img src="../../images/rmhd-icon.png?__inline"/></div>
-		                <div class="nav-li-text">热门活动</div>
+		                <div class="nav-li-img"><img src="../../images/jwy-icon.png?__inline"/></div>
+		                <div class="nav-li-text">境外游</div>
 		            </li>
 		            <li class="nav-li nav-li-4">
-		                <div class="nav-li-img"><img src="../../images/tq-icon.png?__inline"/></div>
-		                <div class="nav-li-text">天气</div>
+		                <div class="nav-li-img"><img src="../../images/qzy-icon.png?__inline"/></div>
+		                <div class="nav-li-text">亲子游</div>
 		            </li>
 		            <li class="nav-li nav-li-4">
-		                <div class="nav-li-img"><img src="../../images/ms-icon.png?__inline"/></div>
-		                <div class="nav-li-text">美食</div>
+		                <div class="nav-li-img"><img src="../../images/syy-icon.png?__inline"/></div>
+		                <div class="nav-li-text">摄影游</div>
 		            </li>
 		            <li class="nav-li nav-li-4">
-		                <div class="nav-li-img"><img src="../../images/jd-icon.png?__inline"/></div>
-		                <div class="nav-li-text">酒店</div>
+		                <div class="nav-li-img"><img src="../../images/zby-icon.png?__inline"/></div>
+		                <div class="nav-li-text">周边游</div>
 		            </li>
 		            <li class="nav-li nav-li-4">
-		                <div class="nav-li-img"><img src="../../images/jd-icon.png?__inline"/></div>
-		                <div class="nav-li-text">出行</div>
-		            </li>
+		                <div class="nav-li-img"><img src="../../images/zty-icon.png?__inline"/></div>
+		                <div class="nav-li-text">主题游</div>
+		            </li> -->
 		        </ul>
 		    </div>
-            <div class="content">
-                <div class="item">
+            <div class="content" id="content">
+                <!-- <div class="item">
                     <div class="item-c-div item-l">
                         <img class="cente" src="../../images/detailxx.png?__inline"/>
                     </div>
                     <div class="item-c">
-                        <div class="item-c-top1 twoline-ellipsis">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
+                        <div class="item-c-top1 twoline-ellipsis pb0">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
                         <div class="index-item-bottom">杭州出发</div>
                     </div>
                     <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
-                <div class="item">
-                    <div class="item-c-div item-l">
-                        <img class="cente" src="../../images/detailxx.png?__inline"/>
-                    </div>
-                    <div class="item-c">
-                        <div class="item-c-top1 twoline-ellipsis">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
-                        <div class="index-item-bottom">杭州出发</div>
-                    </div>
-                    <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
+                </div> -->
             </div>
             <div id="pullUp" class="idle" style="display: block;">
                 <div class="pullUpLabel">
@@ -83,6 +74,35 @@
                     <div class="bounce2"></div>
                     <div class="bounce3"></div>
                     <div class="bounce4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="travel-sx-wrap" id="travelWrap">
+        <div class="travel-sx-cont" id="travelCont">
+            <header class="travel-sx-top">
+                <input type="button" class="fl" value="取消" id="cancel">
+                <input type="button" class="fr" value="确定" id="ok">
+            </header>
+            <div class="travel-drop">
+                <div class="travel-drop-item p_r" id="dropCont">
+                    <div class="travel-drop-left" id="dropLeft">
+                        <div class="travel-drop-item-left active">地域</div>
+                        <div class="travel-drop-item-left">类别</div>
+                        <div class="travel-drop-item-left">时间</div>
+                        <div class="travel-drop-item-left">形式</div>
+                    </div>
+                    <div class="innerWrap" id="innerWrap">
+                        <div class="innerScroll" id="dropRight"></div>
+                    </div>
+                    <!-- <div class="travel-drop-right travel-drop-right0 active">
+                        <div class="travel-drop-item-right-item">
+                            不限<div class="chose-icon circle-icon"></div>
+                        </div>
+                    </div>
+                    <div class="travel-drop-right travel-drop-right1"></div>
+                    <div class="travel-drop-right travel-drop-right2"></div>
+                    <div class="travel-drop-right travel-drop-right3"></div> -->
                 </div>
             </div>
         </div>

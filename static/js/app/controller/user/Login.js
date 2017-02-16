@@ -2,8 +2,9 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/module/validate/validate',
+    'app/module/loading/loading'
     // 'app/module/foot/foot'
-], function(base, Ajax, Validate, Foot) {
+], function(base, Ajax, Validate, loading) {
     var returnUrl;
 
     init();
@@ -43,7 +44,8 @@ define([
 
     function loginAction() {
         if ($("#loginForm").valid()) {
-            $("#loginBtn").attr("disabled", "disabled").val("登录中...");
+            // $("#loginBtn").attr("disabled", "disabled").val("登录中...");
+            loading.createLoading("登录中...");
             var param = {
                 "loginName": $("#mobile").val(),
                 "loginPwd": $("#password").val(),
@@ -52,17 +54,19 @@ define([
 
             Ajax.post("805043", { json: param })
                 .then(function(res) {
+                    loading.hideLoading();
                     if (res.success) {
                         base.setSessionUser(res);
                         base.goBackUrl("./user.html");
                     } else {
                         base.clearSessionUser();
-                        $("#loginBtn").removeAttr("disabled").val("登录");
+                        // $("#loginBtn").removeAttr("disabled").val("登录");
                         base.showMsg(res.msg);
                     }
                 }, function() {
+                    loading.hideLoading();
                     base.clearSessionUser();
-                    $("#loginBtn").removeAttr("disabled").val("登录");
+                    // $("#loginBtn").removeAttr("disabled").val("登录");
                     base.showMsg("登录失败");
                 });
         }

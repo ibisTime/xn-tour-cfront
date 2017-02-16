@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <link rel="stylesheet" href="../../css/mobiscroll.core.css">
+    <title>账户安全</title>
+</head>
+
+<body class="bg_f3f3f3">
+
+    <div class=" fs15 ba  lh60 wp100 plr10 bb p-r">
+    	<div class=" inline_block">头像</div>
+        <img src="../../images/avatar.png" class="head-img">
+        <img src="../../images/xyjt.png" class="more ">
+    </div>
+    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r mb10 clearfix">
+    	<div class=" inline_block">用户名</div>
+        <div class="fr inline_block pr20" >二哈</div>
+        <img src="../../images/xyjt.png" class="more ">
+    </div>
+    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r">
+    	<div class=" inline_block">身份绑定</div>
+        <div class="fr inline_block pr20 coc fs12" >已绑定</div>
+        <img src="../../images/xyjt.png" class="more ">
+    </div>
+    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r">
+    	<div class=" inline_block">修改手机号</div>
+        <img src="../../images/xyjt.png" class="more ">
+    </div>
+    <div class=" fs15 ba mb10 lh50 wp100 plr10  p-r">
+    	<div class=" inline_block">修改密码</div>
+        <img src="../../images/xyjt.png" class="more ">
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+    <script type="text/javascript" src="../../js/lib/qiniu/plupload.full.min.js"></script>
+    <script type="text/javascript" src="../../js/lib/qiniu/qiniu.min.js"></script>
+    <script data-loader>
+        require(['app/controller/user/AccountSecurity']);
+    </script>
+</body>
+
+</html>

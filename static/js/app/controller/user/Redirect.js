@@ -2,7 +2,6 @@ define([
     'app/controller/base',
     'app/util/ajax'
 ], function(base, Ajax) {
-    var code1 = base.getUrlParam("c");
     init();
 
     function init() {
@@ -18,7 +17,7 @@ define([
             .then(function(res) {
                 if (res.success) {
                     base.setSessionUser(res);
-                    location.href = "../pay/apply.html?code=" + code1;
+                    base.goBackUrl("./user.html");
                 } else {
                     base.showMsg(res.msg);
                 }

@@ -8,10 +8,10 @@
                 <div class="item-c-top1 t_norwrap">{{name}}</div>
                 <div class="item-c-center item-c-center1 t_norwrap">{{detail}}</div>
                 <div class="item-c-bottom1 t_norwrap">
-                	{{category}}
+                	{{formatCategory category}}
                 </div>
             </div>
-            <div class="item-c-div item-r item-r1">¥{{formatZeroMoney lowPrice 0}}<span class="smf">起</span></div>
+            <div class="item-c-div item-r item-r1">¥{{formatMoney lowPrice}}<span class="smf">起</span></div>
         </a>
     </div>
 {{/each}}
