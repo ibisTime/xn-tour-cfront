@@ -184,9 +184,9 @@ define([
                         var data = res.data.list;
                         if(data.length < config.limit){
                             isEnd = true;
-                            hidePullUp();
+                            base.hidePullUp();
                         }else{
-                            showPullUp();
+                            base.showPullUp();
                         }
                         $("#content")[refresh ? "html" : "append"](hotelTmpl({items: data}));
                         config.start++;
@@ -195,7 +195,7 @@ define([
                             $("#content").html('<div class="item-error">附近暂无酒店</div>');
                             isEnd = true;
                         }
-                        hidePullUp();
+                        base.hidePullUp();
                         res.msg && base.showMsg(res.msg);
                     }
                     first = false;
@@ -213,12 +213,5 @@ define([
         }else{
             loading.hideLoading();
         }
-    }
-    function hidePullUp(){
-        $("#pullUp").css("visibility", "hidden");
-    }
-
-    function showPullUp(){
-        $("#pullUp").css("visibility", "visible");
     }
 });

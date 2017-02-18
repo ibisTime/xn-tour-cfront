@@ -59,10 +59,6 @@ define([
                 $("#name").html(data.name);
                 $("#lowPrice").html('¥' + base.formatMoney(data.lowPrice) + '<span class="sm-f">起</span>');
                 $("#addrInfo").html(getAddr(data));
-                    // .parent().data("addr", {
-                    //     longitude: data.longitude,
-                    //     latitude: data.latitude
-                    // });
                 showInMap.addMap({
                     lng: data.longitude,
                     lat: data.latitude
@@ -71,7 +67,7 @@ define([
                     .html('<a class="show c_78" href="tel://'+data.telephone+'">'+data.telephone+'<div class="st-jt"></div></a>');
                 $("#content0").html(data.specialDesc);
                 $("#content1").html(data.foodDesc);
-                data.judge == "0" ? $("#scjdIcon").addClass("active") : "";
+                data.judge == "1" ? $("#scjdIcon").addClass("active") : "";
             }else{
                 base.showMsg("加载失败");
             }
@@ -96,7 +92,7 @@ define([
                 start: start,
                 limit: limit,
                 topCode: hotelCode,
-                status: '1'
+                // status: '1'
             }).then(function(res){
                 if(res.success && res.data.list.length){
                     if(res.data.list.length < limit){
@@ -110,7 +106,7 @@ define([
                         html += '<div class="plun-cont-item flex">'+
                             '<div class="plun-left">'+
                                 '<div class="plun-left-wrap">'+
-                                    '<img class="center-img wp100" src="'+base.getAvatar(l.res.userExt.photo)+'" />'+
+                                    '<img class="center-img wp100" src="'+base.getWXAvatar(l.res.userExt.photo)+'" />'+
                                 '</div>'+
                             '</div>'+
                             '<div class="plun-right">'+
@@ -122,13 +118,22 @@ define([
                     });
                     $("#content").append(html);
                     start++;
+                    myScroll.refresh();
                 }else{
-                    $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                    if(start == 1){
+                        $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                        myScroll.refresh();
+                        isEnd = true;
+                    }
                     base.hidePullUp();
                 }
                 isLoading = false;
             }, function(){
-                $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                if(start == 1){
+                    $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                    myScroll.refresh();
+                    isEnd = true;
+                }
                 base.hidePullUp();
             });
         }
@@ -141,7 +146,7 @@ define([
     function addListener() {
         $("#scjdIcon").on("click", function(){
             if(!base.isLogin()){
-                location.href = "../user/login.html?return=" + base.makeReturnUrl();
+                base.goLogin();
                 return;
             }
             loading.createLoading();
@@ -156,7 +161,7 @@ define([
 
         $("#writePlIcon").on("click", function (e) {
             if(!base.isLogin()){
-                location.href = "../user/login.html?return=" + base.makeReturnUrl();
+                base.goLogin();
                 return;
             }
             comment.showComment({

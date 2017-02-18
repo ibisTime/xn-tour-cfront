@@ -3,34 +3,113 @@
 
 <head>
     <link rel="import" href="../head.html?__inline">
-    <link rel="stylesheet" href="../../css/mobiscroll.core.css">
     <title>账户安全</title>
 </head>
 
 <body class="bg_f3f3f3">
 
-    <div class=" fs15 ba  lh60 wp100 plr10 bb p-r">
-    	<div class=" inline_block">头像</div>
-        <img src="../../images/avatar.png" class="head-img">
-        <img src="../../images/xyjt.png" class="more ">
+    <div id="uploadContainer" class=" fs15 ba  lh60 wp100 plr10 bb p-r">
+        <div id="uploadBtn">
+        	<div class=" inline_block">头像</div>
+            <div class="acecu-avatar-div">
+                <img src="" class="wp100 center-img" id="showAvatar">
+            </div>
+            <img src="../../images/xyjt.png?__inline" class="more ">
+        </div>
     </div>
-    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r mb10 clearfix">
+    <div class="upload-progress-wrap">
+        <div class="upload-progress"></div>
+    </div>
+    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r mb10 clearfix" id="nickWrap">
     	<div class=" inline_block">用户名</div>
-        <div class="fr inline_block pr20" >二哈</div>
-        <img src="../../images/xyjt.png" class="more ">
+        <div class="fr inline_block pr20" id="nick"></div>
+        <img src="../../images/xyjt.png?__inline" class="more ">
     </div>
-    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r">
+    <div class=" fs15 ba lh50 wp100 plr10 bb p-r" id="identityWrap">
     	<div class=" inline_block">身份绑定</div>
-        <div class="fr inline_block pr20 coc fs12" >已绑定</div>
-        <img src="../../images/xyjt.png" class="more ">
+        <div class="fr inline_block pr20 coc fs12" id="identityFlag"></div>
+        <img src="../../images/xyjt.png?__inline" class="more ">
     </div>
-    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r">
-    	<div class=" inline_block">修改手机号</div>
-        <img src="../../images/xyjt.png" class="more ">
+    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r" id="mobileWrap">
+    	<div class="inline_block" id="mobileName">绑定手机号</div>
+        <img src="../../images/xyjt.png?__inline" class="more ">
     </div>
-    <div class=" fs15 ba mb10 lh50 wp100 plr10  p-r">
-    	<div class=" inline_block">修改密码</div>
-        <img src="../../images/xyjt.png" class="more ">
+    <!-- <div class=" fs15 ba mb10 lh50 wp100 plr10  p-r">
+        <a class="wp100 show" href="./resetPwd.html">
+        	<div class=" inline_block">修改密码</div>
+            <img src="../../images/xyjt.png?__inline" class="more ">
+        </a>
+    </div> -->
+
+    <div id="nicknameChange" class="right-left-cont">
+        <div class="right-left-cont-title">
+            <div class="right-left-cont-back" id="nickBack"></div>
+            <div class="right-left-cont-title-name">修改用户名</div>
+        </div>
+        <form class="right-left-cont-info" id="nicknameForm">
+            <div class="right-left-cont-info-input-wrap">
+                <span class="right-left-cont-info-input-left">用户名：</span>
+                <div class="right-left-cont-info-input-right">
+                    <input type="text" name="nickname" id="nickname" placeholder="请输入用户名">
+                </div>
+            </div>
+            <div class="right-left-cont-btn-wrap">
+                <input type="button" id="changeNick" value="保存">
+            </div>
+        </form>
+    </div>
+
+    <div id="mobileAction" class="right-left-cont">
+        <div class="right-left-cont-title">
+            <div class="right-left-cont-back" id="mobileBack"></div>
+            <div class="right-left-cont-title-name">绑定手机号</div>
+        </div>
+        <form class="right-left-cont-info" id="mobileForm">
+            <div class="right-left-cont-info-input-wrap">
+                <span class="right-left-cont-info-input-left">手机号：</span>
+                <div class="right-left-cont-info-input-right">
+                    <input type="text" name="mobile" id="mobile" placeholder="请输入手机号">
+                </div>
+            </div>
+            <div class="right-left-cont-info-input-wrap">
+                <span class="right-left-cont-info-input-left">验证码：</span>
+                <div class="right-left-cont-info-input-right">
+                    <div class="pr110">
+                        <div class="p-r">
+                            <input type="text" name="smsCaptcha" id="smsCaptcha" placeholder="短信验证码">
+                        </div>
+                    </div>
+                    <input type="button" value="获取验证码" id="getVerification" class="captcha-btn">
+                </div>
+            </div>
+            <div class="right-left-cont-btn-wrap">
+                <input type="button" id="mobileBtn" value="设置">
+            </div>
+        </form>
+    </div>
+
+    <div id="authentication" class="right-left-cont">
+        <div class="right-left-cont-title">
+            <div class="right-left-cont-back" id="authenticationBack"></div>
+            <div class="right-left-cont-title-name">实名认证</div>
+        </div>
+        <form class="right-left-cont-info" id="authenticationForm">
+            <div class="right-left-cont-info-input-wrap">
+                <span class="right-left-cont-info-input-left">真实姓名：</span>
+                <div class="right-left-cont-info-input-right">
+                    <input type="text" name="realName" id="realName" placeholder="请输入姓名">
+                </div>
+            </div>
+            <div class="right-left-cont-info-input-wrap">
+                <span class="right-left-cont-info-input-left">身份证号：</span>
+                <div class="right-left-cont-info-input-right">
+                    <input type="text" name="idNo" id="idNo" placeholder="请输入身份证号">
+                </div>
+            </div>
+            <div class="right-left-cont-btn-wrap">
+                <input type="button" id="authenticationBtn" value="确定">
+            </div>
+        </form>
     </div>
 
     <link rel="import" href="../footer.html?__inline">

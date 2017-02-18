@@ -32,9 +32,9 @@ define(["jquery"], function($) {
                     data: param
                 });
                 cache[cache_url].then(function(res) {
-                    if(!res.success && res.timeout && location.pathname.indexOf("/buy.html") == -1){
+                    if(!res.success && res.timeout){
                         sessionStorage.setItem("user", "0");
-                        location.href = "../user/login.html?return=" + encodeURIComponent(location.pathname + location.search);
+                        location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
                     }
                 }, function(res) {
                     var d = dialog({
@@ -75,7 +75,7 @@ define(["jquery"], function($) {
                 userId = sessionStorage.getItem("user") || "";
 
             token && (param["token"] = token);
-            userId && (param["userId"] = userId);
+            // userId && (param["userId"] = userId);
             param["systemCode"] = SYSTEM_CODE;
             // param["companyCode"] = COMPANY_CODE;
 

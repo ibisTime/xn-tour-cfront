@@ -15,7 +15,7 @@ define([
     var yjTmpl = __inline("../../ui/travel-yj.handlebars"),
         glTmpl = __inline("../../ui/travel-gl.handlebars");
     var lineInfo = sessionStorage.getItem("line-info");
-    var myScroll;
+    var myScroll, lineAmount;
 
     init();
 
@@ -63,7 +63,8 @@ define([
 
     function getTravel(){
         return Ajax.get("618102", {
-            code: travelCode
+            code: travelCode,
+            userId: base.getUserId()
         }).then(function(res){
             if(res.success){
                 var data = res.data;
@@ -75,16 +76,17 @@ define([
                 $("#swiper").find(".swiper-wrapper").html(html);
 
                 initSwiper();
-
+                lineAmount = data.price;
                 $("#joinPlace").html(data.joinPlace);
                 $("#outDate").html(base.formatDate(data.outDate, "yyyy.MM.dd"));
-                $("#price").html(base.fZeroMoney(data.price));
+                $("#price").html(base.formatMoney(data.price));
                 $("#name").html(data.name);
                 var tabList = data.lineTabList;
                 // 1 亮点 2行程 3费用 4 须知
                 for(var i = 0; i < tabList.length; i++){
                     $("#content" + (+tabList[i].type - 1)).html(tabList[i].description);
                 }
+                data.isCollect == "1" ? $("#scjdIcon").addClass("active") : "";
             }else{
                 base.showMsg("加载失败");
             }
@@ -125,7 +127,7 @@ define([
             status: 1
         }).then(function(res){
             if(res.success && res.data.list.length){
-                $("#yjContent").html( glTmpl({items: res.data.list}) );
+                $("#yjContent").html( yjTmpl({items: res.data.list}) );
             }else{
                 $("#yjContent").html( '<div class="item-error">暂无相关游记</div>' );
             }
@@ -154,7 +156,7 @@ define([
                         html += '<div class="plun-cont-item flex">'+
                             '<div class="plun-left">'+
                                 '<div class="plun-left-wrap">'+
-                                    '<img class="center-img wp100" src="'+base.getAvatar(l.res.userExt.photo)+'" />'+
+                                    '<img class="center-img wp100" src="'+base.getWXAvatar(l.res.userExt.photo)+'" />'+
                                 '</div>'+
                             '</div>'+
                             '<div class="plun-right">'+
@@ -165,14 +167,23 @@ define([
                         '</div>';
                     });
                     $("#content").append(html);
+                    myScroll.refresh();
                     start++;
                 }else{
-                    $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                    if(start == 1){
+                        $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                        myScroll.refresh();
+                        isEnd = true;
+                    }
                     base.hidePullUp();
                 }
                 isLoading = false;
             }, function(){
-                $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                if(start == 1){
+                    $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                    myScroll.refresh();
+                    isEnd = true;
+                }
                 base.hidePullUp();
             });
         }
@@ -184,7 +195,7 @@ define([
         });
         $("#writePlIcon").on("click", function (e) {
             if(!base.isLogin()){
-                location.href = "../user/login.html?return=" + base.makeReturnUrl();
+                base.goLogin();
                 return;
             }
             comment.showComment({
@@ -229,10 +240,17 @@ define([
             location.href = "http://kefu.easemob.com/webim/im.html?tenantId=" + TENANTID;
         });
         $("#buyBtn").on("click", function(){
-            if(base.isLogin())
+            if(base.isLogin()){
+                if(!lineInfo)
+                    lineInfo = {};
+                if(!lineInfo[travelCode])
+                    lineInfo[travelCode] = {};
+                lineInfo[travelCode].lineAmount = lineAmount;
+                sessionStorage.setItem("line-info", JSON.stringify(lineInfo));
                 location.href = './submit-order.html?lineCode=' + travelCode;
+            }
             else
-                location.href = '../user/login.html?return=' + base.makeReturnUrl()
+                base.goLogin();
         });
         //推荐酒店
         $("#J_Tjjd").on("click", function(){
@@ -240,10 +258,14 @@ define([
                 lineCode: travelCode
             });
         });
+        //推荐美食
+        $("#J_Tjms").on("click", function(){
+            location.href = "./travel-food-list.html?code=" + travelCode;
+        });
         //收藏
         $("#scjdIcon").on("click", function(){
             if(!base.isLogin()){
-                location.href = "../user/login.html?return=" + base.makeReturnUrl();
+                base.goLogin();
                 return;
             }
             loading.createLoading();
@@ -254,7 +276,7 @@ define([
         Ajax.post("618320", {
             json: {
                 toEntity: travelCode,
-                toType: 3,
+                toType: 1,
                 type: 2,
                 interacter: base.getUserId()
             }

@@ -1,25 +1,275 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'app/module/loading/loading'
-], function(base, Ajax, loading) {
-	var token;
+    'app/module/loading/loading',
+    'app/module/validate/validate',
+    'app/module/qiniu/qiniu',
+    'app/module/smsCaptcha/smsCaptcha',
+], function(base, Ajax, loading, Validate, qiniu, smsCaptcha) {
+	var token, nickname, mobile, bizType = "805153", identityFlag;
 	init();
 	function init(){
-		// loading.createLoading();
-		initUpload();
+		loading.createLoading();
+		base.getUser()
+			.then(function(res){
+				loading.hideLoading();
+				if(res.success){
+					$("#showAvatar").attr("src", base.getWXAvatar(res.data.userExt.photo));
+					nickname = res.data.nickname;
+					$("#nick").html(nickname);
+					if(mobile = res.data.mobile){
+						$("#mobileName").text("修改手机号");
+						$("#mobileAction").find(".right-left-cont-title-name").text("修改手机号");
+						bizType = "805047";
+					}
+					identityFlag = res.data.identityFlag;
+					if( identityFlag != "0"){
+						$("#identityFlag").text("已绑定");
+						$("#idNo").val(res.data.idNo).attr("disabled", "disabled");
+						$("#realName").val(res.data.realName).attr("disabled", "disabled");
+						$("#authenticationBtn").parent().hide();
+					}else{
+						$("#identityFlag").text("未绑定");
+					}
+					addListener();
+					initUpload();
+				}else{
+					base.showMsg(res.msg || "用户信息获取失败");
+				}
+			}, function(){
+				base.showMsg("用户信息获取失败");
+			});
 	}
 
-	function getQiniuToken(){
-		return Ajax.get('807900');
+	function addListener(){
+		$("#nickWrap").on("click", function(){
+			showLeft2Right($("#nicknameChange"), function(){
+				$("#nickname").val(nickname);
+			});
+		});
+		$("#nickBack").on("click", function(){
+			hideLeft2Right($("#nicknameChange"));
+		});
+		$("#nicknameForm").validate({
+            'rules': {
+                nickname: {
+                    required: true,
+                    maxlength: 32,
+                    isNotFace: true
+                }
+            },
+            onkeyup: false
+        });
+        $("#changeNick").on("click", function(){
+        	if($("#nicknameForm").valid()){
+        		changeNickName();
+        	}
+        });
+        $("#mobileBack").on("click", function(){
+			hideLeft2Right($("#mobileAction"));
+		});
+		$("#mobileWrap").on("click", function(){
+			showLeft2Right($("#mobileAction"));
+		});
+        smsCaptcha.init({
+            checkInfo: function () {
+                return $("#mobile").valid();
+            },
+            bizType: bizType
+        });
+        $("#mobileBtn").on("click", function(){
+        	if($("#mobileForm").valid()){
+        		if(mobile){
+        			changeMobile();
+        		}else{
+        			bindMobile();
+        		}
+        	}
+        });
+        $("#mobileForm").validate({
+            'rules': {
+                mobile: {
+                    required: true,
+                    mobile: true
+                },
+                smsCaptcha: {
+                	sms: true,
+                	required: true
+                }
+            },
+            onkeyup: false
+        });
+
+        $("#identityWrap").on("click", function(){
+			showLeft2Right($("#authentication"));
+		});
+		$("#authenticationBack").on("click", function(){
+			hideLeft2Right($("#authentication"));
+		});
+		$("#authenticationForm").validate({
+            'rules': {
+                realName: {
+                    required: true,
+                    maxlength: 32,
+                    isNotFace: true
+                },
+                idNo: {
+                	required: true,
+                	isIdCardNo: true
+                }
+            },
+            onkeyup: false
+        });
+        $("#authenticationBtn").on("click", function(){
+        	if($("#authenticationForm").valid()){
+        		identity();
+        	}
+        });
+	}
+	function identity(){
+		loading.createLoading("认证中...");
+		var data = $("#authenticationForm").serializeObject();
+		data.idKind = 1;
+		data.userId = base.getUserId();
+		Ajax.post("805044", {
+			json: data
+		}).then(function(res){
+			loading.hideLoading();
+			if(res.success){
+				hideLeft2Right($("#authenticationForm"), function(){
+					identityFlag = true;
+					$("#authenticationBtn").parent().hide();
+					$("#identityFlag").text("已绑定");
+					$("#realName, #idNo").attr("disabled", "disabled");
+				});
+			}else{
+				base.showMsg(res.msg);
+			}
+		}, function(){
+			base.showMsg("实名认证失败");
+			loading.hideLoading();
+		});
+	}
+	function changeMobile(){
+		loading.createLoading("修改中...");
+		Ajax.post("805047", {
+			json: {
+	            "newMobile": $("#mobile").val(),
+	            "smsCaptcha": $("#smsCaptcha").val(),
+	            "tradePwd": "111111",
+	            "userId": base.getUserId()
+	        }
+		}).then(function(res){
+			loading.hideLoading();
+			if(res.success){
+				hideLeft2Right($("#mobileAction"), function(){
+					mobile = $("#mobile").val();
+					$("#mobile").val("");
+					$("#smsCaptcha").val("");
+				});
+			}else{
+				base.showMsg(res.msg);
+			}
+		}, function(){
+			base.showMsg("手机号修改失败");
+			loading.hideLoading();
+		});
+	}
+	function bindMobile(){
+		loading.createLoading("绑定中...");
+		Ajax.post("805153", {
+			json: {
+	            "mobile": $("#mobile").val(),
+	            "smsCaptcha": $("#smsCaptcha").val(),
+	            "userId": base.getUserId()
+	        }
+		}).then(function(res){
+			loading.hideLoading();
+			if(res.success){
+				$("#mobileName").text("修改手机号");
+				hideLeft2Right($("#mobileAction"), function(){
+					mobile = $("#mobile").val();
+					$("#mobile").val("");
+					$("#smsCaptcha").val("");
+					$("#mobileAction").find(".right-left-cont-title-name").text("修改手机号");
+					bizType = "805047";
+					smsCaptcha.init({
+			            checkInfo: function () {
+			                return $("#mobile").valid();
+			            },
+			            bizType: bizType,
+			            id: 'smsCaptcha'
+			        });
+				});
+			}else{
+				base.showMsg(res.msg);
+			}
+		}, function(){
+			base.showMsg("手机号绑定失败");
+			loading.hideLoading();
+		});
+	}
+	function changeNickName(){
+		loading.createLoading("修改中...");
+		nickname = $("#nickname").val();
+		Ajax.post("805075", {
+			json: {
+				nickname: nickname,
+				userId: base.getUserId()
+			}
+		}).then(function(res){
+			loading.hideLoading();
+			if(res.success){
+				hideLeft2Right($("#nicknameChange"), function(){
+					$("#nick").html(nickname);
+				});
+			}else{
+				base.showMsg(res.msg);
+			}
+		}, function(){
+			base.showMsg("昵称修改失败");
+			loading.hideLoading();
+		});
+	}
+	function showLeft2Right(cont, afterFn){
+		cont.show()
+			.animate({
+	            left: 0
+	        }, 200, function(){
+	        	afterFn && afterFn();
+	        });
+	}
+	function hideLeft2Right(cont, afterFn){
+		cont.animate({
+            left: "100%"
+        }, 200, function () {
+            cont.hide();
+            afterFn && afterFn();
+        });
 	}
 
 	function initUpload(){
-		getQiniuToken()
+		qiniu.getQiniuToken()
 			.then(function(res){
 				if(res.success){
 					token = res.data.uploadToken;
-					// uploadInit(token);
+					qiniu.uploadInit({
+						token: token,
+						btnId: "uploadBtn",
+						containerId: "uploadContainer",
+						multi_selection: false,
+						showUploadProgress: function(up, file){
+							$(".upload-progress").css("width", parseInt(file.percent, 10) + "%");
+						},
+						fileAdd: function(file){
+							$(".upload-progress-wrap").show();
+						},
+						fileUploaded: function(up, url, key){
+							$(".upload-progress-wrap").hide().find(".upload-progress").css("width", 0);
+							loading.createLoading("上传中...");
+							uploadAvatar(url, key);
+						}
+					});
 				}else{
 					base.showMsg(res.msg || "token获取失败");
 				}
@@ -27,135 +277,21 @@ define([
 				base.showMsg("token获取失败");
 			})
 	}
-
-	function uploadInit(token, btnId, containerId, multi_selection) {
-	    // this 即 editor 对象
-	    var editor = this;
-	    // 触发选择文件的按钮的id
-	    // var btnId = editor.customUploadBtnId || editor.prev().find('input').attr('id');
-	    // 触发选择文件的按钮的父容器的id
-	    // var containerId = editor.customUploadContainerId || editor.prev().next().attr('id');
-	    
-	    // var dropId = editor.id || (editor.attr && editor.attr('id')) || 'jsForm';
-
-		multi_selection = multi_selection || true;
-
-	    // 创建上传对象
-	    var uploader = Qiniu.uploader({
-	        runtimes: 'html5,flash,html4', //上传模式,依次退化
-	        browse_button: btnId, //上传选择的点选按钮，**必需**
-	        //uptoken_url: '/uptoken',
-	        //Ajax请求upToken的Url，**强烈建议设置**（服务端提供）
-	        uptoken: token,
-	        //若未指定uptoken_url,则必须指定 uptoken ,uptoken由其他程序生成
-	        unique_names: false,
-	        // 默认 false，key为文件名。若开启该选项，SDK会为每个文件自动生成key（文件名）
-	        save_key: false,
-	        // 默认 false。若在服务端生成uptoken的上传策略中指定了 `sava_key`，则开启，SDK在前端将不对key进行任何处理
-	        //domain: 'http://oi99f4peg.bkt.clouddn.com/',
-	        domain: PIC_PREFIX + '/',
-	        //bucket 域名，下载资源时用到，**必需**
-	        container: containerId, //上传区域DOM ID，默认是browser_button的父元素，
-	        max_file_size: '100mb', //最大文件体积限制
-	        flash_swf_url: 'js/plupload/Moxie.swf', //引入flash,相对路径
-			multi_selection: multi_selection,
-	        filters: {
-	            mime_types: [
-	                //只允许上传图片文件 （注意，extensions中，逗号后面不要加空格）
-	                {
-	                    title: "图片文件",
-	                    extensions: "jpg,gif,png,bmp"
-	                }
-	    //             , {
-					// 	title: '文件',
-					// 	extensions: "docx,doc,xls,xlsx,pdf"
-					// }
-	            ]
-	        },
-	        max_retries: 3, //上传失败最大重试次数
-	        // dragdrop: true, //开启可拖曳上传
-	        // drop_element: dropId, //拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
-	        chunk_size: '4mb', //分块上传时，每片的体积
-	        auto_start: true, //选择文件后自动上传，若关闭需要自己绑定事件触发上传
-	        init: {
-	            'FilesAdded': function(up, files) {
-	                plupload.each(files, function(file) {
-	                    // 文件添加进队列后,处理相关的事情
-	                    // printLog('on FilesAdded');
-	                });
-	            },
-	            'BeforeUpload': function(up, file) {
-	                // 每个文件上传前,处理相关的事情
-	                //printLog('on BeforeUpload');
-	            },
-	            'UploadProgress': function(up, file) {
-	                // 显示进度条
-	            	editor.showUploadProgress && editor.showUploadProgress(file.percent);
-	            	// var uploaded = file.loaded;
-              //       var size = plupload.formatSize(uploaded).toUpperCase();
-              //       var formatSpeed = plupload.formatSize(file.speed).toUpperCase();
-              //       editor.find("#" + file.id)
-              //           .find(".progress-infos").text("已上传: " + size + " 上传速度： " + formatSpeed + "/s")
-              //           .parent().find(".progress-bar").css("width", parseInt(file.percent, 10) + "%");
-	            },
-	            'FileUploaded': function(up, file, info) {
-	                // 每个文件上传成功后,处理相关的事情
-	                // 其中 info 是文件上传成功后，服务端返回的json，形式如
-	                // {
-	                //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
-	                //    "key": "gogopher.jpg"
-	                //  }
-	                //printLog(info);
-	                // 参考http://developer.qiniu.com/docs/v6/api/overview/up/response/simple-response.html
-
-	                var domain = up.getOption('domain');
-	                var res = $.parseJSON(info);
-	                var sourceLink = domain + res.key; //获取上传成功后的文件的Url
-
-	                //printLog(sourceLink);
-
-	                // 插入图片到editor
-	                editor.command && editor.command(null, 'insertHtml', '<img src="' + sourceLink + '" style="max-width:100%;"/>');
-					if (editor.append) {
-						
-						var imgCtn = $('<div class="img-ctn" style="display: inline-block;position: relative;"><img data-src="'+res.key+'" src="'+sourceLink+'" /><i class="zmdi zmdi-close-circle-o zmdi-hc-fw"></i></div>').appendTo(editor);
-
-						
-						editor[0] && editor[0].cfg.single && setImgDisabled(editor);
-						imgCtn.find('.zmdi-close-circle-o').on('click', function(e) {
-							imgCtn.remove();
-							editor[0] && editor[0].cfg.single && setImgDisabled(editor);
-						});
-						imgCtn.find('.zmdi-download').on('click', function(e) {
-							window.open(domain + imgCtn.attr('data-src'), '_blank');
-						});
-
-					}
-	            },
-	            'Error': function(up, err, errTip) {
-	                //上传出错时,处理相关的事情
-	                //printLog('on Error');
-	            },
-	            'UploadComplete': function() {
-	                    //队列文件处理完毕后,处理相关的事情
-	                    //printLog('on UploadComplete');
-
-	                    // 隐藏进度条
-	            	editor.hideUploadProgress && editor.hideUploadProgress();
-				},
-				'Key': function(up, file) {
-					// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
-					// 该配置必须要在 unique_names: false , save_key: false 时才生效
-					// do something with key here
-					var sourceLink = file.name;
-	                var suffix = sourceLink.slice(0, sourceLink.lastIndexOf('.'));
-	                var suffix1 = sourceLink.slice(sourceLink.lastIndexOf('.') + 1);
-	                suffix = suffix + "_" + (new Date().getTime());
-	                return suffix + "." + suffix1;
-				}
-	        }
-	    });
-	    // domain 为七牛空间（bucket)对应的域名，选择某个空间后，可通过"空间设置->基本设置->域名设置"查看获取
-	    // uploader 为一个plupload对象，继承了所有plupload的方法，参考http://plupload.com/docs
+	function uploadAvatar(url, photo){
+		Ajax.post("805077", {
+			json: {
+				"userId": base.getUserId(),
+				"photo": photo
+			}
+		}).then(function(res){
+			loading.hideLoading();
+			if(!res.success){
+				base.showMsg(res.msg);
+			}else{
+				$("#showAvatar").attr("src", url);
+			}
+		}, function(){
+			loading.hideLoading();
+		});
 	}
 });

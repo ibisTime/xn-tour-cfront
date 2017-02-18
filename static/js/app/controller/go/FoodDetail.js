@@ -65,7 +65,7 @@ define([
                 });
                 $("#telephone")
                     .html('<a class="show c_78" href="tel://'+data.telephone+'">'+data.telephone+'<div class="st-jt"></div></a>');
-                data.judge == "0" ? $("#scjdIcon").addClass("active") : "";
+                data.isCollect == "1" ? $("#scjdIcon").addClass("active") : "";
             }else{
                 base.showMsg("加载失败");
             }
@@ -90,7 +90,7 @@ define([
                 start: start,
                 limit: limit,
                 topCode: foodCode,
-                status: '1'
+                // status: '1'
             }).then(function(res){
                 if(res.success && res.data.list.length){
                     if(res.data.list.length < limit){
@@ -104,7 +104,7 @@ define([
                         html += '<div class="plun-cont-item flex">'+
                             '<div class="plun-left">'+
                                 '<div class="plun-left-wrap">'+
-                                    '<img class="center-img wp100" src="'+base.getAvatar(l.res.userExt.photo)+'" />'+
+                                    '<img class="center-img wp100" src="'+base.getWXAvatar(l.res.userExt.photo)+'" />'+
                                 '</div>'+
                             '</div>'+
                             '<div class="plun-right">'+
@@ -117,12 +117,20 @@ define([
                     $("#content").append(html);
                     start++;
                 }else{
-                    $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                    if(start == 1){
+                        $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                        myScroll.refresh();
+                        isEnd = true;
+                    }
                     base.hidePullUp();
                 }
                 isLoading = false;
             }, function(){
-                $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                if(start == 1){
+                    $("#content").html( '<div class="item-error">暂无相关评论</div>' );
+                    myScroll.refresh();
+                    isEnd = true;
+                }
                 base.hidePullUp();
             });
         }
@@ -135,11 +143,11 @@ define([
     function addListener() {
         $("#scjdIcon").on("click", function(){
             if(!base.isLogin()){
-                location.href = "../user/login.html?return=" + base.makeReturnUrl();
+                base.goLogin();
                 return;
             }
             loading.createLoading();
-            collectHotel();
+            collectFood();
         });
         $("#swiper").on("click", ".swiper-slide .center-img", function(){
             showImg.createImg($(this).attr("src")).showImg();
@@ -150,11 +158,11 @@ define([
 
         $("#writePlIcon").on("click", function (e) {
             if(!base.isLogin()){
-                location.href = "../user/login.html?return=" + base.makeReturnUrl();
+                base.goLogin();
                 return;
             }
             comment.showComment({
-                type: "1",
+                type: "3",
                 parentCode: foodCode,
                 commer: base.getUserId(),
                 topCode: foodCode,
@@ -184,26 +192,13 @@ define([
                 }
             });
         });
-        
-        $("#nav").on("click", ".hd-c-item", function(){
-            var _self = $(this), idx = _self.index();
-            _self.siblings(".active").removeClass("active")
-                .end().addClass("active");
-            var o_idx = idx && 0 || 1;
-            $("#content" + o_idx).removeClass("active");
-            $("#content"+idx).addClass("active");
-        });
-        $("#wyrzBtn").on("click", function(){
-            if(hotelCode)
-                location.href = './chose-room.html?code=' + hotelCode + "&return=" + returnUrl;
-        });
     }
 
     function collectFood(){
         Ajax.post("618320", {
             json: {
-                toEntity: hotelCode,
-                toType: 3,
+                toEntity: foodCode,
+                toType: 4,
                 type: 2,
                 interacter: base.getUserId()
             }

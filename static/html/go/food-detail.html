@@ -3,13 +3,16 @@
 
 <head>
     <link rel="import" href="../head.html?__inline">
-    <title>详情</title>
+    <title>美食详情</title>
 </head>
 
 <body class="bg_f3f3f3">
-    <div class="swiper-container wp100 top-banner" id="swiper">
-        <div class="swiper-wrapper"></div>
-        <div class="swiper-pagination"></div>
+    <div class="p-r wp100">
+        <div class="swiper-container wp100 top-banner" id="swiper">
+            <div class="swiper-wrapper"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="h-detail-icon" id="scjdIcon"></div>
     </div>
     <div class="bg_fff">
         <div class="hd-name">
@@ -21,7 +24,6 @@
             <div class="st-jt"></div>
         </div>
     </div>
-    <div class="h-detail-icon" id="scjdIcon"></div>
     
     <div class="hotel-pl-title">
         <div class="hpt-l">游客评论</div><div class="hpt-r" id="writePlIcon">写评论</div>
@@ -56,6 +58,7 @@
         </div>
     </div>
     <link rel="import" href="../footer.html?__inline">
+    <script src="//api.map.baidu.com/api?v=2.0&ak=GtNrG008U04GONzKSDHiW70GxurUUhlU&s=1"></script>
     <script data-loader>
         require(['app/controller/go/FoodDetail']);
     </script>

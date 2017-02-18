@@ -17,7 +17,7 @@ define([
             return;
         }
         if(!base.isLogin()){
-            location.href = "../user/login.html?return=" + base.makeReturnUrl();
+            base.goLogin();
             return;
         }
         if(type == 0){
@@ -87,6 +87,7 @@ define([
             });
     }
     function wxPayOrder0(){
+        loading.createLoading("支付中...");
         Ajax.getIp()
             .then(function(res){
                 Ajax.post("618042", {
@@ -95,19 +96,14 @@ define([
                         payType: "2",
                         ip: res.ip
                     }
-                }).then(function(res){
-                    if(res.success){
-                        base.showMsg("支付成功");
-                        setTimeout(function(){
-                            location.href = "../user/user.html";
-                        }, 1000);
-                    }else{
-                        base.showMsg("支付失败");
-                    }
-                }, function(){
-                    base.showMsg("支付失败");
+                }).then(wxPay, function(){
+                    loading.hideLoading();
+                    base.showMsg("非常抱歉，支付请求提交失败");
                 });
-        });
+            }, function() {
+                    loading.hideLoading();
+                    base.showMsg("ip获取失败");
+            });
     }
     function wxPayOrder1() {
         loading.createLoading("支付中...");
@@ -144,7 +140,7 @@ define([
             },
             function(res) {
                 loading.hideLoading();
-                base.showMsg(res.err_msg, 100000);
+                // base.showMsg(res.err_msg, 100000);
                 if (res.err_msg == "get_brand_wcpay_request:ok") { // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
                     base.showMsg("支付成功");
                     setTimeout(function() {

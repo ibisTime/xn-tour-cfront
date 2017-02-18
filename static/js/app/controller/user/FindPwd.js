@@ -62,7 +62,7 @@ define([
                 if (response.success) {
                     base.showMsg("密码找回成功");
                     setTimeout(function() {
-                        location.href = "./login.html?return=" + base.makeReturnUrl();
+                        base.goLogin();
                     }, 1000);
                 } else {
                     base.showMsg(response.msg);

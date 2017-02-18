@@ -17,7 +17,8 @@ define([
         travelTime: "",
         joinPlace: "",
         start: 1,
-        limit: 10
+        limit: 10,
+        status: "1"
     };
     var firstSX = true;
     init();
@@ -54,6 +55,7 @@ define([
                             '</li>';
                 });
                 $("#topNav").html(html);
+                myScroll.refresh();
             }else{
                 base.showMsg(res.msg || "模块加载失败");
             }

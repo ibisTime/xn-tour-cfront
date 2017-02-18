@@ -47,7 +47,7 @@ define([
                 mapCont.css("top", $(window).scrollTop()+"px");
                 mapCont.show().animate({
                     left: 0
-                });
+                }, 200);
                 if(first){
                     var map = new BMap.Map("J_OnePointMapCont");
                     var point = new BMap.Point(defaultOpt.lng, defaultOpt.lat);
@@ -66,9 +66,9 @@ define([
             if(this.hasMap()){
                 var mapCont = $("#J_OnePointMapWrapper");
                 // mapCont.fadeOut(100);
-                mapCont.show().animate({
+                mapCont.animate({
                     left: "100%"
-                }, function () {
+                }, 200, function () {
                     mapCont.hide();
                 });
             }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>编写游记</title>
+</head>
+
+<body class="bg_f3f3f3">
+	<form id="travelForm">
+		<input type="hidden" name="publisher" id="publisher">
+		<div class=" fs15 ba mb10 lh50 wp100 plr10 bb p-r">
+			<div class="inline_block">针对线路</div>
+			<div class="over-select-text inline_block"></div>
+			<select class="over-select" id="lineCode" name="lineCode"></select>
+		    <img src="../../images/xyjt.png?__inline" class="more">
+		</div>
+		<div class="wp100 pl10 fs15 lh50 ba p-r bb ">
+			<div class="inline_block wid p-a">游记标题</div>
+		    <input type="text" placeholder="游记标题" id="name" name="name" class="fs15 pl80 wp100 pr10">
+		</div>
+		<div class="fs15 ba lh50 wp100 plr10 bb p-r" id="uploadContainer">
+			<div class="upload-pic-wrap">
+				<div class="p-r">
+					<input type="text" class="upload-pic-wrap-input" name="pic" id="pic">
+				</div>
+			</div>
+			<div class=" inline_block">上传图片</div>
+		    <div class="chose-img-wrap" id="uploadBtn"><img src="../../images/upload-img.png" class="take"></div>
+		</div>
+		<div class="plr10 pb10 ba bb clearfix hidden" id="showImgContainer"></div>
+		<div class="p-r ba text-h plr10 pt8 fs15">
+			<div class="p-r hp100">
+				<textarea class="wp100 p-a a-rea travel-textarea" id="description" name="description"></textarea>
+			    <div id="noTextarea" class="fs14 co9">请输入正文内容</div>
+			</div>
+		</div>
+		<div class=" plr10 mt40">
+			<input type="button" id="submitBtn" value="提交" class="but wp100 fs15">
+		</div>
+	</form>
+	<div class="tc wp100 pt100 nopay-f hidden" id="noTravel">
+		<img src="../../images/nothing.png?__inline" class="nopay">
+	    <div class="fs15 pt15">您还没有购买过线路哦</div>
+	</div>
+	<link rel="import" href="../footer.html?__inline">
+	<script type="text/javascript" src="../../js/lib/qiniu/plupload.full.min.js"></script>
+    <script type="text/javascript" src="../../js/lib/qiniu/qiniu.min.js"></script>
+    <script data-loader>
+        require(['app/controller/user/WriteTravelNote']);
+    </script>
+</body>
+
+</html>

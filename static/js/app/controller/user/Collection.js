@@ -58,20 +58,20 @@ define([
 			isEnd: false,
 			first: true
 		}
-	},
-	index = base.getUrlParam("index") || 0,
-	myScroll;
-	var hotelTmpl = __inline("../../ui/go-hotel.handlebars");
+	};
+	var index = base.getUrlParam("index") || 0,
+		myScroll;
+	var lineTmpl = __inline("../../ui/collection-line.handlebars");
+	var strategyTmpl = __inline("../../ui/collection-strategy.handlebars");
+	var hotelTmpl = __inline("../../ui/collection-hotel.handlebars");
+	var foodTmpl = __inline("../../ui/collection-food.handlebars");
 
 	init();
 	function init(){
 		initIScroll();
 		addListeners();
 		loading.createLoading();
-		getModuleList()
-			.then(function(){
-				$("#collection-top-nav").find(".order-list-top-nav1-item:eq("+index+")").click();
-			});
+		$("#collection-top-nav").find(".order-list-top-nav1-item:eq("+index+")").click();
 	}
 	function getModuleList(){
 		return Ajax.get("806052", {
@@ -85,16 +85,19 @@ define([
 	            });
 			}else{
 				base.showMsg("加载失败");
+		 		base.hidePullUp();
 		 		loading.hideLoading();
 			}
 		}, function(){
 		 	base.showMsg("加载失败");
+		 	base.hidePullUp();
 		 	loading.hideLoading();
 		});
 	}
 	//刷新
     function pullDownAction () {
-        getData(index, true);
+    	config1[index].isEnd = false;
+        getPageData(index, true);
     }
 	function initIScroll(){
         var pullDownEl, pullDownOffset, $pullDownEl;
@@ -119,7 +122,7 @@ define([
                     $pullDownEl.removeClass("flip");
                     this.minScrollY = -pullDownOffset;
                 } else if (this.y - 20 < this.maxScrollY) {
-                    getData(index);
+                    getPageData(index);
                 }
             },
             onScrollEnd: function () {
@@ -130,72 +133,51 @@ define([
             }
         });
     }
-    function getData(idx, refresh){
-    	switch(idx){
-        	case 0:
-        		getPageRoute(refresh);
-        		break;
-        	case 1:
-        		getPageStrategy(refresh);
-        		break;
-        	case 2:
-        		getPageHotel(refresh);
-        		break;
-        	case 3:
-        		getPageFood(refresh);
-        		break;
-        	default:
-        		getPageRoute(refresh);
-        }
-    }
     //线路
-	function getPageRoute(){
-		config1[0].isEnd = true;
-		loading.hideLoading();
-		myScroll.refresh();
-	}
-	//攻略
-	function getPageStrategy(){
-		config1[1].isEnd = true;
-		loading.hideLoading();
-		myScroll.refresh();
-	}
-	//酒店
-	function getPageHotel(refresh){
-		if( (!config1[2].isEnd || refresh) && !config1[2].isLoading ){
-			Ajax.get("618325", config[2], !refresh)
+	function getPageData(idx, refresh){
+		if( (!config1[idx].isEnd || refresh) && !config1[idx].isLoading ){
+			config1[idx].isLoading = true;
+			config1[idx].start = refresh && 1 || config1[idx].start;
+			Ajax.get("618325", config[idx], !refresh)
 				.then(function(res){
-					if(res.success && res.data.list){
+					if(res.success && res.data.list.length){
 						var data = res.data.list;
-						if(data.length < config[2].limit){
-							config1[2].isEnd = true;
+						if(data.length < config[idx].limit){
+							config1[idx].isEnd = true;
+							base.hidePullUp();
 						}
-						$("#content").find(".J_Content2")
-                            [refresh ? "html" : "append"](hotelTmpl({items: data}));
-						config1[2].start++;
+						var tmpl = idx == 0 ? lineTmpl :
+										idx == 1 ? strategyTmpl : 
+											idx == 2 ? hotelTmpl : 
+												idx == 3 ? foodTmpl : lineTmpl;
+						$("#content").find(".J_Content" + idx)
+                            [refresh ? "html" : "append"](tmpl({items: data}));
+						config1[idx].start++;
 					}else{
-						if(config1[2].first){
-                            $("#content").find(".J_Content2").html('<div class="no-collection">什么都木有～！</div>');
+						if(refresh){
+                            $("#content").find(".J_Content"+idx).html('<div class="no-collection">什么都木有～！</div>');
 						}
+						config1[idx].isEnd = true;
                         base.hidePullUp();
                         res.msg && base.showMsg(res.msg);
 					}
+					config1[idx].first = false;
 					myScroll.refresh();
 					loading.hideLoading();
+					config1[idx].isLoading = false;
 				}, function(){
+					config1[idx].first = false;
+					config1[idx].isEnd = true;
 					bas.showMsg("数据加载失败");
 					base.hidePullUp();
 					loading.hideLoading();
+					config1[idx].isLoading = false;
+					if(refresh){
+                        $("#content").find(".J_Content"+idx).html('<div class="no-collection">什么都木有～！</div>');
+                        myScroll.refresh();
+					}
 				});
-		}else{
-			myScroll.refresh();
 		}
-	}
-	//美食
-	function getPageFood(){
-		config1[3].isEnd = true;
-		loading.hideLoading();
-		myScroll.refresh();
 	}
 	function addListeners(){
 		$("#collection-top-nav").on("click", ".order-list-top-nav1-item", function (e) {
@@ -212,7 +194,17 @@ define([
             }
             if(config1[index].first){
             	loading.createLoading();
-            	getData(index);
+            	if(index == 2){
+            		getModuleList()
+            			.then(function(){
+            				// getData(index, true);
+            				getPageData(index, true);
+            			});
+            	}else{
+            		getPageData(index, true);
+            	}
+            }else{
+            	myScroll.refresh();
             }
         })
 	}

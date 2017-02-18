@@ -20,7 +20,8 @@ define([
 
     function getDetail(){
         Ajax.get("618116", {
-            code: code
+            code: code,
+            userId: base.getUserId()
         }).then(function(res){
             loading.hideLoading();
             if(res.success){
@@ -28,6 +29,7 @@ define([
                 $("#title").html(data.title);
                 $("#description").html(data.description);
                 $("#date").html(base.formatDate(data.updateDatetime, "yyyy-MM-dd"));
+                data.isCollect == "1" ? $("#scjdIcon").addClass("active") : "";
             }else{
                 base.showMsg(res.msg);
             }

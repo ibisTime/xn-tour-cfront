@@ -2,11 +2,10 @@ define([
     'Handlebars'
 ], function(Handlebars) {
     Handlebars.registerHelper('formatMoney', function(num, options){
-        if(!num)
+        if(!num && num !== 0)
             return "--";
         num = +num;
-        var pre = num > 0 ? "" : "-";
-        return pre + (num / 1000).toFixed(2);
+        return (num / 1000).toFixed(2);
     });
     Handlebars.registerHelper('formatZeroMoney', function(num, places, options){
         if (typeof num == 'undefined' || typeof num != 'number') {
@@ -40,9 +39,15 @@ define([
     Handlebars.registerHelper('formateDateTime', function(date, options){
         return date ? new Date(date).format("yyyy-MM-dd hh-mm-ss") : "--";
     });
+    Handlebars.registerHelper('formateDate', function(date, options){
+        return date ? new Date(date).format("yyyy-MM-dd") : "--";
+    });
     Handlebars.registerHelper('formatePointDate', function(date, options){
         return date ? new Date(date).format("yyyy.MM.dd") : "--";
     });
-
+    Handlebars.registerHelper('clearTag', function(des, options){
+        return des && des.replace(/(\<[^\>]+\>)|(\<\/[^\>]+\>)|(\<[^\/\>]+\/\>)/ig, "") || "";
+    });
+    
     return Handlebars;
 });

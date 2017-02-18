@@ -24,44 +24,57 @@ define([
             .then(function(res){
                 if(res.success){
                     var data = res.data;
+                    getLineInfo(data.lineCode);
                     $("#code").html(code);
                     $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
                     $("#status").html(lineOrderStatus[data.status]);
-                    $("#hotelPic").attr("src", base.getImg(data.hotal.pic1));
-                    $("#name").html(data.hotal.name);
-                    $("#addr").html(getAddr(data.hotal));
-                    $("#datetime")
-                        .html(base.formatDate(data.startDate, 'MM月dd号')+
-                            ' - '+base.formatDate(data.endDate, 'MM月dd号')+'<span class="pl4">'+
-                            base.calculateDays(data.startDate, data.endDate)+'晚'+data.quantity+'间</span>');
-                    $("#type").html(hhType[data.hotal.type]);
-                    $("#checkInName").html(data.checkInName);
-                    $("#checkInMobile").html(data.checkInMobile);
+                    // $("#hotelPic").attr("src", base.getImg(data.hotal.pic1));
+                    // $("#name").html(data.hotal.name);
+                    // $("#addr").html(getAddr(data.hotal));
                     $("#applyNote").html(data.applyNote || "无");
-                    $("#amount").html(base.fZeroMoney(data.amount));
-                    $("#orderA").attr("href", "../go/hotel-detail.html?code=" + code);
+                    $("#amount").html(base.formatMoney(data.amount));
+                    $("#orderA").attr("href", "../go/line-detail.html?code=" + data.lineCode);
                     if(data.status == "1")
                         $(".order-hotel-detail-btn0").removeClass("hidden");
                     else if(data.status == "2")
                         $(".order-hotel-detail-btn1").removeClass("hidden");
                     else if(data.status == "6")
-                        $(".order-hotel-detail-btn1").removeClass("hidden");
+                        $(".order-hotel-detail-btn2").removeClass("hidden");
                 }else{
                     base.showMsg("订单信息获取失败");
+                    loading.hideLoading();
                 }
+            }, function(){
                 loading.hideLoading();
             });
     }
 
-    function getAddr(data){
-        return data.province + (data.city || "") + (data.area || "") + (data.detail || "");
+    function getLineInfo(lineCode){
+        return Ajax.get("618102", {
+            code: lineCode
+        }).then(function(res){
+            loading.hideLoading();
+            if(res.success){
+                var data = res.data;
+                var pic = data.pathPic.split(/\|\|/), html = "";
+                $("#linePic").attr("src", base.getImg(pic[0]));
+                $("#name").html(data.name);
+                $("#joinPlace").html(data.joinPlace);
+            }else{
+                base.showMsg("线路信息加载失败");
+            }
+        }, function(){
+            loading.hideLoading();
+        })
     }
+
     function cancelOrder(remark){
         loading.createLoading("提交申请中...");
-        Ajax.post("618043", {
+        Ajax.post("618142", {
             json: {
                 code: code,
-                remark: remark
+                remark: remark,
+                userId: base.getUserId()
             }
         }).then(function(res){
                 loading.hideLoading();
@@ -76,30 +89,35 @@ define([
                 base.showMsg("申请失败");
             })
     }
-    function tuikcx(remark){
-        loading.createLoading("提交申请中...");
-        Ajax.post("618047", {
-            json: {
-                code: code,
-                remark: remark
-            }
-        }).then(function(res){
-                loading.hideLoading();
-                if(res.success){
-                    base.showMsg("申请提交成功");
-                    $(".order-hotel-detail-btn2").addClass("hidden");
-                }else{
-                    base.showMsg(res.msg || "申请失败");
-                }
-            }, function(){
-                loading.hideLoading();
-                base.showMsg("申请失败");
-            })
+    //撤销退款
+    function tuikcx(){
+        base.confirm("确定撤销退款吗?")
+            .then(function(){
+                loading.createLoading("提交申请中...");
+                Ajax.post("618146", {
+                    json: {
+                        code: code,
+                        userId: base.getUserId()
+                    }
+                }).then(function(res){
+                    loading.hideLoading();
+                    if(res.success){
+                        base.showMsg("申请提交成功");
+                        loading.createLoading();
+                        $(".order-hotel-detail-btn2").addClass("hidden");
+                    }else{
+                        base.showMsg(res.msg || "申请失败");
+                    }
+                }, function(){
+                    loading.hideLoading();
+                    base.showMsg("申请失败");
+                });
+            });
     }
     function addListeners(){
         //支付
         $("#payBtn").on("click", function(){
-            location.href = "../pay/pay.html?code=" + code;
+            location.href = "../pay/pay.html?code=" + code + "&type=1";
         });
         //取消订单
         $("#cancelBtn").on("click", function(){
@@ -111,7 +129,8 @@ define([
                 ok: function (argument) {
                     var remark = $(".dialog-textarea").val();
                     if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip").removeClass("hidden");
+                        $(".dialog-error-tip0").removeClass("hidden");
+                        $(".dialog-error-tip1").addClass("hidden");
                         return false;
                     } else if(!base.isNotFace(remark)){
                         $(".dialog-error-tip0").addClass("hidden");
@@ -158,31 +177,32 @@ define([
         });
         //撤销退款
         $("#tuikchBtn").on("click", function(){
-            var d = dialog({
-                title: '撤销退款申请',
-                content: '撤销退款理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
-                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写撤销退款理由</div>'+
-                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">撤销退款理由中包含非法字符</div>',
-                ok: function (argument) {
-                    var remark = $(".dialog-textarea").val();
-                    if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip1").addClass("hidden");
-                        $(".dialog-error-tip0").removeClass("hidden");
-                        return false;
-                    }else if(!base.isNotFace(remark)){
-                        $(".dialog-error-tip0").addClass("hidden");
-                        $(".dialog-error-tip1").removeClass("hidden");
-                        return false;
-                    }
-                    tuikcx(remark);
-                },
-                okValue: '确定',
-                cancel: function(){
-                    d.close().remove();
-                },
-                cancelValue: '取消'
-            });
-            d.showModal();
+            tuikcx();
+        //     var d = dialog({
+        //         title: '撤销退款申请',
+        //         content: '撤销退款理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
+        //                  '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写撤销退款理由</div>'+
+        //                  '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">撤销退款理由中包含非法字符</div>',
+        //         ok: function (argument) {
+        //             var remark = $(".dialog-textarea").val();
+        //             if(!remark || remark.trim() == ""){
+        //                 $(".dialog-error-tip1").addClass("hidden");
+        //                 $(".dialog-error-tip0").removeClass("hidden");
+        //                 return false;
+        //             }else if(!base.isNotFace(remark)){
+        //                 $(".dialog-error-tip0").addClass("hidden");
+        //                 $(".dialog-error-tip1").removeClass("hidden");
+        //                 return false;
+        //             }
+        //             tuikcx(remark);
+        //         },
+        //         okValue: '确定',
+        //         cancel: function(){
+        //             d.close().remove();
+        //         },
+        //         cancelValue: '取消'
+        //     });
+        //     d.showModal();
         });
     }
 

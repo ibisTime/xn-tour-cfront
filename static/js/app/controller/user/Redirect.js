@@ -17,7 +17,7 @@ define([
             .then(function(res) {
                 if (res.success) {
                     base.setSessionUser(res);
-                    base.goBackUrl("./user.html");
+                    base.goBackUrl("./user.html", true);
                 } else {
                     base.showMsg(res.msg);
                 }

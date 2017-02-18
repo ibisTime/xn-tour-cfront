@@ -44,6 +44,7 @@ define([
         }else{
             $("#jdxx-t, #jdxx").hide();
         }
+        totalLineAmount = +lineCodeInfo.lineAmount;
         var totalAmount = totalHotelAmount + totalLineAmount + totalOutAmount;
         $("#price").html(base.formatMoney(totalAmount));
     }
@@ -85,6 +86,7 @@ define([
             delete lineInfo[lineCode].roomTypeName;
             delete lineInfo[lineCode].roomPrice;
             delete lineInfo[lineCode].hotelAddr;
+            delete lineInfo[lineCode].lineAmount;
             data = $.extend(data, lineInfo[lineCode]);
         }
         Ajax.get("618140", data).then(function(res){

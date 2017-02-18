@@ -49,7 +49,7 @@ define([
     return {
         init: function (options) {
             $.extend(defaultOptions, options);
-            $("#" + defaultOptions.id).on("click", function() {
+            $("#" + defaultOptions.id).off("click").on("click", function() {
                 defaultOptions.checkInfo() && handleSendVerifiy();
             });
         }

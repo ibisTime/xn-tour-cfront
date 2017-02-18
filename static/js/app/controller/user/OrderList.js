@@ -16,22 +16,26 @@ define([
         "0": {
             start: 1,
             limit: 10,
-            status: ""
+            status: "",
+            userId: base.getUserId()
         },
         "1": {
             start: 1,
             limit: 10,
-            status: ""
+            status: "",
+            userId: base.getUserId()
         },
         "2": {
             start: 1,
             limit: 10,
-            status: ""
+            status: "",
+            userId: base.getUserId()
         },
         "3": {
             start: 1,
             limit: 10,
-            status: ""
+            status: "",
+            userId: base.getUserId()
         }
     }, config1 = {
         first0: true,
@@ -170,7 +174,8 @@ define([
                 ok: function (argument) {
                     var remark = $(".dialog-textarea").val();
                     if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip").removeClass("hidden");
+                        $(".dialog-error-tip0").removeClass("hidden");
+                        $(".dialog-error-tip1").addClass("hidden");
                         return false;
                     } else if(!base.isNotFace(remark)){
                         $(".dialog-error-tip0").addClass("hidden");
@@ -198,7 +203,8 @@ define([
                 ok: function (argument) {
                     var remark = $(".dialog-textarea").val();
                     if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip").removeClass("hidden");
+                        $(".dialog-error-tip0").removeClass("hidden");
+                        $(".dialog-error-tip1").addClass("hidden");
                         return false;
                     } else if(!base.isNotFace(remark)){
                         $(".dialog-error-tip0").addClass("hidden");
@@ -276,60 +282,12 @@ define([
         //酒店撤销退款
         $("#content").on("click", ".order-list-content2 .od-cancel-tuik-btn", function(){
             var code = $(this).closest("[data-code]").attr("data-code");
-            var d = dialog({
-                title: '撤销退款申请',
-                content: '撤销退款理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
-                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写撤销退款理由</div>'+
-                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">撤销退款理由中包含非法字符</div>',
-                ok: function (argument) {
-                    var remark = $(".dialog-textarea").val();
-                    if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip1").addClass("hidden");
-                        $(".dialog-error-tip0").removeClass("hidden");
-                        return false;
-                    }else if(!base.isNotFace(remark)){
-                        $(".dialog-error-tip0").addClass("hidden");
-                        $(".dialog-error-tip1").removeClass("hidden");
-                        return false;
-                    }
-                    tuikcx_hotel(code, remark);
-                },
-                okValue: '确定',
-                cancel: function(){
-                    d.close().remove();
-                },
-                cancelValue: '取消'
-            });
-            d.showModal();
+            tuikcx_hotel(code);
         });
         //线路撤销退款
         $("#content").on("click", ".order-list-content1 .od-cancel-tuik-btn", function(){
             var code = $(this).closest("[data-code]").attr("data-code");
-            var d = dialog({
-                title: '撤销退款申请',
-                content: '撤销退款理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
-                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写撤销退款理由</div>'+
-                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">撤销退款理由中包含非法字符</div>',
-                ok: function (argument) {
-                    var remark = $(".dialog-textarea").val();
-                    if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip1").addClass("hidden");
-                        $(".dialog-error-tip0").removeClass("hidden");
-                        return false;
-                    }else if(!base.isNotFace(remark)){
-                        $(".dialog-error-tip0").addClass("hidden");
-                        $(".dialog-error-tip1").removeClass("hidden");
-                        return false;
-                    }
-                    tuikcx_line(code, remark);
-                },
-                okValue: '确定',
-                cancel: function(){
-                    d.close().remove();
-                },
-                cancelValue: '取消'
-            });
-            d.showModal();
+            tuikcx_line(code);
         });
     }
     //酒店订单分页查询
@@ -413,50 +371,55 @@ define([
         }
     }
     //酒店撤销退款
-    function tuikcx_hotel(code, remark){
-
-        loading.createLoading("提交申请中...");
-        Ajax.post("618047", {
-            json: {
-                code: code,
-                remark: remark
-            }
-        }).then(function(res){
-                loading.hideLoading();
-                if(res.success){
-                    base.showMsg("申请提交成功");
-                    loading.createLoading();
-                    getPageHotelOrderList(true);
-                }else{
-                    base.showMsg(res.msg || "申请失败");
-                }
-            }, function(){
-                loading.hideLoading();
-                base.showMsg("申请失败");
-            })
+    function tuikcx_hotel(code){
+        
+        base.confirm("确定撤销退款吗?")
+            .then(function(){
+                loading.createLoading("提交申请中...");
+                Ajax.post("618047", {
+                    json: {
+                        code: code,
+                        userId: base.getUserId()
+                    }
+                }).then(function(res){
+                        loading.hideLoading();
+                        if(res.success){
+                            base.showMsg("申请提交成功");
+                            loading.createLoading();
+                            getPageHotelOrderList(true);
+                        }else{
+                            base.showMsg(res.msg || "申请失败");
+                        }
+                    }, function(){
+                        loading.hideLoading();
+                        base.showMsg("申请失败");
+                    })
+            });
     }
     //线路撤销退款
-    function tuikcx_line(code, remark){
-
-        // loading.createLoading("提交申请中...");
-        // Ajax.post("618047", {
-        //     json: {
-        //         code: code,
-        //         remark: remark
-        //     }
-        // }).then(function(res){
-        //         loading.hideLoading();
-        //         if(res.success){
-        //             base.showMsg("申请提交成功");
-        //             loading.createLoading();
-        //             getPageHotelOrderList(true);
-        //         }else{
-        //             base.showMsg(res.msg || "申请失败");
-        //         }
-        //     }, function(){
-        //         loading.hideLoading();
-        //         base.showMsg("申请失败");
-        //     })
+    function tuikcx_line(code){
+        base.confirm("确定撤销退款吗?")
+            .then(function(){
+                loading.createLoading("提交申请中...");
+                Ajax.post("618146", {
+                    json: {
+                        code: code,
+                        userId: base.getUserId()
+                    }
+                }).then(function(res){
+                    loading.hideLoading();
+                    if(res.success){
+                        base.showMsg("申请提交成功");
+                        loading.createLoading();
+                        getPageLineOrderList(true);
+                    }else{
+                        base.showMsg(res.msg || "申请失败");
+                    }
+                }, function(){
+                    loading.hideLoading();
+                    base.showMsg("申请失败");
+                });
+            });
     }
     //取消酒店订单
     function cancelHotelOrder(code, remark){
@@ -464,7 +427,8 @@ define([
         Ajax.post("618043", {
             json: {
                 code: code,
-                remark: remark
+                remark: remark,
+                userId: base.getUserId()
             }
         }).then(function(res){
                 loading.hideLoading();
@@ -483,10 +447,11 @@ define([
     //取消线路订单
     function cancelLineOrder(code, remark){
         loading.createLoading("提交申请中...");
-        Ajax.post("618042", {
+        Ajax.post("618142", {
             json: {
                 code: code,
-                remark: remark
+                remark: remark,
+                userId: base.getUserId()
             }
         }).then(function(res){
                 loading.hideLoading();
@@ -528,7 +493,7 @@ define([
                             '<span class="order-list-item-top-right fr">'+base.formatDate(d.applyDatetime, "yyyy-MM-dd")+'</span>'+
                         '</div>'+
                         '<div class="order-list-item-center item">'+
-                        '<a href="./order-food-detail.html?code='+d.code+'" class="wp100 show">'+
+                        '<a href="./order-line-detail.html?code='+d.code+'" class="wp100 show">'+
                             '<div class="item-c-div item-l">'+
                                 '<img class="center-img" src="'+base.getImg(d.line.pathPic)+'"/>'+
                             '</div>'+

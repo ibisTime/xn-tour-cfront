@@ -12,7 +12,7 @@ define([
 	var endDate = base.getUrlParam("end") || getNow();
 	var hmType2 = {}, ssType = {}, price = 0, roomType = 1,
         roomDescription = "", roomPic = "", hotelAddr = "",
-        roomTypeName = "", roomPrice;
+        roomTypeName = "", roomPrice, totalDays;
     var returnUrl = base.getUrlParam("return");
 
 	init();
@@ -25,10 +25,11 @@ define([
             }
             $("#startDate").html(startDate);
             $("#endDate").html(endDate);
-            $("#totalDays").html(base.calculateDays(startDate, endDate));
+            totalDays = base.calculateDays(startDate, endDate);
+            $("#totalDays").html(totalDays);
             getRoomAndHotel();
         }else{
-            location.href = "../user/login.html?return=" + base.makeReturnUrl();
+            base.goLogin();
         }
 	}
 
@@ -100,7 +101,9 @@ define([
         	var val = $(this).val();
             if($("#quantity").valid()){
                 val = +val;
-                $("#price").html(base.fZeroMoney(price * val));
+                $("#price").html(base.formatMoney(+roomPrice * +totalDays * val));
+            }else{
+                $("#price").html("--");
             }
         });
         $("#addr-wrap").on("click", function(){
@@ -118,7 +121,7 @@ define([
         data.roomType = roomType;
         Ajax.get("618040", data).then(function(res){
             if(res.success){
-                location.href = "../pay/pay.html?code=" + res.data;
+                location.href = "../pay/pay.html?code=" + res.data.code;
             }else{
                 loading.hideLoading();
                 base.showMsg(res.msg || "订单提交失败");
@@ -191,7 +194,8 @@ define([
                 price = data.price;
                 roomType = data.type;
                 roomPrice = price;
-                $("#price").html(base.formatMoney(price));
+                $("#price").html(base.formatMoney(+roomPrice * +totalDays));
+                // $("#price").html(base.formatMoney(price));
             }else{
                 base.showMsg("房间信息加载失败");
             }

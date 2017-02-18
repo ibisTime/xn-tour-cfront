@@ -13,7 +13,7 @@ define([
     function init() {
         loading.createLoading();
         if(!base.isLogin()){
-            location.href = "./wx-login.html";
+            base.goLogin();
             return;
         }
         Foot.addFoot(3);

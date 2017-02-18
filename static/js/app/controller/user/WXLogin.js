@@ -3,6 +3,7 @@ define([
     'app/util/ajax',
     'app/module/loading/loading'
 ], function(base, Ajax, loading) {
+    var returnUrl = base.getReturnParam();
     init();
     function init(){
         loading.createLoading();

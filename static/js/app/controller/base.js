@@ -332,13 +332,20 @@ define([
             }
             return "";
         },
-        goBackUrl: function(url) {
+        goBackUrl: function(url, isLoginBack) {
             var rUrl = Base.getUrlParam("return");
-            if (rUrl) {
-                location.href = rUrl;
-            } else {
-                location.href = url || "../index.html";
+            if(isLoginBack){
+                var returnUrl = sessionStorage.getItem("l-return");
+                sessionStorage.removeItem("l-return");
+                location.href = returnUrl || url || "../user/user.html";
+            }else{
+                if (rUrl) {
+                    location.href = rUrl;
+                } else {
+                    location.href = url || "../index.html";
+                }
             }
+            
         },
         addIcon: function() {
             var icon = sessionStorage.getItem("icon");
@@ -350,7 +357,9 @@ define([
             return !!sessionStorage.getItem("user");
         },
         getUser: function(refresh) {
-            return Ajax.get("805056", {}, !refresh)
+            return Ajax.get("805056", {
+                userId: Base.getUserId()
+            }, !refresh)
                 .then(function(res){
                     if(res.success){
                         Base.setSessionUserInfo(res.data);
@@ -391,7 +400,32 @@ define([
             $("#pullUp").css("visibility", "visible");
         },
         goLogin: function(){
-            location.href = "../user/login.html?return=" + base.makeReturnUrl();
+            // location.href = "../user/wx-login.html?return=" + Base.makeReturnUrl();
+            sessionStorage.setItem("l-return", location.pathname + location.search);
+            location.href = "../user/wx-login.html";
+        },
+        confirm: function(msg) {
+            return (new Promise(function (resolve, reject) {
+                var d = dialog({
+                    content: msg,
+                    ok: function () {
+                        var that = this;
+                        setTimeout(function () {
+                            that.close().remove();
+                        }, 1000);
+                        resolve();
+                        return true;
+                    },
+                    cancel: function () {
+                        reject();
+                        return true;
+                    },
+                    cancelValue: '取消',
+                    okValue: '确定'
+                });
+                d.showModal();
+            }));
+
         }
     };
     Base.addIcon();

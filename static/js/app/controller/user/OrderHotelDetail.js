@@ -44,14 +44,14 @@ define([
                 $("#checkInName").html(data.checkInName);
                 $("#checkInMobile").html(data.checkInMobile);
                 $("#applyNote").html(data.applyNote || "无");
-                $("#amount").html(base.fZeroMoney(data.amount));
-                $("#orderA").attr("href", "../go/hotel-detail.html?code=" + code);
+                $("#amount").html(base.formatMoney(data.amount));
+                $("#orderA").attr("href", "../go/hotel-detail.html?code=" + data.code);
                 if(data.status == "1")
                     $(".order-hotel-detail-btn0").removeClass("hidden");
                 else if(data.status == "2")
                     $(".order-hotel-detail-btn1").removeClass("hidden");
                 else if(data.status == "6")
-                    $(".order-hotel-detail-btn1").removeClass("hidden");
+                    $(".order-hotel-detail-btn2").removeClass("hidden");
             }else{
                 base.showMsg("订单信息获取失败");
             }
@@ -67,7 +67,8 @@ define([
         Ajax.post("618043", {
             json: {
                 code: code,
-                remark: remark
+                remark: remark,
+                userId: base.getUserId()
             }
         }).then(function(res){
                 loading.hideLoading();
@@ -87,7 +88,8 @@ define([
         Ajax.post("618047", {
             json: {
                 code: code,
-                remark: remark
+                remark: remark,
+                userId: base.getUserId()
             }
         }).then(function(res){
                 loading.hideLoading();
@@ -105,7 +107,7 @@ define([
     function addListeners(){
         //支付
         $("#payBtn").on("click", function(){
-            location.href = "../pay/pay.html?code=" + code;
+            location.href = "../pay/pay.html?code=" + code + "&type=0";
         });
         //取消订单
         $("#cancelBtn").on("click", function(){
@@ -117,7 +119,8 @@ define([
                 ok: function (argument) {
                     var remark = $(".dialog-textarea").val();
                     if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip").removeClass("hidden");
+                        $(".dialog-error-tip0").removeClass("hidden");
+                        $(".dialog-error-tip1").addClass("hidden");
                         return false;
                     } else if(!base.isNotFace(remark)){
                         $(".dialog-error-tip0").addClass("hidden");
