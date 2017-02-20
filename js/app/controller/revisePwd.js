@@ -26,7 +26,7 @@ define([
           }
         })
 	
-	//新手机号验证码
+	//手机号验证码
 	$("#newTelCode").on("click",function(){
 		
 		var newTel = $(".revise-Tel").val();
@@ -38,7 +38,6 @@ define([
 		}else{
 			
 			if(codeTimeNum==60){
-				
 				timer = setInterval(function(){
 					codeTimeNum--;
 					
@@ -55,7 +54,7 @@ define([
 				
 				var parem={
 					"mobile":newTel,
-					"bizType":"805047",
+					"bizType":"805048",
 		            "kind": "11"
 				}
 				
@@ -71,36 +70,42 @@ define([
 		}
 	})
 	
-	
-	$("#fdPwd").on("click",function(){
-		location.href = "revisetPwd.html?code="+code;
-	});
-	
-	//-----------------修改手机号-----------------
+	//-----------------修改密码-----------------
 	//确定提交
+	
 	$("#reviseSub").on("click",function(){
 		var newTel = $(".revise-Tel").val();
 		var newCode = $(".newTelCode").val();
-		var tradePwd = $(".revise-tPwd").val();
+		
+		var tradePwd = $(".revise-NPwd").val();//新密码
+		var tradePwd2 = $(".revise-NPwd2").val();//确认密码
 		
 		if(newTel==null || newTel=="" ){
 			base.showMsg("请输入手机号");
+		}else if(newTel.length!=11){
+			base.showMsg("请输入正确的手机号");
 		}else if(newCode==null || newCode==""){
 			base.showMsg("请输入手机验证码");
+		}else if(tradePwd!=tradePwd2){
+			base.showMsg("两次密码输入不一致");
+			
+			$(".revise-NPwd").val("");//新交易密码
+			$(".revise-NPwd2").val("");//确认交易密码
+			
 		}else if(newCode.length!=4){
 			base.showMsg("手机验证码不正确");
 		}else if(tradePwd==null || newCode==""){
 			base.showMsg("请输入交易密码");
 		}else {
 			var parem={
-				"userId": userId,
-			    "newMobile": newTel,
+				"mobile": newTel,
 			    "smsCaptcha": newCode,
-			    "tradePwd":tradePwd
+				"newLoginPwd": tradePwd,
+				"loginPwdStrength": base.calculateSecurityLevel(tradePwd),
+				"kind": "11"
 			}
 			
-	        console.log(userId,newTel,newCode)
-			Ajax.post("805047",{json:parem})
+			Ajax.post("805048",{json:parem})
 				.then(function(res) {
 	                if (res.success) {
 	                	if(res.data.isSuccess){

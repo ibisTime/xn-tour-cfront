@@ -16,7 +16,7 @@ define([
 	Ajax.get("618011",{"ownerId":userId})
 		.then(function(res) {
             if (res.success) {
-            	console.log(res.data[0])
+//          	console.log(res.data[0])
                 code = res.data[0].code;
                 userName = res.data[0].name;
                 userPic = res.data[0].pic1;
@@ -42,7 +42,7 @@ define([
 	});
 	
 	$("#h-aboutUs").on('click', function(){
-		location.href = "aboutUs.html"
+		location.href = "aboutUs.html?code="+code;
 	});
 	
 	$("#h-system").on('click', function(){
@@ -62,8 +62,13 @@ define([
 	$("#revise-tel").on('click', function(){
 		location.href = "reviseTel.html?code="+code;
 	});
+	
 	$("#revise-pwd").on('click', function(){
 		location.href = "revisePwd.html?code="+code;
+	});
+	
+	$("#revise-tpwd").on('click', function(){
+		location.href = "revisetPwd.html?code="+code;
 	});
 	
 });

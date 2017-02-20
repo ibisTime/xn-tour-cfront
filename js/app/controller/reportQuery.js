@@ -20,13 +20,10 @@ define([
 	).then(function(res1,res2){
 		if (res1.success && res2.success) {
         	
-	        amount1 = res1.data[0].amount;
-	        amount2 = res2.data[0].amount;
-	        amount3 = parseInt(amount2) - parseInt(amount1);
+	        amount1 = res1.data[0].amount;//
+	        amount2 = res2.data[0].amount;//
+	        amount3 = amount2 - amount1;//
 	           
-	        console.log(res1.data)
-	        console.log(res2.data)
-	        
 	        $(".rQ-incomeNum").html(amount2);
 	        $(".rQ-balanceNum").html(amount1);
 	        $(".rQ-setNum").html(amount3);

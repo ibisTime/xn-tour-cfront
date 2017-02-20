@@ -84,6 +84,7 @@ define([
 		
 	})
 	
+	
 	function dictArray(dkey,arrayData){//类型
 		for(var i = 0 ; i < arrayData.length; i++ ){
 			if(dkey == arrayData[i].dkey){
