@@ -93,9 +93,9 @@ margin-right: 10px;color:#ffffff;}
 .plr60{padding-left:60px;padding-right:60px;}
 
 /*专线详情*/
-.zhida{background:url(../images/%E7%9B%B4%E8%BE%BE.png) no-repeat center;}
-.Station-add{background:url(../images/%E5%AE%9A%E4%BD%8D%E5%9C%B0%E5%9D%80@2x.png) no-repeat left center;background-size:15px;padding-left:20px;}
-.writ{background:url(../images/%E8%B4%AD%E7%A5%A8%E6%95%B0%E9%87%8F@2x.png) no-repeat left center;background-size:15px;padding-left:20px;}
+.zhida{background:url(../images/train.png?__inline) no-repeat center;}
+.Station-add{background:url(../images/line-addr.png?__inline) no-repeat left center;background-size:15px;padding-left:20px;}
+.writ{background:url(../images/ticket-icon.png?__inline) no-repeat left center;background-size:15px;padding-left:20px;}
 .jian{width:25px;}
 .jia{width:25px;}
 .chat{position:fixed;bottom:64px;right:0;}

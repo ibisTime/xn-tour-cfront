@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>专线</title>
+</head>
+
+<body class="bg_f3f3f3">
+    <form class="bg_fff wp100" id="specialForm">
+        <div class="special-top-item">
+            出发地<span class="st-r"></span>
+            <select class="over-select" id="startSite" name="startSite"></select>
+            <div class="st-jt"></div>
+        </div>
+        <div class="special-top-item">
+            目的地<span class="st-r"></span>
+            <select class="over-select" id="endSite" name="endSite"></select>
+            <div class="st-jt"></div>
+        </div>
+        <div class="special-top-item">
+            <div class="p-r">
+                <!-- <input id="choseDate" data-val="1" data-target1="relDate" class="spec-top-date" data-target="dateStart"/> -->
+                <input id="choseDate" class="spec-top-date"/>
+                选择时间<span id="relDate" class="st-r"></span>
+                <input name="dateStart" type="text" class="op-0" id="dateStart"/>
+            </div>
+            <div class="st-jt"></div>
+        </div>
+    </form>
+    <div class="special-button">
+        <input type="button" id="search" value="开始查询">
+    </div>
+    <div class="spec-area hidden">
+        <span class="area-s" id="startArea">温州</span>
+        <span class="plr2">-</span>
+        <span class="area-e" id="endArea">海宁</span>
+    </div>
+    <div id="wrapper" class="scroll-wrapper special-wrapper">
+        <div id="scroll">
+            <div id="content" class="s-content b-b-0"></div>
+            <div id="pullUp" class="idle hidden">
+                <div class="pullUpLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                    <div class="bounce4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script src="../../js/lib/laydate/laydate.dev.js"></script>
+
+    <script data-loader>
+        require(['app/controller/go/SpecialLine']);
+    </script>
+</body>
+
+</html>

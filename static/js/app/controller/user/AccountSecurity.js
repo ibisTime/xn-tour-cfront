@@ -4,9 +4,14 @@ define([
     'app/module/loading/loading',
     'app/module/validate/validate',
     'app/module/qiniu/qiniu',
-    'app/module/smsCaptcha/smsCaptcha',
-], function(base, Ajax, loading, Validate, qiniu, smsCaptcha) {
-	var token, nickname, mobile, bizType = "805153", identityFlag;
+    'app/module/identity/identity',
+    'app/module/bindMobile/bindMobile',
+    'app/module/changeMobile/changeMobile',
+    'app/module/changeNickName/changeNickName',
+    'app/module/setTradePwd/setTradePwd'
+], function(base, Ajax, loading, Validate, qiniu, Identity,
+			BindMobile, ChangeMobile, ChangeNickName, TradePwd) {
+	var token, nickname, mobile, identityFlag, tradeFlag;
 	init();
 	function init(){
 		loading.createLoading();
@@ -16,21 +21,84 @@ define([
 				if(res.success){
 					$("#showAvatar").attr("src", base.getWXAvatar(res.data.userExt.photo));
 					nickname = res.data.nickname;
-					$("#nick").html(nickname);
+					$("#nick").text(nickname);
+					ChangeNickName.addNickCont({
+						success: function(res){
+							nickname = res;
+							$("#nick").text(nickname);
+						},
+						error: function(msg){
+							base.showMsg(msg);
+						},
+						defaultName: nickname
+					});
 					if(mobile = res.data.mobile){
 						$("#mobileName").text("修改手机号");
-						$("#mobileAction").find(".right-left-cont-title-name").text("修改手机号");
-						bizType = "805047";
-					}
-					identityFlag = res.data.identityFlag;
-					if( identityFlag != "0"){
-						$("#identityFlag").text("已绑定");
-						$("#idNo").val(res.data.idNo).attr("disabled", "disabled");
-						$("#realName").val(res.data.realName).attr("disabled", "disabled");
-						$("#authenticationBtn").parent().hide();
+						$("#mobileDetail").text(mobile);
+						ChangeMobile.addMobileCont({
+							success: function(res){
+								mobile = res;
+								$("#mobileDetail").text(mobile);
+							},
+							error: function(msg){
+								base.showMsg(msg);
+							}
+						});
 					}else{
+						BindMobile.addMobileCont({
+							success: function(res){
+								mobile = res;
+								$("#mobileDetail").text(mobile);
+								$("#mobileName").text("修改手机号");
+								ChangeMobile.addMobileCont({
+									success: function(res){
+										mobile = res;
+										$("#mobileDetail").text(mobile);
+									},
+									error: function(msg){
+										base.showMsg(msg);
+									}
+								});
+							},
+							error: function(msg){
+								base.showMsg(msg);
+							}
+						});
+					}
+					identityFlag = !!res.data.realName;
+					if( identityFlag ){
+						$("#identityFlag").text("已绑定");
+						Identity.addIdentity({
+							disabled: true,
+							realName: res.data.realName,
+							idNo: res.data.idNo
+						});
+					}else{
+						Identity.addIdentity({
+							success: function(){
+								identityFlag = true;
+								$("#identityFlag").text("已绑定");
+							},
+							error: function(msg){
+								base.showMsg(msg);
+							}
+						})
 						$("#identityFlag").text("未绑定");
 					}
+					tradeFlag = res.data.tradePwdStrength && res.data.tradePwdStrength != "0";
+					if(tradeFlag){
+						$("#tradeName").text("修改交易密码");
+					}
+					TradePwd.addCont({
+						success: function(){
+							identityFlag = true;
+							$("#tradeName").text("修改交易密码");
+						},
+						error: function(msg){
+							base.showMsg(msg);
+						},
+						mobile: mobile
+					});
 					addListener();
 					initUpload();
 				}else{
@@ -43,210 +111,21 @@ define([
 
 	function addListener(){
 		$("#nickWrap").on("click", function(){
-			showLeft2Right($("#nicknameChange"), function(){
-				$("#nickname").val(nickname);
-			});
-		});
-		$("#nickBack").on("click", function(){
-			hideLeft2Right($("#nicknameChange"));
-		});
-		$("#nicknameForm").validate({
-            'rules': {
-                nickname: {
-                    required: true,
-                    maxlength: 32,
-                    isNotFace: true
-                }
-            },
-            onkeyup: false
-        });
-        $("#changeNick").on("click", function(){
-        	if($("#nicknameForm").valid()){
-        		changeNickName();
-        	}
-        });
-        $("#mobileBack").on("click", function(){
-			hideLeft2Right($("#mobileAction"));
+			ChangeNickName.showNickCont();
 		});
 		$("#mobileWrap").on("click", function(){
-			showLeft2Right($("#mobileAction"));
+			if(mobile)
+				ChangeMobile.showMobileCont();
+			else
+				BindMobile.showMobileCont();
 		});
-        smsCaptcha.init({
-            checkInfo: function () {
-                return $("#mobile").valid();
-            },
-            bizType: bizType
-        });
-        $("#mobileBtn").on("click", function(){
-        	if($("#mobileForm").valid()){
-        		if(mobile){
-        			changeMobile();
-        		}else{
-        			bindMobile();
-        		}
-        	}
-        });
-        $("#mobileForm").validate({
-            'rules': {
-                mobile: {
-                    required: true,
-                    mobile: true
-                },
-                smsCaptcha: {
-                	sms: true,
-                	required: true
-                }
-            },
-            onkeyup: false
-        });
-
         $("#identityWrap").on("click", function(){
-			showLeft2Right($("#authentication"));
+			Identity.showIdentity();
 		});
-		$("#authenticationBack").on("click", function(){
-			hideLeft2Right($("#authentication"));
+		$("#tradeWrap").on("click", function(){
+			TradePwd.showCont(mobile);
 		});
-		$("#authenticationForm").validate({
-            'rules': {
-                realName: {
-                    required: true,
-                    maxlength: 32,
-                    isNotFace: true
-                },
-                idNo: {
-                	required: true,
-                	isIdCardNo: true
-                }
-            },
-            onkeyup: false
-        });
-        $("#authenticationBtn").on("click", function(){
-        	if($("#authenticationForm").valid()){
-        		identity();
-        	}
-        });
-	}
-	function identity(){
-		loading.createLoading("认证中...");
-		var data = $("#authenticationForm").serializeObject();
-		data.idKind = 1;
-		data.userId = base.getUserId();
-		Ajax.post("805044", {
-			json: data
-		}).then(function(res){
-			loading.hideLoading();
-			if(res.success){
-				hideLeft2Right($("#authenticationForm"), function(){
-					identityFlag = true;
-					$("#authenticationBtn").parent().hide();
-					$("#identityFlag").text("已绑定");
-					$("#realName, #idNo").attr("disabled", "disabled");
-				});
-			}else{
-				base.showMsg(res.msg);
-			}
-		}, function(){
-			base.showMsg("实名认证失败");
-			loading.hideLoading();
-		});
-	}
-	function changeMobile(){
-		loading.createLoading("修改中...");
-		Ajax.post("805047", {
-			json: {
-	            "newMobile": $("#mobile").val(),
-	            "smsCaptcha": $("#smsCaptcha").val(),
-	            "tradePwd": "111111",
-	            "userId": base.getUserId()
-	        }
-		}).then(function(res){
-			loading.hideLoading();
-			if(res.success){
-				hideLeft2Right($("#mobileAction"), function(){
-					mobile = $("#mobile").val();
-					$("#mobile").val("");
-					$("#smsCaptcha").val("");
-				});
-			}else{
-				base.showMsg(res.msg);
-			}
-		}, function(){
-			base.showMsg("手机号修改失败");
-			loading.hideLoading();
-		});
-	}
-	function bindMobile(){
-		loading.createLoading("绑定中...");
-		Ajax.post("805153", {
-			json: {
-	            "mobile": $("#mobile").val(),
-	            "smsCaptcha": $("#smsCaptcha").val(),
-	            "userId": base.getUserId()
-	        }
-		}).then(function(res){
-			loading.hideLoading();
-			if(res.success){
-				$("#mobileName").text("修改手机号");
-				hideLeft2Right($("#mobileAction"), function(){
-					mobile = $("#mobile").val();
-					$("#mobile").val("");
-					$("#smsCaptcha").val("");
-					$("#mobileAction").find(".right-left-cont-title-name").text("修改手机号");
-					bizType = "805047";
-					smsCaptcha.init({
-			            checkInfo: function () {
-			                return $("#mobile").valid();
-			            },
-			            bizType: bizType,
-			            id: 'smsCaptcha'
-			        });
-				});
-			}else{
-				base.showMsg(res.msg);
-			}
-		}, function(){
-			base.showMsg("手机号绑定失败");
-			loading.hideLoading();
-		});
-	}
-	function changeNickName(){
-		loading.createLoading("修改中...");
-		nickname = $("#nickname").val();
-		Ajax.post("805075", {
-			json: {
-				nickname: nickname,
-				userId: base.getUserId()
-			}
-		}).then(function(res){
-			loading.hideLoading();
-			if(res.success){
-				hideLeft2Right($("#nicknameChange"), function(){
-					$("#nick").html(nickname);
-				});
-			}else{
-				base.showMsg(res.msg);
-			}
-		}, function(){
-			base.showMsg("昵称修改失败");
-			loading.hideLoading();
-		});
-	}
-	function showLeft2Right(cont, afterFn){
-		cont.show()
-			.animate({
-	            left: 0
-	        }, 200, function(){
-	        	afterFn && afterFn();
-	        });
-	}
-	function hideLeft2Right(cont, afterFn){
-		cont.animate({
-            left: "100%"
-        }, 200, function () {
-            cont.hide();
-            afterFn && afterFn();
-        });
-	}
+  	}
 
 	function initUpload(){
 		qiniu.getQiniuToken()

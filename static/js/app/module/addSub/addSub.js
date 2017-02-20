@@ -48,15 +48,17 @@ define([
                 }
             }).on("change", function(e) {
                 var keyCode = e.charCode || e.keyCode;
+                var _self = $(this), val = _self.val();
                 if (!isSpecialCode(keyCode) && !isNumber(keyCode)) {
-                    this.value = this.value.replace(/[^\d]/g, "");
+                    val = val.replace(/[^\d]/g, "");
                 }
-                if (!$(this).val()) {
-                    this.value = "1";
+                if (!val) {
+                    val = "1";
                 }
-                if ($(this).val() == "0") {
-                    this.value = "1";
+                if (val == "0") {
+                    val = "1";
                 }
+                _self.val(val);
                 options.changeFn && options.changeFn.apply(this);
             });
         },

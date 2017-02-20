@@ -45,6 +45,9 @@ define([
     Handlebars.registerHelper('formatePointDate', function(date, options){
         return date ? new Date(date).format("yyyy.MM.dd") : "--";
     });
+    Handlebars.registerHelper('formateTime', function(date, options){
+        return date ? new Date(date).format("hh:mm") : "--";
+    });
     Handlebars.registerHelper('clearTag', function(des, options){
         return des && des.replace(/(\<[^\>]+\>)|(\<\/[^\>]+\>)|(\<[^\/\>]+\/\>)/ig, "") || "";
     });

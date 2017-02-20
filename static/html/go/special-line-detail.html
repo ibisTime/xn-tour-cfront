@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>专线详情</title>
+</head>
+
+<body class="bg_f3f3f3">
+
+    <div class="point wp100 plr10 ptb18">
+    	<div class="fs13 pb15" id="date"></div>
+        <div class="fs18  zhida">
+        	<div class="inline_block" id="startSite"></div>
+            <div class="inline_block fr" id="endSite"></div>
+        </div>
+         <div class="fs14 pt15">
+        	<div class="inline_block" id="time"></div>
+    		<div class="inline_block fr">余票：<span id="remainNum"></span>张</div>
+        </div>
+    </div>
+
+    <div class=" fs15 ba mb10 lh50 wp100 plr10 bb p-r t_norwrap flex">
+    	<div class=" inline_block co9 fs13 Station-add">车站地址</div>
+        <div class="fs14 inline_block pl16 black t_norwrap" id="address"></div>
+    </div>
+
+    <div class=" fs15 ba mb10 lh50 wp100 plr10 bb p-r  va">
+    	<div class=" inline_block co9 fs13 writ ">购买票数</div>
+        <div class=" inline_block xxx hig50 va fr">
+        	<img id="subBtn" src="../../images/sub-btn-icon.png?__inline" class="inline_block jian va">
+            <input type="number" class="special-line-input" value="1" id="totalTicket">
+            <img id="addBtn" src="../images/add-btn-icon.png?__inline" class="inline_block jia va">
+        </div>
+    </div>
+
+    <div id="kefuIcon" class="kefu-icon"></div>
+
+    <div class="fs14 ba plr10 wp100 border fixft hig50 xxx">
+    	<div class="inline_block va">
+        	<span class="fs14 co9">合计:</span>
+       	    <span class="price fs13">¥</span>
+            <span class="price fs18" id="totalAmount"></span>
+        </div>
+    	<input type="button" id="sbtn" value="预定" class="release fs15 inline_block fr">
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+
+    <script data-loader>
+        require(['app/controller/go/SpecialLineDetail']);
+    </script>
+</body>
+
+</html>

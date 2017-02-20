@@ -308,6 +308,7 @@
     left: 0;
     top: 0;
     opacity: 0;
+    z-index: 10;
 }
 .special-top-item .st-r{
     font-size: 15px;
@@ -320,7 +321,7 @@
     top: 0;
     height: 50px;
     width: 20px;
-    background: url(../images/xyjt.png) no-repeat;
+    background: url(../images/xyjt.png?__inline) no-repeat;
     background-size: 8px 15px;
     background-position: left center;
 }
@@ -1228,7 +1229,7 @@ label.error{
     color: #333;
     height: 100px;
     background: transparent;
-    padding-top: 2px;
+    /*padding-top: 2px;*/
 }
 .submit-textarea-wrap{
     height: 100px;
@@ -2051,4 +2052,51 @@ label.error{
 }
 .pb2_i{
     padding-bottom: 2px !important;
+}
+.op-0{
+    opacity: 0;
+}
+.b-b-0{
+    border-bottom: none !important;
+}
+.special-line-input{
+    width: 38px;
+    font-size: 15px;
+    color: #595959;
+    text-align: center;
+}
+.special-item, .special-item-addr{
+    font-size: 15px;
+    color: #484848;
+    border-bottom: 1px solid #ededed;
+    background-color: #fff;
+}
+.special-item-addr{
+    width: 100%;
+}
+.special-item{
+    line-height: 50px;
+}
+.special-title{
+    width: 100px;
+    color: #666;
+    flex-shrink: 0;
+    padding-left: 10px;
+}
+.special-item-order{
+    padding-left: 0 !important;
+}
+.content .item .item-c.special-item-order .item-c-top{
+    color: #484848;
+    padding-right: 50px;
+}
+.content .item .item-c.special-item-order .item-c-center{
+    color: #f64444;
+    font-size: 13px;
+}
+.content .item .item-c.special-item-order .item-c-bottom{
+    color: #666;
+}
+.lh1_6em{
+    line-height: 1.6em !important;
 }

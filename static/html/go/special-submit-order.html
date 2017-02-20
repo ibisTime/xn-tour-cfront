@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>专线</title>
+</head>
+
+<body class="bg_f3f3f3">
+	<div class="special-item-cont">
+		<div class="special-item t_norwrap flex">
+			<span class="special-title">起点</span>
+			<span class="t_norwrap" id="startSite"></span>
+		</div>
+		<div class="special-item t_norwrap flex">
+			<span class="special-title">终点</span>
+			<span class="t_norwrap" id="endSite"></span>
+		</div>
+		<div class="flex">
+			<span class="special-title special-item">车站地址</span>
+			<div class="special-item-addr flex flex-jc flex-dv">
+				<div class="lh1_6em" id="address"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="item">
+            <a class="block_wp100" id="orderA">
+                <div class="item-c flex flex-jb flex-dv special-item-order">
+                    <div class="item-c-top t_norwrap" id="name"></div>
+                    <div class="item-c-center order-item-center t_norwrap">
+                    	发车时间：<span id="datetime"></span>
+                    </div>
+                    <div class="item-c-bottom t_norwrap" id="type">票数：<span class="ticket"></span>张</div>
+                </div>
+                <div class="item-c-div item-r item-r2">¥<span class="fs-15" id="amount"></span></div>
+            </a>
+        </div>
+	</div>
+	<form id="submitForm" class="wp100">
+		<div id="areaWrap" class="bg_fff plr10 mt10 pb10 b-tb-ed">
+	        <div class="submit-textarea-wrap">
+	            <div class="p_r wp100">
+	                <textarea class="submit-textarea" name="applyNote" id="applyNote"></textarea>
+	                <div class="placeholder-text" id="applyPlaceholder">有什么特殊要求，写在这里！</div>
+	            </div>
+	        </div>
+	    </div>
+    </form>
+    <div class="hp50"></div>
+    <div class="fix-b2 font-9e">
+        合计：<span class="normal_ffa800">¥</span><span class="big_ffa800" id="totalAmount"></span>
+        <input type="button" id="submitBtn" value="提交订单" class="small-btn-ffa800" />
+    </div>
+	<link rel="import" href="../footer.html?__inline">
+
+    <script data-loader>
+        require(['app/controller/go/SpecialSubmitOrder']);
+    </script>
+</body>
+
+</html>

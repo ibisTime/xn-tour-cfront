@@ -11,6 +11,7 @@ define([
     return {
         createImg: function(pic){
         	pic = pic && pic.replace(/\?.*/gi, "") || "";
+            pic += '?imageMogr2/auto-orient';
             if(_hasShowImg()){
                 $("#J_ShowImg_Cont").attr("src", pic);
             }else{

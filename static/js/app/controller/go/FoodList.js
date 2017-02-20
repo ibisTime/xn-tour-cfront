@@ -20,6 +20,7 @@ define([
         latitude: "",
         supplyTime: "",  //用餐时间
         maxSeat: "",    //用餐人数
+        status: "1"
     }, isLoading = false, isEnd = false, first = true, module,
     foodTmpl = __inline("../../ui/go-food.handlebars");
 

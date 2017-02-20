@@ -43,9 +43,9 @@ fis.match('::package', {
         useInlineMap: true
     })
 });
-fis.match('/js/module/**', {
-    isMod: true
-});
+// fis.match('/js/module/**', {
+//     isMod: true
+// });
 fis.media("prod")
     .match('::package', {
         postpackager: fis.plugin('loader', {
@@ -58,7 +58,14 @@ fis.media("prod")
         packTo: '/pkg/common.js',
         packOrder: -100
     })
-    .match('{/js/lib/*.js,/js/app/util/*.js,/js/app/controller/base.js}', {
+    .match('/js/lib/jquery-2.1.4.js', {
+        packTo: '/pkg/common.js',
+        packOrder: -90
+    })
+    .match('/js/module/**', {
+        requires: ['/js/require.js']
+    })
+    .match('{/js/lib/*.js,/js/app/util/*.js,/js/app/controller/base.js,/js/app/module/loading/loading.js}', {
         requires: ['/js/require.js'],
         packTo: '/pkg/common.js'
     })

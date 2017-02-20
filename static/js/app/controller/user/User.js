@@ -3,8 +3,9 @@ define([
     'app/util/ajax',
     'iScroll',
     'app/module/foot/foot',
-    'app/module/loading/loading'
-], function(base, Ajax, iScroll, Foot, loading) {
+    'app/module/loading/loading',
+    'app/module/showImg/showImg'
+], function(base, Ajax, iScroll, Foot, loading, showImg) {
 
     var myScroll;
 
@@ -60,7 +61,9 @@ define([
     }
 
     function addListener() {
-
+        $("#avatar").on("click", function(){
+            showImg.createImg($(this).attr("src")).showImg();
+        });
     }
 
     function getUser(refresh){

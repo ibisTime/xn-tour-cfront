@@ -137,7 +137,8 @@ define([
                 start: start,
                 limit: limit,
                 type: '2',
-                lineCode: lineCode
+                lineCode: lineCode,
+                status: "1"
             }, !refresh)
                 .then(function (res) {
                     if(res.success && res.data.list.length){

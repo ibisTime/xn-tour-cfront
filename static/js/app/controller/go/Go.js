@@ -24,7 +24,8 @@ define([
             city: "",
             area: "",
             longitude: "",
-            latitude: ""
+            latitude: "",
+            status: "1"
         },
         hotel: {
             start: 1,
@@ -34,7 +35,8 @@ define([
             city: "",
             area: "",
             longitude: "",
-            latitude: ""
+            latitude: "",
+            status: "1"
         },
         food: {
             start: 1,
@@ -44,7 +46,8 @@ define([
             city: "",
             area: "",
             longitude: "",
-            latitude: ""
+            latitude: "",
+            status: "1"
         }
     };
     var config1 = {
@@ -125,7 +128,7 @@ define([
                             }
                         }
                     });
-                    // $("#top-content").find(".J_Content0").html(html0);
+                    $("#top-content").find(".J_Content0").html(html0);
                     $("#top-content").find(".J_Content1").html(html1);
                     $("#top-content").find(".J_Content2").html(html2);
                     Handlebars.registerHelper('formatCategory', function(category, options){

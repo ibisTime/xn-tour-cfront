@@ -1,25 +1,42 @@
 define([
-    'app/controller/base',
+    'jquery',
     'app/util/ajax',
-    'jquery'
-], function (base, Ajax, $) {
-    var defaultOptions = {
+    'app/util/dialog'
+], function ($, Ajax, dialog) {
+    function _showMsg(msg, time) {
+        var d = dialog({
+            content: msg,
+            quickClose: true
+        });
+        d.show();
+        setTimeout(function() {
+            d.close().remove();
+        }, time || 1500);
+    }
+    function initSms(opt){
+        this.options = $.extend({}, this.defaultOptions, opt);
+        var _self = this;
+        $("#" + this.options.id).off("click")
+            .on("click", function() {
+                _self.options.checkInfo() && _self.handleSendVerifiy();
+            });
+    }
+    initSms.prototype.defaultOptions = {
         id: "getVerification",
         mobile: "mobile",
         checkInfo: function () {
-            return $("#" + this.mobile).valid();
+            return $("#" + this.options.mobile).valid();
         },
-        sendCode: '805904',
-        //errorFn: function () {}
+        sendCode: '805904'
     };
-    function handleSendVerifiy() {
-        var verification = $("#" + defaultOptions.id);
+    initSms.prototype.handleSendVerifiy = function() {
+        var verification = $("#" + this.options.id);
         verification.attr("disabled", "disabled");
-        Ajax.post(defaultOptions.sendCode, {
+        Ajax.post(this.options.sendCode, {
             json: {
-                "bizType": defaultOptions.bizType,
+                "bizType": this.options.bizType,
                 "kind": "f1",
-                "mobile": $("#" + defaultOptions.mobile).val()
+                "mobile": $("#" + this.options.mobile).val()
             }
         }).then(function(response) {
             if (response.success) {
@@ -35,23 +52,19 @@ define([
                     })(i);
                 }
             } else {
-                defaultOptions.errorFn && defaultOptions.errorFn();
-                base.showMsg(response.msg);
+                this.options.errorFn && this.options.errorFn();
+                _showMsg(response.msg);
                 verification.val("获取验证码").removeAttr("disabled");
             }
         }, function() {
-            defaultOptions.errorFn && defaultOptions.errorFn();
-            base.showMsg("验证码获取失败");
+            this.options.errorFn && this.options.errorFn();
+            _showMsg("验证码获取失败");
             verification.val("获取验证码").removeAttr("disabled");
         });
     }
-
     return {
         init: function (options) {
-            $.extend(defaultOptions, options);
-            $("#" + defaultOptions.id).off("click").on("click", function() {
-                defaultOptions.checkInfo() && handleSendVerifiy();
-            });
+            new initSms(options);
         }
     }
 });

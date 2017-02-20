@@ -32,6 +32,12 @@
     </div>
     <div class=" fs15 ba  lh50 wp100 plr10 bb p-r" id="mobileWrap">
     	<div class="inline_block" id="mobileName">绑定手机号</div>
+        <div class="fr inline_block pr20" id="mobileDetail"></div>
+        <img src="../../images/xyjt.png?__inline" class="more ">
+    </div>
+    <div class=" fs15 ba  lh50 wp100 plr10 bb p-r" id="tradeWrap">
+        <div class="inline_block" id="tradeName">设置交易密码</div>
+        <div class="fr inline_block pr20" id="tradeDetail"></div>
         <img src="../../images/xyjt.png?__inline" class="more ">
     </div>
     <!-- <div class=" fs15 ba mb10 lh50 wp100 plr10  p-r">
@@ -41,76 +47,6 @@
         </a>
     </div> -->
 
-    <div id="nicknameChange" class="right-left-cont">
-        <div class="right-left-cont-title">
-            <div class="right-left-cont-back" id="nickBack"></div>
-            <div class="right-left-cont-title-name">修改用户名</div>
-        </div>
-        <form class="right-left-cont-info" id="nicknameForm">
-            <div class="right-left-cont-info-input-wrap">
-                <span class="right-left-cont-info-input-left">用户名：</span>
-                <div class="right-left-cont-info-input-right">
-                    <input type="text" name="nickname" id="nickname" placeholder="请输入用户名">
-                </div>
-            </div>
-            <div class="right-left-cont-btn-wrap">
-                <input type="button" id="changeNick" value="保存">
-            </div>
-        </form>
-    </div>
-
-    <div id="mobileAction" class="right-left-cont">
-        <div class="right-left-cont-title">
-            <div class="right-left-cont-back" id="mobileBack"></div>
-            <div class="right-left-cont-title-name">绑定手机号</div>
-        </div>
-        <form class="right-left-cont-info" id="mobileForm">
-            <div class="right-left-cont-info-input-wrap">
-                <span class="right-left-cont-info-input-left">手机号：</span>
-                <div class="right-left-cont-info-input-right">
-                    <input type="text" name="mobile" id="mobile" placeholder="请输入手机号">
-                </div>
-            </div>
-            <div class="right-left-cont-info-input-wrap">
-                <span class="right-left-cont-info-input-left">验证码：</span>
-                <div class="right-left-cont-info-input-right">
-                    <div class="pr110">
-                        <div class="p-r">
-                            <input type="text" name="smsCaptcha" id="smsCaptcha" placeholder="短信验证码">
-                        </div>
-                    </div>
-                    <input type="button" value="获取验证码" id="getVerification" class="captcha-btn">
-                </div>
-            </div>
-            <div class="right-left-cont-btn-wrap">
-                <input type="button" id="mobileBtn" value="设置">
-            </div>
-        </form>
-    </div>
-
-    <div id="authentication" class="right-left-cont">
-        <div class="right-left-cont-title">
-            <div class="right-left-cont-back" id="authenticationBack"></div>
-            <div class="right-left-cont-title-name">实名认证</div>
-        </div>
-        <form class="right-left-cont-info" id="authenticationForm">
-            <div class="right-left-cont-info-input-wrap">
-                <span class="right-left-cont-info-input-left">真实姓名：</span>
-                <div class="right-left-cont-info-input-right">
-                    <input type="text" name="realName" id="realName" placeholder="请输入姓名">
-                </div>
-            </div>
-            <div class="right-left-cont-info-input-wrap">
-                <span class="right-left-cont-info-input-left">身份证号：</span>
-                <div class="right-left-cont-info-input-right">
-                    <input type="text" name="idNo" id="idNo" placeholder="请输入身份证号">
-                </div>
-            </div>
-            <div class="right-left-cont-btn-wrap">
-                <input type="button" id="authenticationBtn" value="确定">
-            </div>
-        </form>
-    </div>
 
     <link rel="import" href="../footer.html?__inline">
     <script type="text/javascript" src="../../js/lib/qiniu/plupload.full.min.js"></script>

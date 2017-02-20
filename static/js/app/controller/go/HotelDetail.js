@@ -92,7 +92,7 @@ define([
                 start: start,
                 limit: limit,
                 topCode: hotelCode,
-                // status: '1'
+                status: '1'
             }).then(function(res){
                 if(res.success && res.data.list.length){
                     if(res.data.list.length < limit){
@@ -125,16 +125,17 @@ define([
                         myScroll.refresh();
                         isEnd = true;
                     }
+                    res.msg && base.showMsg(res.msg);
                     base.hidePullUp();
                 }
                 isLoading = false;
             }, function(){
+                base.hidePullUp();
                 if(start == 1){
                     $("#content").html( '<div class="item-error">暂无相关评论</div>' );
                     myScroll.refresh();
                     isEnd = true;
                 }
-                base.hidePullUp();
             });
         }
     }

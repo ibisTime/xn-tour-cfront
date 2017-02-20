@@ -17,7 +17,8 @@ define([
         city: "",
         area: "",
         longitude: "",
-        latitude: ""
+        latitude: "",
+        status: "1"
     }, isLoading = false, isEnd = false, first = true, module,
     hotelTmpl = __inline("../../ui/go-hotel.handlebars");
 

@@ -143,19 +143,6 @@ define([
         });
     }
 
-    var opt = {
-            'date': {
-                preset: 'date',
-                dateOrder: 'yymmd D',
-                dateFormat: 'yy-mm-dd',
-                minDate: new Date(),
-                invalid: {
-                    daysOfWeek: [0, 6],
-                    daysOfMonth: ['5/1', '12/24', '12/25']
-                }
-            }
-        };
-
     function addListener() {
         $("#buyBtn").on("click", function(){
             if(start_date && end_date && roomCode){
@@ -172,16 +159,42 @@ define([
         $("#swiper").on("click", ".swiper-slide .center-img", function(){
             showImg.createImg($(this).attr("src")).showImg();
         });
-        $("#choseStartDate").scroller($.extend(opt["date"], {
-            mode: "scroller",
-            lang: "zh",
-            display: "bottom",  //modal
-        }));
-        $("#choseEndDate").scroller($.extend(opt["date"], {
-            mode: "scroller",
-            lang: "zh",
-            display: "bottom",  //modal
-        }));
+        var start = {
+            elem: '#choseStartDate',
+            format: 'YYYY-MM-DD',
+            min: laydate.now(), //设定最小日期为当前日期
+            isclear: false, //是否显示清空
+            istoday: false,
+            choose: function(datas){
+                start_date = datas;
+                $("#startDate").val(datas).trigger("change");
+                $("#startSpan").text(datas);
+                var d = new Date(datas);
+                d.setDate(d.getDate() + 1);
+                datas = d.format('yyyy-MM-dd');
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+        var end = {
+            elem: '#choseEndDate',
+            format: 'YYYY-MM-DD',
+            min: laydate.now(),
+            isclear: false, //是否显示清空
+            istoday: false,
+            choose: function(datas){
+                end_date = datas;
+                $("#endDate").val(datas).trigger("change");
+                $("#endSpan").text(datas);
+                var d = new Date(datas);
+                d.setDate(d.getDate() - 1);
+                datas = d.format('yyyy-MM-dd');
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        laydate(start);
+        laydate(end);
+
         $("#kefuIcon").on("click", function (e) {
             location.href = "http://kefu.easemob.com/webim/im.html?tenantId=" + TENANTID;
         });
@@ -196,31 +209,36 @@ define([
                 roomCode = _self.attr("data-code");
             }
         });
-        $("#startDate").on("change", function(){
-            var date = $(this).val();
-            var startDate = date && new Date(date) || new Date(); 
-            start_date = date;
-            $("#choseEndDate").scroller('destroy').scroller($.extend(opt["date"], {
-                mode: "scroller",
-                lang: "zh",
-                display: "bottom",  //modal
-                minDate: startDate
-            }));
-            var endDate = $("#endDate").val() || "";
-            $("#totalDays").html( base.calculateDays(date, endDate) );
-        });
-        $("#endDate").on("change", function(){
-            var date = $(this).val();
-            var endDate = date && new Date(date) || new Date();
-            end_date = date;
-            $("#choseStartDate").scroller('destroy').scroller($.extend(opt["date"], {
-                mode: "scroller",
-                lang: "zh",
-                display: "bottom",  //modal
-                maxDate: endDate
-            }));
-            var startDate = $("#startDate").val() || "";
-            $("#totalDays").html( base.calculateDays(startDate, date) );
+        // $("#startDate").on("change", function(){
+        //     var date = $(this).val();
+        //     var startDate = date && new Date(date) || new Date(); 
+        //     start_date = date;
+        //     $("#choseEndDate").scroller('destroy').scroller($.extend(opt["date"], {
+        //         mode: "scroller",
+        //         lang: "zh",
+        //         display: "bottom",  //modal
+        //         minDate: startDate
+        //     }));
+        //     var endDate = $("#endDate").val() || "";
+        //     $("#totalDays").html( base.calculateDays(date, endDate) );
+        // });
+        // $("#endDate").on("change", function(){
+        //     var date = $(this).val();
+        //     var endDate = date && new Date(date) || new Date();
+        //     end_date = date;
+        //     $("#choseStartDate").scroller('destroy').scroller($.extend(opt["date"], {
+        //         mode: "scroller",
+        //         lang: "zh",
+        //         display: "bottom",  //modal
+        //         maxDate: endDate
+        //     }));
+        //     var startDate = $("#startDate").val() || "";
+        //     $("#totalDays").html( base.calculateDays(startDate, date) );
+        // });
+        $("#startDate, #endDate").on("change", function(){
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            $("#totalDays").html( base.calculateDays(startDate, endDate) );
         });
     }
 

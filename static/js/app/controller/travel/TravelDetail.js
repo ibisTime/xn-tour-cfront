@@ -142,7 +142,7 @@ define([
                 start: start,
                 limit: limit,
                 topCode: travelCode,
-                // status: '1'
+                status: '1'
             }).then(function(res){
                 if(res.success && res.data.list.length){
                     if(res.data.list.length < limit){
