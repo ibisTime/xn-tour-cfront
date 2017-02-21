@@ -6,8 +6,8 @@ define([
     'app/util/dict'
 ], function(base, Ajax, dialog, loading, Dict) {
     var code = base.getUrlParam("code");
-    var hotelOrderStatus = Dict.get("hotelOrderStatus");
-    var hhType = {};
+    var orderStatus = Dict.get("lineOrderStatus");
+    var specialModule = {};
     init();
 
     function init() {
@@ -19,33 +19,43 @@ define([
         getOrder();
         addListeners();
     }
-
+    //专线数据字典
+    function getSDict(){
+        return Ajax.get("806052", {type: 3, location: 'goout'})
+            .then(function(res){
+                if(res.success){
+                    $.each(res.data, function(i, d){
+                        specialModule[d.code] = d.name;
+                    });
+                }else{
+                    base.showMsg(res.msg);
+                }
+            }, function(){
+                base.showMsg("数据加载失败");
+            });
+    }
     function getOrder(){
         $.when(
-            base.getDictList("hh_type"),
-            Ajax.get("618052", {code: code})
+            Ajax.get("806052", {type: 3, location: 'goout'}),
+            Ajax.get("618192", {code: code})
         ).then(function(res0, res){
             if(res0.success && res.success){
                 $.each(res0.data, function(i, d){
-                    hhType[d.dkey] = d.dvalue;
+                    specialModule[d.code] = d.name;
                 });
                 var data = res.data;
                 $("#code").html(code);
                 $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
-                $("#status").html(hotelOrderStatus[data.status]);
-                $("#hotelPic").attr("src", base.getImg(data.hotal.pic1));
-                $("#name").html(data.hotal.name);
-                $("#addr").html(getAddr(data.hotal));
-                $("#datetime")
-                    .html(base.formatDate(data.startDate, 'MM月dd号')+
-                        ' - '+base.formatDate(data.endDate, 'MM月dd号')+'<span class="pl4">'+
-                        base.calculateDays(data.startDate, data.endDate)+'晚'+data.quantity+'间</span>');
-                $("#type").html(hhType[data.hotal.type]);
-                $("#checkInName").html(data.checkInName);
-                $("#checkInMobile").html(data.checkInMobile);
+                $("#status").html(orderStatus[data.status]);
+                getSpecialLine(data.specialLineCode);
+                // $("#pic").attr("src", base.getImg(data.specialLine.pic));
+                // $("#sType").html(specialModule[data.specialLine.type]);
+                // $("#address").html(data.specialLine.address);
+                // $("#outDatetime").html(base.formatDate(data.specialLine.outDatetime, 'yyyy-MM-dd hh:mm'));
+                $("#quantity").html(data.quantity);
                 $("#applyNote").html(data.applyNote || "无");
                 $("#amount").html(base.formatMoney(data.amount));
-                $("#orderA").attr("href", "../go/hotel-detail.html?code=" + data.code);
+                $("#orderA").attr("href", "../go/special-line-detail.html?code=" + data.code);
                 if(data.status == "1")
                     $(".order-hotel-detail-btn0").removeClass("hidden");
                 else if(data.status == "2")
@@ -53,20 +63,35 @@ define([
                 else if(data.status == "6")
                     $(".order-hotel-detail-btn2").removeClass("hidden");
             }else{
-                base.showMsg("订单信息获取失败");
+                loading.hideLoading();
+                base.showMsg(res0.msg || res.msg);
             }
-            loading.hideLoading();
         }, function () {
             base.showMsg("订单信息获取失败");
         });
     }
 
-    function getAddr(data){
-        return data.province + (data.city || "") + (data.area || "") + (data.detail || "");
+    function getSpecialLine(code) {
+        Ajax.get("618172", {code: code})
+            .then(function (res) {
+                loading.hideLoading();
+                if(res.success){
+                    var data = res.data;
+                    $("#pic").attr("src", base.getImg(data.pic));
+                    $("#sType").html(specialModule[data.type]);
+                    $("#address").html(data.address);
+                    $("#outDatetime").html(base.formatDate(data.outDatetime, 'yyyy-MM-dd hh:mm'));
+                }else{
+                    base.showMsg(res.msg);
+                }
+            }, function () {
+                base.showMsg("线路信息加载失败");
+            })
     }
+
     function cancelOrder(remark){
         loading.createLoading("提交申请中...");
-        Ajax.post("618043", {
+        Ajax.post("618182", {
             json: {
                 code: code,
                 remark: remark,
@@ -87,7 +112,7 @@ define([
     }
     function tuikcx(remark){
         loading.createLoading("提交申请中...");
-        Ajax.post("618047", {
+        Ajax.post("618185", {
             json: {
                 code: code,
                 remark: remark,
@@ -109,7 +134,7 @@ define([
     function addListeners(){
         //支付
         $("#payBtn").on("click", function(){
-            location.href = "../pay/pay.html?code=" + code + "&type=0";
+            location.href = "../pay/pay.html?code=" + code + "&type=2";
         });
         //取消订单
         $("#cancelBtn").on("click", function(){

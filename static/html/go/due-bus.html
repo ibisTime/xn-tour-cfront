@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>大巴预定</title>
+</head>
+
+<body class="bg_f3f3f3">
+    <form id="deuBusForm">
+        <div class="ba lh50 wp100 plr10 bb p-r clearfix" id="startSiteWrap">
+            <div class="p-r">
+            	<div class="inline_block fs14 co9">上车地点</div>
+                <input type="text" class="op-0" name="startSite" id="startSite">
+                <div class="due-bus-ellipsis-item fs15" id="showStartSite"></div>
+            </div>
+        </div>
+
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="endSiteWrap">
+        	<div class="p-r">
+                <div class="inline_block fs14 co9">下车地点</div>
+                <input type="text" class="op-0" name="endSite" id="endSite">
+                <div class="due-bus-ellipsis-item fs15" id="showEndSite"></div>
+            </div>
+        </div>
+
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="midSiteWrap">
+        	<div class="p-r">
+                <div class="inline_block fs14 co9">途经站点</div>
+                <input type="text" class="op-0" name="midSite" id="midSite">
+                <div class="due-bus-ellipsis-item fs15" id="showMidSite"></div>
+            </div>
+        </div>
+
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r mt10 clearfix">
+            <input id="choseDate" class="spec-all-date"/>
+        	<div class="p-r">
+                <div class="inline_block fs14 co9">预定时间</div>
+                <input type="text" class="op-0" name="midSite" id="midSite">
+                <div class="fr inline_block pr20 fs15" id="showDate"></div>
+            </div>
+            <img src="../images/xyjt.png?__inline" class="more">
+        </div>
+
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="choseNum">
+        	<div class="p-r">
+                <div class="inline_block fs14 co9">预定人数</div>
+                <div class="fr inline_block pr20 fs15">人</div>
+                <div class="fr inline_block fs15" id="showNum">2</div>
+            </div>
+            <img src="../images/xyjt.png?__inline" class="more ">
+        </div>
+    </form>
+
+    <div class="fs14 ba plr10 wp100 border fixft hig50 xxx">
+    	<div class="inline_block va">
+        	<span class="fs14 co9">合计:</span>
+       	    <span class="price fs13">¥</span>
+            <span class="price fs18">234</span>
+        </div>
+    	<input type="button" id="sbtn" value="预定" class="release fs15 inline_block fr">
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+    <script src="//api.map.baidu.com/api?v=2.0&ak=GtNrG008U04GONzKSDHiW70GxurUUhlU&s=1"></script>
+    <script src="../../js/lib/laydate/laydate.dev.js"></script>
+    <script data-loader>
+        require(['app/controller/go/DueBus']);
+    </script>
+</body>
+
+</html>

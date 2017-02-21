@@ -47,7 +47,7 @@ define([
             loading.hideLoading();
             base.showMsg("数据加载失败");
         });
-        addListener();
+        // addListener();
         initIScroll();
     }
 

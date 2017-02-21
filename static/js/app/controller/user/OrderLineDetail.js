@@ -41,10 +41,11 @@ define([
                     else if(data.status == "6")
                         $(".order-hotel-detail-btn2").removeClass("hidden");
                 }else{
-                    base.showMsg("订单信息获取失败");
+                    base.showMsg(res.msg);
                     loading.hideLoading();
                 }
             }, function(){
+                base.showMsg("订单信息获取失败");
                 loading.hideLoading();
             });
     }
@@ -61,9 +62,10 @@ define([
                 $("#name").html(data.name);
                 $("#joinPlace").html(data.joinPlace);
             }else{
-                base.showMsg("线路信息加载失败");
+                base.showMsg(res.msg);
             }
         }, function(){
+            base.showMsg("线路信息加载失败");
             loading.hideLoading();
         })
     }
