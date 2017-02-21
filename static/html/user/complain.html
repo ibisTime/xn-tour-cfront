@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<meta charset="UTF-8">
+ <link rel="import" href="../head.html?__inline">
+<link rel="stylesheet" href="../../css/complain.css">
+
+<title>投诉反馈</title>
+</head>
+<style>
+
+</style>
+<body class="bc">
+
+<form id="compForm">
+    <div class="wp100 pl10 fs14 lh50 ba p-r bb">
+        <div class="inline_block wid p-a fs15">联系方式</div>
+        <input type="text" placeholder="请输入您的电话／邮箱" class="fs14 pl80" id ="contact" name="contact">
+    </div>
+
+    <div class="p-r fs14 ba text-h plr10 pt8">
+        <div class="fs15">投诉信息</div>
+        <div class="p-r mt10">
+            <textarea class="wp100 p-a a-rea left0 f14" id="tsContent" name="tsContent"></textarea>
+            <div class="fs14 co9 complain-tip">请输入您的投诉信息</div>
+        </div>
+    </div>
+    <div class="p-r fs14 ba text-h plr10 pt8">
+        <div class="fs15">反馈建议</div>
+        <div class="p-r mt10">
+            <textarea class="wp100 p-a a-rea left0 f14" id="fkContent" name="fkContent"></textarea>
+            <div class="fs14 co9 complain-tip">请输入您的反馈建议</div>
+        </div>
+    </div>
+</form>
+<div class=" plr10 mt40">
+	<input type="button"  value="提交" class="but wp100 fs15" id="submit">
+</div>
+<link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/user/Complain']);
+    </script>
+</body>
+
+</html>
