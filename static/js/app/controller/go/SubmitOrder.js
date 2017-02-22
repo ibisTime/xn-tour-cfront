@@ -136,7 +136,7 @@ define([
             lineInfo = $.parseJSON(lineInfo);
         }
         var lCode = base.getUrlParam("lineCode", returnUrl.replace(/(.+)\?/i, "?"));
-        var obj = {};
+        var obj = lineInfo[lCode] || {};
         obj.hotalCode = hotelCode;
         obj.roomType = roomType;
         obj.startDate = startDate;

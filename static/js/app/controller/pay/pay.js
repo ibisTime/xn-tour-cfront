@@ -3,11 +3,10 @@ define([
     'app/util/ajax',
     'app/module/loading/loading'
 ], function(base, Ajax, loading) {
-
     var code = base.getUrlParam("code");
-    // 0:酒店 1:线路 2:专线
+    // 0:酒店 1:线路 2:专线 3:大巴
     var type = base.getUrlParam("type") || 0;
-    var choseIdx = 0;
+    var choseIdx = 0, bizType, payBizType;
 
     init();
 
@@ -20,15 +19,22 @@ define([
             base.goLogin();
             return;
         }
-        // 0:酒店 1:线路 2:专线
-        if(type == 0)
-            getCont0();
-        else if(type == 1)
-            getCont1();
-        else if(type == 2)
-            getCont2();
-        else
-            getCont0();
+        bizType = "618052";
+        payBizType = "618042";
+        // 0:酒店 1:线路 2:专线 3:大巴
+        if(type == 1){
+            bizType = "618152";
+            payBizType = "618141";
+        }
+        else if(type == 2){
+            bizType = "618192";
+            payBizType = "618181";
+        }
+        else if(type == 3){
+            bizType = "618222";
+            payBizType = "618216";
+        }
+        getCont();
     }
 
     function addListener() {
@@ -41,67 +47,29 @@ define([
         $("#payBtn").on("click", function() {
             // 微信支付
             if(choseIdx == 0){
-                // 0:酒店 1:线路 2:专线
-                if(type == 0)
-                    wxPayOrder0();
-                else if(type == 1)
-                    wxPayOrder1();
-                else if(type == 2)
-                    wxPayOrder2();
-                else
-                    wxPayOrder0();  
+                wxPayOrder();  
             // 支付宝支付
             }else{}
         });
     }
-    // 酒店
-    function getCont0() {
+    function getCont() {
         loading.createLoading("加载中...");
-        Ajax.get("618052", { code: code })
+        Ajax.get(bizType, { code: code })
             .then(function(res) {
                 loading.hideLoading();
                 if (res.success) {
-                    $("#price").html(base.formatMoney(res.data.amount));
+                    $("#price").html(base.formatMoney(res.data.amount || res.data.price));
                     addListener();
                 } else {
                     base.showMsg("订单信息获取失败");
                 }
             });
     }
-    // 线路
-    function getCont1() {
-        loading.createLoading("加载中...");
-        Ajax.get("618152", { code: code })
-            .then(function(res) {
-                loading.hideLoading();
-                if (res.success) {
-                    $("#price").html(base.formatMoney(res.data.amount));
-                    addListener();
-                } else {
-                    base.showMsg("订单信息获取失败");
-                }
-            });
-    }
-    // 专线
-    function getCont2() {
-        loading.createLoading("加载中...");
-        Ajax.get("618192", { code: code })
-            .then(function(res) {
-                loading.hideLoading();
-                if (res.success) {
-                    $("#price").html(base.formatMoney(res.data.amount));
-                    addListener();
-                } else {
-                    base.showMsg("订单信息获取失败");
-                }
-            });
-    }
-    // 酒店
-    function wxPayOrder0(){
+    function wxPayOrder(){
         loading.createLoading("支付中...");
         Ajax.getIp()
             .then(function(res){
-                Ajax.post("618042", {
+                Ajax.post(payBizType, {
                     json: {
                         code: code,
                         payType: "2",
@@ -116,47 +84,109 @@ define([
                     base.showMsg("ip获取失败");
             });
     }
-    // 线路
-    function wxPayOrder1() {
-        loading.createLoading("支付中...");
-        Ajax.getIp()
-            .then(function(res) {
-                Ajax.post("618141", {
-                    json: {
-                        code: code,
-                        ip: res.ip,
-                        payType: "2"
-                    }
-                }).then(wxPay, function() {
-                    loading.hideLoading();
-                    base.showMsg("非常抱歉，支付请求提交失败");
-                });
-            }, function() {
-                loading.hideLoading();
-                base.showMsg("ip获取失败");
-            });
+    // // 酒店
+    // function getCont0() {
+    //     loading.createLoading("加载中...");
+    //     Ajax.get("618052", { code: code })
+    //         .then(function(res) {
+    //             loading.hideLoading();
+    //             if (res.success) {
+    //                 $("#price").html(base.formatMoney(res.data.amount));
+    //                 addListener();
+    //             } else {
+    //                 base.showMsg("订单信息获取失败");
+    //             }
+    //         });
+    // }
+    // // 线路
+    // function getCont1() {
+    //     loading.createLoading("加载中...");
+    //     Ajax.get("618152", { code: code })
+    //         .then(function(res) {
+    //             loading.hideLoading();
+    //             if (res.success) {
+    //                 $("#price").html(base.formatMoney(res.data.amount));
+    //                 addListener();
+    //             } else {
+    //                 base.showMsg("订单信息获取失败");
+    //             }
+    //         });
+    // }
+    // // 专线
+    // function getCont2() {
+    //     loading.createLoading("加载中...");
+    //     Ajax.get("618192", { code: code })
+    //         .then(function(res) {
+    //             loading.hideLoading();
+    //             if (res.success) {
+    //                 $("#price").html(base.formatMoney(res.data.amount));
+    //                 addListener();
+    //             } else {
+    //                 base.showMsg("订单信息获取失败");
+    //             }
+    //         });
+    // }
+    // 酒店
+    // function wxPayOrder0(){
+    //     loading.createLoading("支付中...");
+    //     Ajax.getIp()
+    //         .then(function(res){
+    //             Ajax.post("618042", {
+    //                 json: {
+    //                     code: code,
+    //                     payType: "2",
+    //                     ip: res.ip
+    //                 }
+    //             }).then(wxPay, function(){
+    //                 loading.hideLoading();
+    //                 base.showMsg("非常抱歉，支付请求提交失败");
+    //             });
+    //         }, function() {
+    //                 loading.hideLoading();
+    //                 base.showMsg("ip获取失败");
+    //         });
+    // }
+    // // 线路
+    // function wxPayOrder1() {
+    //     loading.createLoading("支付中...");
+    //     Ajax.getIp()
+    //         .then(function(res) {
+    //             Ajax.post("618141", {
+    //                 json: {
+    //                     code: code,
+    //                     ip: res.ip,
+    //                     payType: "2"
+    //                 }
+    //             }).then(wxPay, function() {
+    //                 loading.hideLoading();
+    //                 base.showMsg("非常抱歉，支付请求提交失败");
+    //             });
+    //         }, function() {
+    //             loading.hideLoading();
+    //             base.showMsg("ip获取失败");
+    //         });
 
-    }
-    // 专线
-    function wxPayOrder2() {
-        loading.createLoading("支付中...");
-        Ajax.getIp()
-            .then(function(res) {
-                Ajax.post("618181", {
-                    json: {
-                        code: code,
-                        ip: res.ip,
-                        payType: "2"
-                    }
-                }).then(wxPay, function() {
-                    loading.hideLoading();
-                    base.showMsg("非常抱歉，支付请求提交失败");
-                });
-            }, function() {
-                loading.hideLoading();
-                base.showMsg("ip获取失败");
-            });
-    }
+    // }
+    // // 专线
+    // function wxPayOrder2() {
+    //     loading.createLoading("支付中...");
+    //     Ajax.getIp()
+    //         .then(function(res) {
+    //             Ajax.post("618181", {
+    //                 json: {
+    //                     code: code,
+    //                     ip: res.ip,
+    //                     payType: "2"
+    //                 }
+    //             }).then(wxPay, function() {
+    //                 loading.hideLoading();
+    //                 base.showMsg("非常抱歉，支付请求提交失败");
+    //             });
+    //         }, function() {
+    //             loading.hideLoading();
+    //             base.showMsg("ip获取失败");
+    //         });
+    // }
     var response = {};
 
     function onBridgeReady() {

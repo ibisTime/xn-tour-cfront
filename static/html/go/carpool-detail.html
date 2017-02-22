@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>发布拼车</title>
+</head>
+
+<body class="bg_f3f3f3">
+    <form id="carpoolForm">
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="startSiteWrap">
+            <div class="p-r">
+            	<div class="inline_block fs14 co9">上车地点</div>
+                <div class="due-bus-ellipsis-item fs15" id="startSite"></div>
+            </div>
+            <img src="../images/xyjt.png?__inline" class="more ">
+        </div>
+
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="endSiteWrap">
+        	<div class="p-r">
+                <div class="inline_block fs14 co9">下车地点</div>
+                <div class="due-bus-ellipsis-item fs15" id="endSite"></div>
+            </div>
+            <img src="../images/xyjt.png?__inline" class="more ">
+        </div>
+
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r mt10 clearfix">
+            <input id="choseDate" class="spec-all-date"/>
+        	<div class="p-r">
+                <div class="inline_block fs14 co9">拼车时间</div>
+                <div class="fr inline_block pr20 fs15" id="outDatetime"></div>
+            </div>
+        </div>
+
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="choseNum">
+        	<div class="p-r">
+                <div class="inline_block fs14 co9">当前拼车人数</div>
+                <div class="fr inline_block pr20 fs15">人</div>
+                <div class="fr inline_block fs15" id="takePartNum"></div>
+            </div>
+        </div>
+    </form>
+
+    <div class="fs14 ba plr10 wp100 border fixft hig50 xxx">
+    	<div class="inline_block va">
+        	<span class="fs14 co9">合计:</span>
+       	    <span class="price fs13">¥</span>
+            <span class="price fs18" id="amount"></span>
+        </div>
+    	<input type="button" id="sbtn" value="参与拼车" class="release fs15 inline_block fr">
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+    <script src="//api.map.baidu.com/api?v=2.0&ak=GtNrG008U04GONzKSDHiW70GxurUUhlU&s=1"></script>
+    <script data-loader>
+        require(['app/controller/go/CarpoolDetail']);
+    </script>
+</body>
+
+</html>

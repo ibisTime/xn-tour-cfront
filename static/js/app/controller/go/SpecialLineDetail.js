@@ -8,6 +8,7 @@ define([
     var code = base.getUrlParam("code"), remainNum = 0;
     var price, startSelectArr, endSelectArr;
     var returnUrl = base.getUrlParam("return");
+    var outName = "";
 
     init();
 
@@ -48,6 +49,7 @@ define([
                 remainNum = +data.remainNum;
                 $("#remainNum").text(data.remainNum);
                 $("#address").text(data.address);
+                outName = data.name;
                 price = +data.price;
                 $("#totalAmount").text(base.formatMoney(price));
                 addListener();
@@ -71,11 +73,11 @@ define([
                 base.showMsg("购买票数超过余票");
                 return;
             }
-            // if(returnUrl){
-            //     setHotel();
-            //     location.href = returnUrl;
-            //     return;
-            // }
+            if(returnUrl){
+                setSpe();
+                location.href = returnUrl;
+                return;
+            }
             location.href = "./special-submit-order.html?code=" + code + "&quantity=" + ticket;
         });
 
@@ -88,7 +90,7 @@ define([
             }
         });
     }
-    function setHotel(){
+    function setSpe(){
         var lineInfo = sessionStorage.getItem("line-info");
         if(!lineInfo){
             lineInfo = {};
@@ -96,20 +98,9 @@ define([
             lineInfo = $.parseJSON(lineInfo);
         }
         var lCode = base.getUrlParam("lineCode", returnUrl.replace(/(.+)\?/i, "?"));
-        var obj = {};
-        obj.hotalCode = hotelCode;
-        obj.roomType = roomType;
-        obj.startDate = startDate;
-        obj.endDate = endDate;
-        obj.quantity = $("#quantity").val();
-        obj.hotelName = $("#name").html();
-        obj.checkInMobile = $("#checkInMobile").val();
-        obj.checkInName = $("#checkInName").val();
-        obj.roomDescription = roomDescription;
-        obj.roomPic = roomPic;
-        obj.hotelAddr = hotelAddr;
-        obj.roomTypeName = roomTypeName;
-        obj.roomPrice = roomPrice;
+        var obj = lineInfo[lCode] || {};
+        obj.outCode = code;
+        obj.outName = outName;
         lineInfo[lCode] = obj;
         sessionStorage.setItem("line-info", JSON.stringify(lineInfo));
     }

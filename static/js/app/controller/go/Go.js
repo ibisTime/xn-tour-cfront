@@ -4,12 +4,13 @@ define([
     'iScroll',
     'app/module/foot/foot',
     'app/util/handlebarsHelpers',
-    'app/module/loading/loading'
-], function(base, Ajax, iScroll, Foot, Handlebars, loading) {
+    'app/module/loading/loading',
+    'app/util/dict'
+], function(base, Ajax, iScroll, Foot, Handlebars, loading, Dict) {
 
-    var hotelTmpl = __inline("../../ui/go-hotel.handlebars");
-        // outtingTmpl = __inline("../../ui/go-outting.handlebars"),
-    var foodTmpl = __inline("../../ui/go-food.handlebars");
+    var hotelTmpl = __inline("../../ui/go-hotel.handlebars"),
+        outtingTmpl = __inline("../../ui/go-carpool.handlebars"),
+        foodTmpl = __inline("../../ui/go-food.handlebars");
 
     var index = base.getUrlParam("idx") || 0;
 
@@ -25,7 +26,7 @@ define([
             area: "",
             longitude: "",
             latitude: "",
-            status: "1"
+            // status: "1"
         },
         hotel: {
             start: 1,
@@ -69,7 +70,8 @@ define([
             first: true,
             module: []
         }
-    }
+    };
+    var carpoolStatus = Dict.get("carpoolStatus");
 
     init();
     
@@ -78,6 +80,9 @@ define([
         initIScroll();
         addListener();
         base.initLocation(initConfig);
+        Handlebars.registerHelper('formatCarpoolStatus', function(text, places, options){
+            return carpoolStatus[text];
+        });
     }
 
     function getModuleNav(){
@@ -152,9 +157,9 @@ define([
         config.outting.area = config.hotel.area = config.food.area = sessionStorage.getItem("area") || "";
         config.outting.longitude = config.hotel.longitude = config.food.longitude = sessionStorage.getItem("longitude") || "";
         config.outting.latitude = config.hotel.latitude = config.food.latitude = sessionStorage.getItem("latitude") || "";
+
         getModuleNav();
     }
-
 
     function getMoreData(){
         var idx = $("#top-nav").find(".go-top-li.active").index();
@@ -220,6 +225,45 @@ define([
         config1.outting.isEnd = true;
         loading.hideLoading();
         myScroll.refresh();
+
+        if(!config1.outting.isLoading || refresh){
+            config1.outting.isLoading = true;
+            showPullUp();
+            config.outting.start = refresh && 1 || config.outting.start;
+            Ajax.get("618250", config.outting, !refresh)
+                .then(function (res) {
+                    if(res.success && res.data.list.length){
+                        var data = res.data.list;
+                        if(data.length < config.outting.limit){
+                            config1.outting.isEnd = true;
+                            hidePullUp();
+                        }else{
+                            showPullUp();
+                        }
+                        $("#content").find(".J_Content0")
+                            [refresh ? "html" : "append"](outtingTmpl({items: data}));
+                        config.outting.start++;
+                    }else{
+                        if(config1.outting.first){
+                            $("#content").find(".J_Content0").html('<div class="item-error">附近暂无拼车信息</div>');
+                        }
+                        hidePullUp();
+                        res.msg && base.showMsg(res.msg);
+                    }
+                    config1.outting.first = false;
+                    config1.outting.isLoading = false;
+                    config1.outting.isEnd = true;
+                    myScroll.refresh();
+                    loading.hideLoading();
+                }, function(){
+                    config1.outting.first = false;
+                    config1.outting.isEnd = true;
+                    config1.outting.isLoading = false;
+                    $("#content").find(".J_Content0").html('<div class="item-error">附近暂无拼车信息</div>');
+                    myScroll.refresh();
+                    loading.hideLoading();
+                });
+        }
     }
 
     function getHotelData(refresh){
@@ -312,7 +356,7 @@ define([
             $("#top-content").find(".top-nav").removeClass("active");
             $("#top-nav").find(".active").removeClass("active");
             $(".J_Content" + idx).addClass("active");
-            // myScroll.refresh();
+            myScroll.refresh();
             if(idx == 0){
                 if(config1.outting.first){
                     getOuttingData();

@@ -10,45 +10,48 @@
         <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="startSiteWrap">
             <div class="p-r">
             	<div class="inline_block fs14 co9">上车地点</div>
-                <input type="text" class="op-0" name="startSite" id="startSite">
                 <div class="due-bus-ellipsis-item fs15" id="showStartSite"></div>
             </div>
+            <img src="../images/xyjt.png?__inline" class="more">
         </div>
 
         <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="endSiteWrap">
         	<div class="p-r">
                 <div class="inline_block fs14 co9">下车地点</div>
-                <input type="text" class="op-0" name="endSite" id="endSite">
                 <div class="due-bus-ellipsis-item fs15" id="showEndSite"></div>
             </div>
+            <img src="../images/xyjt.png?__inline" class="more">
         </div>
 
         <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="midSiteWrap">
         	<div class="p-r">
                 <div class="inline_block fs14 co9">途经站点</div>
-                <input type="text" class="op-0" name="midSite" id="midSite">
                 <div class="due-bus-ellipsis-item fs15" id="showMidSite"></div>
-            </div>
-        </div>
-
-        <div class="fs15 ba lh50 wp100 plr10 bb p-r mt10 clearfix">
-            <input id="choseDate" class="spec-all-date"/>
-        	<div class="p-r">
-                <div class="inline_block fs14 co9">预定时间</div>
-                <input type="text" class="op-0" name="outDatetime" id="outDatetime">
-                <div class="fr inline_block pr20 fs15" id="showDate"></div>
             </div>
             <img src="../images/xyjt.png?__inline" class="more">
         </div>
+    </form>
 
-        <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="choseNum">
-        	<div class="p-r">
-                <div class="inline_block fs14 co9">预定人数</div>
-                <div class="fr inline_block pr20 fs15">人</div>
-                <input type="text" class="op-0" name="totalNum" value="0" id="totalNum">
-                <div class="fr inline_block fs15" id="showNum">0</div>
+    <div class="content">
+        <div class="item">
+            <div class="item-c flex flex-jb flex-dv special-item-order">
+                <div class="item-c-top t_norwrap">大巴预定</div>
+                <div class="item-c-center order-item-center t_norwrap">
+                    发车时间：<span id="outDatetime"></span>
+                </div>
+                <div class="item-c-bottom t_norwrap">票数：<span id="totalNum"></span>张</div>
             </div>
-            <img src="../images/xyjt.png?__inline" class="more ">
+            <div class="item-c-div item-r item-r2">¥<span class="fs-15" id="unitPrice"></span></div>
+        </div>
+    </div>
+    <form id="submitForm" class="wp100">
+        <div id="areaWrap" class="bg_fff plr10 mt10 pb10 b-tb-ed">
+            <div class="submit-textarea-wrap">
+                <div class="p_r wp100">
+                    <textarea class="submit-textarea" name="bookNote" id="bookNote"></textarea>
+                    <div class="placeholder-text" id="bookNotePlaceholder">有什么特殊要求，写在这里！</div>
+                </div>
+            </div>
         </div>
     </form>
 
@@ -56,16 +59,15 @@
     	<div class="inline_block va">
         	<span class="fs14 co9">合计:</span>
        	    <span class="price fs13">¥</span>
-            <span class="price fs18" id="amount">--</span>
+            <span class="price fs18" id="amount"></span>
         </div>
     	<input type="button" id="sbtn" value="预定" class="release fs15 inline_block fr">
     </div>
 
     <link rel="import" href="../footer.html?__inline">
     <script src="//api.map.baidu.com/api?v=2.0&ak=GtNrG008U04GONzKSDHiW70GxurUUhlU&s=1"></script>
-    <script src="../../js/lib/laydate/laydate.dev.js"></script>
     <script data-loader>
-        require(['app/controller/go/DueBus']);
+        require(['app/controller/go/BusSubmitOrder']);
     </script>
 </body>
 

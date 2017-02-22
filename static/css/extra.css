@@ -1321,10 +1321,12 @@ label.error{
     font-size: 15px;
     height: 44px;
     line-height: 44px;
+    width: 540px;
 }
 .order-list-top-nav1-item{
     float: left;
-    width: 25%;
+    /*width: 25%;*/
+    width: 90px;
     text-align: center;
     border-bottom: 1px solid #ededed;
     border-right: 1px solid #ededed;
@@ -2115,6 +2117,7 @@ label.error{
     width: 100%;
     height: 100%;
     opacity: 0;
+    z-index: 10;
 }
 .due-bus-ellipsis-item{
     position: absolute;
@@ -2127,5 +2130,32 @@ label.error{
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: right;
-    padding-right: 10px;
+    padding-right: 20px;
+}
+.pl0_i{
+    padding-left: 0 !important;
+}
+.content .order-list-content4 .item .item-c .item-c-top,
+.content .order-list-content4 .item .item-c .item-c-center{
+    font-size: 13px;
+}
+.order-bus-content .order-list-content3 .item{
+    height: inherit;
+}
+.order-bus-content.content .item .item-c{
+    height: 110px;
+}
+.p-a-r-t{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.pb0_i{
+    padding-bottom: 0 !important;
+}
+.pr40_i{
+    padding-right: 40px;
+}
+.pr50_i{
+    padding-right: 50px;
 }

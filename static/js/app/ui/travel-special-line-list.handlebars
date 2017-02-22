@@ -1,0 +1,15 @@
+{{#each items}}
+    <div class="item">
+        <a class="wp100 show" href="../go/special-line-detail.html?code={{formatReturn code}}">
+            <div class="ab item-l">{{formateTime outDatetime}}</div>
+            <div class="item-c">
+                <div class="item-c-top t_norwrap">{{formatStartSite startSite}}</div>
+                <div class="item-c-bottom t_norwrap">{{formatEndSite endSite}}</div>
+            </div>
+            <div class="item-r ab">
+                <div class="spec-money">¥{{formatMoney price}}</div>
+                <div class="spec-yp">余票:{{remainNum}}张</div>
+            </div>
+        </a>
+    </div>
+{{/each}}

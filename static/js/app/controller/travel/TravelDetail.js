@@ -262,6 +262,11 @@ define([
         $("#J_Tjms").on("click", function(){
             location.href = "./travel-food-list.html?code=" + travelCode;
         });
+        $("#J_Tjcx").on("click", function () {
+            location.href = "./travel-special-line-list.html?code=" + travelCode + "&return=" + base.makeReturnUrl({
+                lineCode: travelCode
+            });
+        })
         //收藏
         $("#scjdIcon").on("click", function(){
             if(!base.isLogin()){

@@ -25,19 +25,22 @@
 	</div>
 
 	<div class="content">
-		<div class="item">
-            <a class="block_wp100" id="orderA">
-                <div class="item-c flex flex-jb flex-dv special-item-order">
-                    <div class="item-c-top t_norwrap" id="name"></div>
-                    <div class="item-c-center order-item-center t_norwrap">
-                    	发车时间：<span id="datetime"></span>
-                    </div>
-                    <div class="item-c-bottom t_norwrap" id="type">票数：<span class="ticket"></span>张</div>
+        <div class="order-list-item-center item">
+            <a id="orderA" class="wp100 show">
+                <div class="item-c-div item-l">
+                    <img class="center-img" id="pic"/>
+                </div>
+                <div class="item-c flex flex-dv flex-jb">
+                    <div class="item-c-top t_norwrap pr50" id="name"></div>
+                    <!-- <div class="item-c-center t_bbb t_norwrap">上车地点：<span id="address"></span></div> -->
+                    <div class="item-c-center t_bbb item-c-ctr c_f64444">发车时间：<span id="datetime"></span></div>
+                    <div class="item-c-center t_bbb t_norwrap">票数：<span id="quantity"></span>张</div>
                 </div>
                 <div class="item-c-div item-r item-r2">¥<span class="fs-15" id="amount"></span></div>
             </a>
         </div>
-	</div>
+    </div>
+
 	<form id="submitForm" class="wp100">
 		<div id="areaWrap" class="bg_fff plr10 mt10 pb10 b-tb-ed">
 	        <div class="submit-textarea-wrap">

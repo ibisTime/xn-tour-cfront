@@ -9,9 +9,9 @@ define([
     var lineCode = base.getUrlParam('code'),
         start = 1, limit = 10, isEnd = false, isLoading = false;
     var returnUrl = base.getReturnParam();
-    var hotelTmpl = __inline("../../ui/travel-hotel-list.handlebars");
+    var sLineTmpl = __inline("../../ui/travel-special-line-list.handlebars");
     var lineInfo = sessionStorage.getItem("line-info");
-    var myScroll, hotelCode, module;
+    var myScroll, speLineCode, module;
 
     init();
 
@@ -23,24 +23,20 @@ define([
             if(lineInfo){
                 lineInfo = $.parseJSON(lineInfo);
                 if(lineInfo[lineCode])
-                    hotelCode = lineInfo[lineCode].hotalCode;
+                    speLineCode = lineInfo[lineCode].outCode;
             }
             loading.createLoading();
-            //已选择推荐酒店
-            if(hotelCode){
+            //已选择推荐线路
+            if(speLineCode){
                 $("#chosedCont, #choseBtns").show();
                 $.when(
-                    getModuleNav(),
-                    getHotel()
-                ).then(function(res1, res2){
-                    if(res1.success && res2.success){
-                        module = res1.data;
-                        Handlebars.registerHelper('formatCategory', function(category, options){
-                            return base.findObj(module, "code", category)["name"];
-                        });
-                        $("#chosedCont").html(hotelTmpl({items: [res2.data]}));
+                    getSpecialLine(),
+                    getDictList()
+                ).then(function(res, res1){
+                    if(res.success && res1.success){
+                        $("#chosedCont").html(sLineTmpl({items: [res.data]}));
                     }else{
-                        base.showMsg("加载失败");
+                        base.showMsg(res.msg);
                     }
                     loading.hideLoading();
                 }, function(){
@@ -49,15 +45,11 @@ define([
                 })
             }else{
                 $("#wrapper, #fix-b").show();
-                getModuleNav()
+                getDictList()
                     .then(function(res){
                         if(res.success){
-                            module = res.data;
-                            Handlebars.registerHelper('formatCategory', function(category, options){
-                                return base.findObj(module, "code", category)["name"];
-                            });
-                            getPageHotel(true);
-                            hotelCode = true;
+                            getPageSpeLine(true);
+                            speLineCode = true;
                         }else{
                             base.showMsg("加载失败");
                         }
@@ -73,15 +65,37 @@ define([
             base.showMsg("未传入线路编号");
         }
     }
-    function getModuleNav(){
-        return Ajax.get("806052", {
-            type: 3,
-            location: 'depart_hotel'
+    function getDictList(){
+        return $.when(
+            base.getDictList("zero_type"),
+            base.getDictList("destination_type")
+        ).then(function(res1, res2){
+            if(res1.success && res2.success){
+                var startSelectArr = res1.data;
+                var endSelectArr = res2.data;
+                Handlebars.registerHelper('formatStartSite', function(site, options){
+                    return site ? base.findObj(startSelectArr, "dkey", site)["dvalue"] : "--";
+                });
+                Handlebars.registerHelper('formatEndSite', function(site, options){
+                    return site ? base.findObj(endSelectArr, "dkey", site)["dvalue"] : "--";
+                });
+                return res1;
+            }else{
+                loading.hideLoading();
+                base.showMsg(res1.msg || res2.msg);
+                return {
+                    success: false,
+                    msg: res1.msg || res2.msg
+                }
+            }
+        }, function(){
+            loading.hideLoading();
+            base.showMsg("数据加载失败");
         });
     }
-    function getHotel(){
-        return Ajax.get("618012", {
-            code: hotelCode
+    function getSpecialLine(){
+        return Ajax.get("618102", {
+            code: speLineCode
         });
     }
 
@@ -90,10 +104,10 @@ define([
 
         function pullDownAction () {
             isEnd = false;
-            if(hotelCode){
-                getPageHotel(true);
+            if(speLineCode){
+                getPageSpeLine(true);
             }else{
-                getNormalPageHotel(true);
+                getNormalPageSpeLine(true);
             }
         }
         $pullDownEl = $("#pullDown");
@@ -116,11 +130,10 @@ define([
                     $pullDownEl.removeClass("flip");
                     this.minScrollY = -pullDownOffset;
                 } else if (this.y - 120 < this.maxScrollY) {
-                    // console.log("上拉加载更多");
-                    if(hotelCode){
-                        getPageHotel();
+                    if(speLineCode){
+                        getPageSpeLine();
                     }else{
-                        getNormalPageHotel();
+                        getNormalPageSpeLine();
                     }
                 }
             },
@@ -133,14 +146,14 @@ define([
         });
     }
 
-    function getPageHotel(refresh){
+    function getPageSpeLine(refresh){
         if( !isLoading && (!isEnd || refresh) ){
             isLoading = true;
             start = refresh && 1 || start;
             return Ajax.get("618103", {
                 start: start,
                 limit: limit,
-                type: '2',
+                type: '1',
                 lineCode: lineCode,
                 status: "1"
             }, !refresh)
@@ -155,12 +168,12 @@ define([
                         }
                         var arr = [];
                         $.each(data, function(i, d){
-                            arr.push(d.hotal);
+                            arr.push(d.specialLine);
                         });
-                        $("#content")[refresh ? "html" : "append"](hotelTmpl({items: arr}));
+                        $("#content")[refresh ? "html" : "append"](sLineTmpl({items: arr}));
                         start++;
                     }else{
-                        refresh && $("#content").html('<div class="item-error">暂无推荐酒店</div>');
+                        refresh && $("#content").html('<div class="item-error">暂无推荐出行</div>');
                         isEnd = true;
                         base.hidePullUp();
                         res.msg && base.showMsg(res.msg);
@@ -171,7 +184,7 @@ define([
                 }, function(){
                     isLoading = false;
                     isEnd = true;
-                    refresh && $("#content").html('<div class="item-error">暂无推荐酒店</div>');
+                    refresh && $("#content").html('<div class="item-error">暂无推荐出行</div>');
                     myScroll.refresh();
                     loading.hideLoading();
                 });
@@ -189,26 +202,27 @@ define([
             isLoading = false;
             isEnd = false;
             start = 1;
-            getPageHotel(true);
+            getPageSpeLine(true);
         });
         $("#scBtn").on("click", function(){
-            deleteHotel();
+            deleteSpeLine();
             history.back();
         });
         $("#xzqtBtn").on("click", function(){
-            hotelCode = "";
+            speLineCode = "";
             isLoading = false;
             isEnd = false;
             start = 1;
-            getNormalPageHotel(true);
+            getNormalPageSpeLine(true);
             $("#fix-b").hide();
         });
     }
-    function getNormalPageHotel(refresh){
+    function getNormalPageSpeLine(refresh){
         if( !isLoading && (!isEnd || refresh) ){
             isLoading = true;
             start = refresh && 1 || start;
-            return Ajax.get("618010", {
+            $("#wrapper").css("bottom", "0");
+            return Ajax.get("618170", {
                 start: start,
                 limit: limit
             }, !refresh)
@@ -221,7 +235,7 @@ define([
                         }else{
                             base.showPullUp();
                         }
-                        $("#content")[refresh ? "html" : "append"](hotelTmpl({items: data}));
+                        $("#content")[refresh ? "html" : "append"](sLineTmpl({items: data}));
                         start++;
                     }else{
                         if(refresh){
@@ -245,15 +259,9 @@ define([
             loading.hideLoading();
         }
     }
-    function deleteHotel(){
-        lineInfo[lineCode].hotalCode && (delete lineInfo[lineCode].hotalCode);
-        lineInfo[lineCode].roomType && (delete lineInfo[lineCode].roomType);
-        lineInfo[lineCode].startDate && (delete lineInfo[lineCode].startDate);
-        lineInfo[lineCode].endDate && (delete lineInfo[lineCode].endDate);
-        lineInfo[lineCode].quantity && (delete lineInfo[lineCode].quantity);
-        lineInfo[lineCode].hotelName && (delete lineInfo[lineCode].hotelName);
-        lineInfo[lineCode].checkInMobile && (delete lineInfo[lineCode].checkInMobile);
-        lineInfo[lineCode].checkInName && (delete lineInfo[lineCode].checkInName);
+    function deleteSpeLine(){
+        lineInfo[lineCode].outCode && (delete lineInfo[lineCode].outCode);
+        lineInfo[lineCode].outName && (delete lineInfo[lineCode].outName);
         sessionStorage.setItem("line-info", JSON.stringify(lineInfo));
     }
 });

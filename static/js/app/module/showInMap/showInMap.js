@@ -8,7 +8,7 @@ define([
         lat: '30.25924446'
     }
     var css = __inline("showInMap.css");
-    var first = true;
+    var first = true, map;
     init();
     function init(){
         $("head").append('<style>'+css+'</style>');
@@ -59,6 +59,39 @@ define([
                     first = false;
                 }
                 
+            }
+            return this;
+        },
+        showMapByName: function (name) {
+            if(this.hasMap()){
+                var mapCont = $("#J_OnePointMapWrapper");
+                // mapCont.fadeIn(100);
+                mapCont.css("top", $(window).scrollTop()+"px");
+                mapCont.show().animate({
+                    left: 0
+                }, 200);
+                if(first){
+                    map = new BMap.Map("J_OnePointMapCont");
+                    // var point = new BMap.Point(defaultOpt.lng, defaultOpt.lat);
+                    // map.centerAndZoom(point, 12);
+                    // var marker = new BMap.Marker(point);// 创建标注
+                    // map.addOverlay(marker);             // 将标注添加到地图中
+                    //marker.disableDragging();           // 不可拖拽
+                    map.enableScrollWheelZoom(true);
+                    first = false;
+                }
+                map.clearOverlays();
+                function myFun() {
+                    var pp = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+                    var point = pp;
+                    map.centerAndZoom(pp, 18);
+                    map.addOverlay(new BMap.Marker(pp)); //添加标注
+
+                }
+                var local = new BMap.LocalSearch(map, { //智能搜索
+                    onSearchComplete: myFun
+                });
+                local.search(name);
             }
             return this;
         },

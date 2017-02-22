@@ -6,7 +6,7 @@ define([
     'app/util/dict'
 ], function(base, Ajax, dialog, loading, Dict) {
     var code = base.getUrlParam("code");
-    var orderStatus = Dict.get("lineOrderStatus");
+    var orderStatus = Dict.get("specialLineOrderStatus");
     var specialModule = {};
     init();
 
@@ -60,7 +60,7 @@ define([
                     $(".order-hotel-detail-btn0").removeClass("hidden");
                 else if(data.status == "2")
                     $(".order-hotel-detail-btn1").removeClass("hidden");
-                else if(data.status == "6")
+                else if(data.status == "4")
                     $(".order-hotel-detail-btn2").removeClass("hidden");
             }else{
                 loading.hideLoading();
