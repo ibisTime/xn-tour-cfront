@@ -7,7 +7,7 @@
 
 <body class="bg_f3f3f3">
     <form id="deuBusForm">
-        <div class="ba lh50 wp100 plr10 bb p-r clearfix" id="startSiteWrap">
+        <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="startSiteWrap">
             <div class="p-r">
             	<div class="inline_block fs14 co9">上车地点</div>
                 <input type="text" class="op-0" name="startSite" id="startSite">
@@ -35,7 +35,7 @@
             <input id="choseDate" class="spec-all-date"/>
         	<div class="p-r">
                 <div class="inline_block fs14 co9">预定时间</div>
-                <input type="text" class="op-0" name="midSite" id="midSite">
+                <input type="text" class="op-0" name="outDatetime" id="outDatetime">
                 <div class="fr inline_block pr20 fs15" id="showDate"></div>
             </div>
             <img src="../images/xyjt.png?__inline" class="more">
@@ -45,7 +45,8 @@
         	<div class="p-r">
                 <div class="inline_block fs14 co9">预定人数</div>
                 <div class="fr inline_block pr20 fs15">人</div>
-                <div class="fr inline_block fs15" id="showNum">2</div>
+                <input type="text" class="op-0" name="totalNum" value="0" id="totalNum">
+                <div class="fr inline_block fs15" id="showNum">0</div>
             </div>
             <img src="../images/xyjt.png?__inline" class="more ">
         </div>
@@ -55,7 +56,7 @@
     	<div class="inline_block va">
         	<span class="fs14 co9">合计:</span>
        	    <span class="price fs13">¥</span>
-            <span class="price fs18">234</span>
+            <span class="price fs18" id="amount">--</span>
         </div>
     	<input type="button" id="sbtn" value="预定" class="release fs15 inline_block fr">
     </div>

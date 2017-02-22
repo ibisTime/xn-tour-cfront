@@ -18,10 +18,12 @@ define([
                 var temp = $(tmpl);
                 if(defaultOpt.type == "number" || defaultOpt.type == "Z")
                     temp.find("#normalTextInputDiv").html('<input type="number" id="normalTextInputText" name="normalTextInputText"/>');
-                $("body").append(tmpl);
+                $("body").append(temp);
             }
             var wrap = $("#normalTextInputWrap");
-            defaultOpt.title && wrap.find(".right-left-cont-title-name").html(defaultOpt.title);
+            if(defaultOpt.title) {
+                wrap.find(".right-left-cont-title-name, #normalTextInputLeftTitle").html(defaultOpt.title);
+            }
             var that = this;
             if(first){
                 $("#normalTextInputBack")

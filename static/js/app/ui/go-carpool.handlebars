@@ -1,0 +1,15 @@
+{{#each items}}
+    <div class="item">
+        <a class="show block wp100" href="./carpool-detail.html?code={{code}}">
+            <div class="item-c flex flex-dv flex-jb pl0_i">
+                <div class="item-c-top1 t_norwrap pb0_i pr50_i">上车地点：{{startSite}}</div>
+                <div class="item-c-top1 t_norwrap pb0_i pr50_i">下车地点：{{endSite}}</div>
+                <div class="item-c-center item-c-center0 t_norwrap">拼{{totalNum}}人</div>
+                <div class="item-c-bottom0 t_norwrap mt0">
+                    ¥{{formatMoney totalPrice}}<span class="smf">起</span>
+                </div>
+            </div>
+            <div class="item-r item-r0 item-c-div">{{formatCarpoolStatus status}}</div>
+        </a>
+    </div>
+{{/each}}

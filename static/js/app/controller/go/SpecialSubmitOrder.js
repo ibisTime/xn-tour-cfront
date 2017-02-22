@@ -52,6 +52,7 @@ define([
                 price = +data.price;
                 $("#totalAmount").text(base.formatMoney(price * +quantity));
                 $("#amount").text(base.formatMoney(price));
+                $("#quantity").text(quantity);
                 addListener();
             }else{
                 base.showMsg(res.msg);

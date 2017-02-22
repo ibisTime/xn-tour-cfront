@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>推荐出行列表</title>
+</head>
+
+<body class="bg_f3f3f3">
+    <div id="wrapper" class="travel-scroll-wrapper hidden">
+        <div id="scroll">
+            <div id="pullDown" class="idle">
+                <div class="pullDownLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div> 
+                    <div class="bounce4"></div> 
+                </div>
+            </div>
+            <div id="content" class="s-content mt0"></div>
+            <div id="pullUp" class="idle" style="display: block;">
+                <div class="pullUpLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                    <div class="bounce4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="s-content hidden" id="chosedCont"></div>
+    <div id="choseBtns" class="travel-chose-btns clearfix hidden">
+        <input type="button" id="cxxzBtn" class="travel-cxxz fl" value="重新选择" />
+        <input type="button" id="scBtn" class="travel-sc fr" value="删除" />
+    </div>
+    <div id="fix-b" class="fix-b bg_transparent hidden">
+        <input type="button" value="选择其它" id="xzqtBtn" class="default-big-btn">
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/travel/TravelSpecialLineList']);
+    </script>
+</body>
+
+</html>
