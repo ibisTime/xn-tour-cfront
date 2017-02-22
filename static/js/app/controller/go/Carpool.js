@@ -151,6 +151,7 @@ define([
         var data = $("#carpoolForm").serializeObject();
         data.distancePrice = result.cg;
         data.userId = base.getUserId();
+        data.outDatetime = data.outDatetime + ":00";
         Ajax.post("618240", {
             json: data
         }).then(function (res) {

@@ -27,14 +27,12 @@ define([
                     $("#code").html(code);
                     $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
                     $("#status").html(busStatus[data.status]);
-                    $("#startSite").html(data.startSite);
-                    $("#endSite").html(data.endSite);
-                    $("#outDatetime")
-                        .html(base.formatDate(data.outDatetime, 'yyyy-MM-dd hh:mm'));
-                    // $("#midSite").html(data.midSite);
-                    $("#booker").html(data.booker);
-                    $("#price").html(base.formatMoney(data.price));
                     $("#applyNote").html(data.applyNote);
+
+                    getCarpool(data.carpoolCode);
+
+                    var price = data.totalPrice || ( +(data.firstPayAmount || data.firstAmount) + +(data.secondPayAmount || data.secondAmount || 0) );
+                    $("#price").html(base.formatMoney(price));
                     if(data.status == "0")
                         $(".order-hotel-detail-btn0").removeClass("hidden");
                     // else if(data.status == "1")
@@ -48,6 +46,24 @@ define([
             }, function () {
                 base.showMsg("订单信息获取失败");
             });
+    }
+    function getCarpool(code) {
+        Ajax.get("618252", {
+            code: code
+        }).then(function(res){
+            if(res.success){
+                var data = res.data;
+                $("#startSite").html(data.startSite);
+                $("#endSite").html(data.endSite);
+                $("#outDatetime")
+                    .html(base.formatDate(data.outDatetime, 'yyyy-MM-dd hh:mm'));
+                $("#takePartNum").html(data.takePartNum);
+            }else{
+                base.showMsg(res.msg);
+            }
+        }, function(){
+            base.showMsg("拼车信息获取失败");
+        });
     }
     function cancelOrder(remark){
         loading.createLoading("提交申请中...");

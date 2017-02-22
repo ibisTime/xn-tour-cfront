@@ -2159,3 +2159,39 @@ label.error{
 .pr50_i{
     padding-right: 50px;
 }
+.mall-list-header{
+    height: 49px;
+    line-height: 49px;
+    font-size: 14px;
+    color: #505050;
+    background-color: #fff;
+}
+.mall-header-left{
+    height: 100%;
+    padding-left: 32px;
+    background: url(../images/jfye-icon.png?__inline) 8px center no-repeat;
+    background-size: 19px;
+}
+.mall-header-amount{
+    font-size: 15px;
+    color: #fd8300;
+}
+.mall-header-right{
+    padding-left: 20px;
+    color: #06cdb8;
+    font-size: 12px;
+    padding-right: 8px;
+    height: 100%;
+    background: url(../images/jfgz-icon.png?__inline) left center no-repeat;
+}
+.mall-list-wrapper{
+    position: absolute;
+    top: 49px;
+    bottom: 0;
+    width: 100%;
+}
+
+
+
+
+
