@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>热门活动</title>
+</head>
+
+<body>
+	<header class="nav-head">热门活动</header>
+	<div class="wp100 fs16 scroll-wrapper" id="wrapper">
+		<div id="scroll">
+			<div id="pullDown" class="idle">
+                <div class="pullDownLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div> 
+                    <div class="bounce4"></div> 
+                </div>
+            </div>
+            <div class="activityWrap" id="activityWrap">
+				<!--<div class="activityList" data-href="">
+					<p class="activityTit fl inline_block">青岛湖游</p>
+					<samp class="activityDate fr">2017-2-22</samp>
+				</div>-->
+			</div>
+			<div id="pullUp" class="idle" style="display: block;">
+                <div class="pullUpLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                    <div class="bounce4"></div>
+                </div>
+            </div>
+		</div>
+	</div>
+	
+    <link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/home/activity']);
+    </script>
+</body>
+
+</html>

@@ -10,6 +10,7 @@
 .fs20{font-size:20px;}
 .fs22{font-size:22px;}
 .fs30{font-size:30px;}
+.fs60{font-size:60px;}
 .lh44{line-height: 44px;}
 .ba{background-color:#ffffff;}
 .bc{background-color:#f3f3f3;}
@@ -92,7 +93,7 @@ margin-right: 10px;color:#ffffff;}
 }
 
 /*拼车*/
-.release{width:99px;line-height:40px;background-color:#ffa800;color:#ffffff;border-radius:6px; margin-top:4px;}
+.release{width:99px;line-height:40px;background-color:#ffa800;color:#ffffff;border-radius:6px; margin-top:5px;}
 .hig50{height:50px;}
 
 /*拼车提示*/
@@ -117,6 +118,20 @@ margin-right: 10px;color:#ffffff;}
 .qiandao{line-height:44px;background:#ffa902;border-radius:44px;color:#ffffff;}
 .a-qiandao{line-height:44px;background:#e6e6e6 !important;border-radius:44px;color:#ffffff;}
 
+
+@media only screen and (max-width: 640px) {
+	.sign-in{ height: 630px;}
+}
+@media only screen and (max-width: 580px) {
+	.sign-in{ height: 580px;}
+}
+@media only screen and (max-width: 480px) {
+	.sign-in{ height: 530px;}
+}
+@media only screen and (max-width: 330px) {
+	.sign-in{ height: 350px;}
+}
+
 /*攻略详情*/
 .zan{width:16px;}
 .hig35{height:35px;}
@@ -140,4 +155,25 @@ margin-right: 10px;color:#ffffff;}
 }
 .weatherList .wrap p{
 	padding-top: 1%;
+}
+
+/*热门活动*/
+.activityList{
+	padding: 20px 15px;
+	border-bottom:0.5px solid #ededed;
+	width: 100%;
+	overflow: hidden;
+}
+.activityList p{
+	width: calc(100% - 100px);
+	width: -webkit-calc(100% - 100px);
+	width: -moz-calc(100% - 100px);
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.activityList samp{
+	display: inline-block;
+	width: 100px;
+	text-align: right;
 }
