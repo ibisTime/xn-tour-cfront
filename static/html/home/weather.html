@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>天气预报</title>
+</head>
+
+<body class="hp100">
+    
+    <div class="wp100 hp100 weatherBg1 plr15 pt20 t_white">
+    	<div class="wp100 plr15 ptb15 weatherBg2">
+    		<div class="wp100 fs14">
+    			<p class="inline_block fl"><samp class="fs22 w-add"></samp>今天（<span class="w-nowWeek">星期三</span>）</p>
+    			<p class="inline_block fr"><samp class="fs22"></samp><span class="w-update"></span>更新</p>
+    		</div>
+    		<div class="wp100 pt30 pb10">
+    			<div class="wp60 fl">
+	    			<div class="wp50 fl"><img class="fl wp100 w-condImg" src="" /></div>
+	    			<p class="inline_block fs60 wp50 fr tc lh100 w-nowTmp"></p>
+    			</div>
+    			<div class="wp40 fr fs16 w-templx">
+    				<p class="w-nowCond"></p>
+    				<p class="w-Tmp">6°~12°</p>
+    			</div>
+    		</div>
+    	</div>
+    	
+    	<div class="wp100 mt20 weatherList">
+    		
+    		<div class="over-hide wp100 p10 fs16 wrap">
+    			<p class="fl wp45 inline_block w-date">星期四</p>
+    			<div class="fl wp10"><img class="wp100 w-condImg" src="../images/default-avatar.png" /></div>
+    			<p class="fl wp45 inline_block tr w-Tmp">6°~12°</p>
+    		</div>
+    		
+    	</div>
+    	
+    </div>
+    
+    <link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/home/weather']);
+    </script>
+</body>
+
+</html>
