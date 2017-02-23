@@ -1,0 +1,35 @@
+<ul class="b_bd_b bg_fff">
+	{{#each items}}
+	<li class="clearfix b-b-e9 p_r cart-li" code="{{code}}" cnyP="{{price1}}">
+		<div class="wp100 p_r z_index0">
+			<div class="clearfix bg_fff cart-content-left">
+				<div class="w140p tc  p_r c-img-l">
+				    <div class="cart-li-left-chose-wrap cart-cont-left">
+				    	<div class="inline_block cart-check-btn radio-tip1"></div>
+				    </div>
+				    <div class="cart-li-left-img-wrap">
+				    	<img class="center-img" src="{{formatImage advPic}}"/>
+				    </div>
+				</div>
+                <div class="cart-li-right-wrap">
+                    <div class="hp100 flex flex-jb flex-dv">
+                		<p class="c-59 fs14">{{productName}}</p>
+                		<p class="y-small"><span>{{formatZeroMoney price1}}积分</span></p>
+                		<div class="t_666 cart-li-bottom">
+                        	<span class="subCount a_s_span t_bold tc">
+                        		
+                        	</span>
+                        	<input type="hidden" value="{{quantity}}"/>
+                        	<input class="buyCount tc" type="text" value="{{quantity}}"/>
+                        	<span class="addCount a_s_span t_bold tc">
+                        		
+                        	</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+	        <div class="al_addr_del">删除</div>
+	    </div>
+    </li>
+    {{/each}}
+</ul>

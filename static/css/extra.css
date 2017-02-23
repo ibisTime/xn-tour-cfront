@@ -2481,7 +2481,6 @@ label.error{
     height: 26px;
     display: inline-block;
     vertical-align: middle;
-    border-radius: 6px;
 }
 
 .a_s_span img {
@@ -2516,15 +2515,15 @@ label.error{
 .radio-tip1 {
     position: absolute;
     top: 50%;
-    margin-top: -12px;
+    margin-top: -10px;
     left: 0;
 }
 .ab_l0{
     left: 0;
 }
 .cart-check-btn{
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border: 1px solid #d6d6d6;
     border-radius: 4px;
 }
@@ -2560,7 +2559,7 @@ label.error{
 .cart-li-right-wrap{
     position: absolute;
     top: 0;
-    left: 140px;
+    left: 150px;
     right: 0;
     height: 80px;
 }
@@ -2577,4 +2576,15 @@ label.error{
     margin-right: 3px;
     width: 40px;
     line-height: 26px;
+}
+.w140p{
+    width: 140px;
+}
+.subCount{
+    background: url(../images/sub-btn-icon.png?__inline) no-repeat center;
+    background-size: contain;
+}
+.addCount{
+    background: url(../images/add-btn-icon.png?__inline) no-repeat center;
+    background-size: contain;
 }

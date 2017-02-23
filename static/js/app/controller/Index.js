@@ -15,6 +15,7 @@ define([
         addListener();
         initIScroll();
         initSwiper();
+        getModule();
         // getPageLine();
     }
     function initSwiper(){
@@ -73,59 +74,28 @@ define([
     }
 
     function getModule(){
-        Ajax.get("806052")
+        Ajax.get("806052", {location: "home_page"})
             .then(function(res){
                 if(res.success){
                     var data = res.data;
-                    var html0 = "", html1 = "", html2 = "";
+                    var html = "";
                     $.each(data, function(i, d){
-                        //出行-酒店
-                        if(d.location == "depart_hotel" || d.location == "depart_deli" || d.location == "goout"){
-                            var url = d.url;
-                            if(/^page:/.test(url)){
-                                url = url.replace(/^page:/, "../")
-                                         .replace(/\?/, ".html?");
-                                if(!/\?/.test(url)){
-                                    url = url + ".html";
-                                }
-                            }
-                            //酒店
-                            if(d.location == "depart_hotel"){
-                                config1.hotel.module.push(d);
-                                html1 +='<li class="nav-li nav-li-4">'+
-                                        '<a class="wp100 show" href="'+url+'">'+
-                                            '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
-                                            '<div class="nav-li-text">'+d.name+'</div>'+
-                                        '</a>'+
-                                    '</li>';
-                            //美食
-                            }else if(d.location == "depart_deli"){
-                                config1.food.module.push(d);
-                                html2 +='<li class="nav-li nav-li-4">'+
-                                        '<a class="wp100 show" href="'+url+'">'+
-                                            '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
-                                            '<div class="nav-li-text">'+d.name+'</div>'+
-                                        '</a>'+
-                                    '</li>';
-                            //出行
-                            }else if(d.location == "goout"){
-                                config1.outting.module.push(d);
-                                html0 +='<li class="nav-li nav-li-4">'+
-                                        '<a class="wp100 show" href="'+url+'">'+
-                                            '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
-                                            '<div class="nav-li-text">'+d.name+'</div>'+
-                                        '</a>'+
-                                    '</li>';
+                        var url = d.url;
+                        if(/^page:/.test(url)){
+                            url = url.replace(/^page:/, "../")
+                                     .replace(/\?/, ".html?");
+                            if(!/\?/.test(url)){
+                                url = url + ".html";
                             }
                         }
+                        html +='<li class="nav-li nav-li-4">'+
+                                '<a class="wp100 show" href="'+url+'">'+
+                                    '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
+                                    '<div class="nav-li-text">'+d.name+'</div>'+
+                                '</a>'+
+                            '</li>';
                     });
-                    // $("#top-content").find(".J_Content0").html(html0);
-                    $("#top-content").find(".J_Content1").html(html1);
-                    $("#top-content").find(".J_Content2").html(html2);
-                    Handlebars.registerHelper('formatCategory', function(category, options){
-                        return base.findObj(config1.hotel.module, "code", category)["name"];
-                    });
-                    $("#top-nav").find(".go-top-li").eq(index).click();
+                    $("#module").html(html);
                 }else{
                     base.showMsg(res.msg || "加载失败");
                     loading.hideLoading();

@@ -2,68 +2,41 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/module/moveDelete/moveDelete',
-    'app/module/addSub/addSub'
-], function(base, Ajax, moveDelete, addSub) {
+    'app/module/addSub/addSub',
+    'app/module/loading/loading',
+    'app/util/handlebarsHelpers'
+], function(base, Ajax, moveDelete, addSub, loading, Handlebars) {
     var infos = [];
+    var tmpl = __inline("../../ui/cart-items.handlebars");
     init();
 
     function init() {
         if (!base.isLogin()) {
             base.goLogin();
             return;
-        } else {
-            getMyCart();
-            addListeners();
         }
+        getMyCart();
+        addListeners();
     }
     //获取购物车商品
     function getMyCart() {
+        loading.createLoading();
         infos = [];
         Ajax.get("618441", {
             userId: base.getUserId()
         })
             .then(function(response) {
-                if (response.success) {
-                    var data = response.data,
-                        html = "";
-                    if (data.length) {
-                        html = '<ul class="b_bd_b bg_fff">';
-                        data.forEach(function(cl) {
-                            var amount = (+cl.price1) * (+cl.quantity);
-                            html += '<li class="clearfix b-b-e9 p_r cart-li" code="' + cl.code + '" cnyP="' + (cl.price1 || 0) + '">' +
-                                '<div class="wp100 p_r z_index0">' +
-                                '<div class="clearfix bg_fff cart-content-left">'+
-                                '<div class="w130p tc  p_r c-img-l">' +
-                                    '<div class="cart-li-left-chose-wrap cart-cont-left"><div class="inline_block cart-check-btn radio-tip1"></div></div>';
-                                    // '<div class="cart-cont-left"><div class="radio-tip1 ab_l0"><i></i></div></div>' +
-                                    // '<a href="./buy.html?code=' + cl.productCode + '">';
-                            cl.advPic = cl.advPic.split(/\|\|/)[0];
-                            html += '<div class="cart-li-left-img-wrap"><img class="center-img" src="' + base.getImg(cl.advPic) + '"/></div>'+
-                                    // '</a>'+
-                                    '</div>' +
-                                '<div class="cart-li-right-wrap"><div class="hp100 flex flex-jb flex-dv">' +
-                                '<p class="c-59 fs14">' + cl.productName + '</p>' +
-                                '<p class="y-small"><span>￥' + (+cl.price1 / 1000).toFixed(2) + '</span></p>';
-                            html += '<div class="t_666 cart-li-bottom">' +
-                                '<span class="subCount a_s_span t_bold tc"><img src="/static/images/sub-btn-icon.png" class="cart-as-btn"/></span>' +
-                                '<input type="hidden" value="' + (+cl.quantity) + '"/>' +
-                                '<input class="buyCount tc" type="text" value="' + cl.quantity + '"/>' +
-                                '<span class="addCount a_s_span t_bold tc"><img src="/static/images/add-btn-icon.png" class="cart-as-btn"/></span>' +
-                                '</div></div></div></div>' +
-                                '<div class="al_addr_del">删除</div></div></li>';
-                            //保存每种商品当前的总价
-                            infos.push(amount);
-                        });
-                        html += "</ul>";
-                        $("#od-ul").html(html);
-                        $("#totalAmount").html("0");
-                    } else {
-                        doError();
-                    }
+                loading.hideLoading();
+                if (response.success && response.data.length) {
+                    response.data.forEach(function(cl) {
+                        infos.push((+cl.price1) * (+cl.quantity));
+                    });
+                    $("#od-ul").html(tmpl({items: response.data}));
                 } else {
                     doError();
                 }
             }, function() {
+                loading.hideLoading();
                 doError();
             });
     }
@@ -86,7 +59,7 @@ define([
                 }
             }
             if (checkItem.length) {
-                location.href = '../operator/submit_order.html?code=' + checkItem.join("_") + '&type=2';
+                location.href = './submit-order.html?code=' + checkItem.join("_") + '&type=2';
             } else {
                 base.showMsg("未选择购买的商品");
             }
@@ -104,11 +77,11 @@ define([
                     "quantity": this.value
                 };
                 //修改购物车商品信息
-                $("#loaddingIcon").removeClass("hidden");
+                loading.createLoading("修改中...");
                 var me = this;
                 Ajax.post("618433", { json: config })
                     .then(function(response) {
-                        $("#loaddingIcon").addClass("hidden");
+                        loading.hideLoading();
                         if (response.success) {
                             var flag = gp.find(".c-img-l .radio-tip1.active").length,
                                 $prev = $(me).prev(),
@@ -129,20 +102,19 @@ define([
                             $prev.val(count);
                             //如果当前商品处于被勾选的状态，则更新页面底部的总价
                             if (flag) {
-                                $("#totalAmount").text((new_cnyTotal / 1000).toFixed(2));
+                                $("#totalAmount").text(base.fZeroMoney(new_cnyTotal));
                             }
                         } else {
                             me.value = $(me).prev().val();
                             base.showMsg("数量修改失败，请稍后重试！");
                         }
                     }, function() {
-                        $("#loaddingIcon").addClass("hidden");
+                        loading.hideLoading();
                         me.value = $(me).prev().val();
                         base.showMsg("数量修改失败，请稍后重试！");
                     });
             }
         });
-        // moveDelete.init("od-ul", "cart-content-left");
         /********监测数量输入框的变化end*******/
         //全选按钮
         $("#allChecked").on("click", function() {
@@ -167,7 +139,7 @@ define([
                 for (var i = 0; i < infos.length; i++) {
                     t += infos[i];
                 }
-                $("#totalAmount").text((t / 1000).toFixed(2));
+                $("#totalAmount").text(base.fZeroMoney(t));
                 //否则把页面底部总价置为0
             } else {
                 $("#totalAmount").text("0");
@@ -196,22 +168,13 @@ define([
                     $("#allChecked").addClass("active");
                 }
                 var ori_cnyTotal = (+$("#totalAmount").text()) * 1000;
-                $("#totalAmount").text(((ori_cnyTotal + infos[$li.index()]) / 1000).toFixed(2));
+                $("#totalAmount").text(base.fZeroMoney(ori_cnyTotal + infos[$li.index()]));
             } else {
                 $("#allChecked").removeClass("active");
                 var ori_cnyTotal = (+$("#totalAmount").text()) * 1000;
-                $("#totalAmount").text(((ori_cnyTotal - infos[$li.index()]) / 1000).toFixed(0));
+                $("#totalAmount").text(base.fZeroMoney(ori_cnyTotal - infos[$li.index()]));
             }
         });
-        // //确认删除框点击确认按钮
-        // $("#odOk").on("click", function() {
-        //     deleteFromCart($this);
-        //     $("#od-mask, #od-tipbox").addClass("hidden");
-        // });
-        // //确认删除框点击取消按钮
-        // $("#odCel").on("click", function() {
-        //     $("#od-mask, #od-tipbox").addClass("hidden");
-        // });
         //左滑显示删除按钮事件
         moveDelete.init("od-ul", "cart-content-left");
         //左滑后删除商品
@@ -222,7 +185,6 @@ define([
                 .then(function () {
                     deleteFromCart(that);
                 })
-            // $("#od-mask, #od-tipbox").removeClass("hidden");
         });
     }
 
@@ -236,12 +198,12 @@ define([
     function deleteFromCart(me) {
         var $li = $(me).closest("li[code]"),
             code = $li.attr('code');
-        $("#loaddingIcon").removeClass("hidden");
+        loading.createLoading("删除中...");
         Ajax.post("618431", {
                 json: { "code": code }
             })
             .then(function(response) {
-                $("#loaddingIcon").addClass("hidden");
+                loading.hideLoading();
                 if (response.success) {
                     var ccl = $(me).prev().find(".cart-cont-left"),
                         activeRadio = ccl.find(".radio-tip1.active");
@@ -257,7 +219,7 @@ define([
                     base.showMsg("删除失败，请稍后重试！");
                 }
             }, function() {
-                $("#loaddingIcon").addClass("hidden");
+                loading.hideLoading();
                 base.showMsg("删除失败，请稍后重试！");
             });
     }
