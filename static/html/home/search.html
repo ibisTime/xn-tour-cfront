@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>搜索</title>
+</head>
+
+<body class="bg_f3f3f3">
+	<div class="nav-head searchWrap">
+		<div class="search-input-wrap">
+    		<div class="search-input-cont">
+    			<input type="text" id="searchInput" placeholder="输入关键字" class="index-search-input" />
+    			<img src="../images/search-icon2.png?__inline" class="index-search-icon" id="btn-search" />
+    		</div>
+    	</div>
+	</div>
+	<div id="wrapper" class="scroll-wrapper">
+        <div id="scroll">
+        	<div id="pullDown" class="idle">
+                <div class="pullDownLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div> 
+                    <div class="bounce4"></div> 
+                </div>
+            </div>
+            <div class="content mt0" id="content">
+                <!-- <div class="item">
+                    <div class="item-c-div item-l">
+                        <img class="cente" src="../../images/detailxx.png?__inline"/>
+                    </div>
+                    <div class="item-c">
+                        <div class="item-c-top1 twoline-ellipsis pb0"></div>
+                        <div class="index-item-bottom"></div>
+                    </div>
+                    <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
+                </div> -->
+            </div>
+            <div id="pullUp" class="idle" style="display: block;">
+                <div class="pullUpLabel">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                    <div class="bounce4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/travel/TravelList']);
+    </script>
+</body>
+
+</html>
