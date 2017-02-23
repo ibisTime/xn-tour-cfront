@@ -1319,7 +1319,7 @@ label.error{
     background-color: #fff;
     color: #3e3e3e;
     font-size: 15px;
-    height: 44px;
+    height: 45px;
     line-height: 44px;
     width: 540px;
 }
@@ -2588,3 +2588,9 @@ label.error{
     background: url(../images/add-btn-icon.png?__inline) no-repeat center;
     background-size: contain;
 }
+.c_f64444{
+    color: #f64444;
+}
+
+
+

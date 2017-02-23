@@ -80,9 +80,9 @@ define([
         initIScroll();
         addListener();
         base.initLocation(initConfig);
-        Handlebars.registerHelper('formatCarpoolStatus', function(text, places, options){
-            return carpoolStatus[text];
-        });
+        // Handlebars.registerHelper('formatCarpoolStatus', function(text, places, options){
+        //     return carpoolStatus[text];
+        // });
     }
 
     function getModuleNav(){

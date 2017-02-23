@@ -94,13 +94,14 @@ define([
                         area = city;
                         city = province;
                     }
+                    area = "";
                     sessionStorage.setItem("province", province);
                     sessionStorage.setItem("city", city);
                     sessionStorage.setItem("area", area);
                     sessionStorage.setItem("longitude", longitude);
                     sessionStorage.setItem("latitude", latitude);
 
-                    initFun();
+                    initFun(citylist);
                 }
             });
     }
@@ -232,9 +233,8 @@ define([
                 area = sessionStorage.getItem("area") || "",
                 longitude = sessionStorage.getItem("longitude", longitude),
                 latitude = sessionStorage.getItem("latitude", latitude);
-
+            loading.createLoading("定位中...");
             if (!province) {
-                loading.createLoading("定位中...");
                 var geolocation = new BMap.Geolocation();
                 geolocation.getCurrentPosition(function(r) {
                     if (this.getStatus() == BMAP_STATUS_SUCCESS) {
@@ -260,7 +260,12 @@ define([
                     }
                 }, { enableHighAccuracy: true });
             }else{
-                initFun();
+                Base.getAddress()
+                    .then(function(data) {
+                        var citylist = data.citylist;
+                        loading.hideLoading();
+                        initFun(citylist);
+                    });
             }
         },
         //获取地址json

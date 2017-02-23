@@ -4,7 +4,7 @@ define([
     'app/module/loading/loading'
 ], function(base, Ajax, loading) {
     var code = base.getUrlParam("code");
-    // 0:酒店 1:线路 2:专线 3:大巴
+    // 0:酒店 1:线路 2:专线 3:大巴 4:拼车 5:商品
     var type = base.getUrlParam("type") || 0;
     var choseIdx = 0, bizType, payBizType;
 

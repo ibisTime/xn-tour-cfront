@@ -1,11 +1,11 @@
 {{#each items}}
-	<div class="order-list-item-center item">
+	<div class="order-list-item-center item" data-code="{{fProductCode code}}">
 	    <div class="item-c-div item-l">
-	        <img class="cente" src="{{formatImage advPic}}"/>
+	        <img class="center-img" src="{{formatImage advPic}}"/>
 	    </div>
 	    <div class="flex-dv item-c flex flex-jb">
-	        <div class="t_norwrap pr50 mall-submit-title">{{name}}</div>
-	        <div class="t_norwrap pr50 mall-submit-jf">积分：{{formatZeroMoney costPrice}}</div>
+	        <div class="t_norwrap pr50 mall-submit-title">{{formatProductName name}}</div>
+	        <div class="t_norwrap pr50 mall-submit-jf">积分：{{formatZeroMoney price1}}</div>
 	        <div class="mall-submit-qua">x{{quantity}}</div>
 	    </div>
 	</div>

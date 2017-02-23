@@ -15,6 +15,18 @@ define([
             base.goLogin();
             return;
         } else {
+            Handlebars.registerHelper('formatProductName', function(name, options){
+                if(name)
+                    return name;
+                var idx = options.data.index;
+                return options.data.root.items[idx].productName || "--";
+            });
+            Handlebars.registerHelper('fProductCode', function(code, options){
+                if(code)
+                    return code;
+                var idx = options.data.index;
+                return options.data.root.items[idx].productCode || "";
+            });
             //单件商品购买
             if (type == 1) {
                 $.when(
@@ -84,29 +96,16 @@ define([
         return Ajax.get(postCode, {
             userId: base.getUserId()
         }).then(function(response) {
-                if (response.success) {
+                if (response.success && response.data.length) {
                     var data = response.data,
-                        totalCount = 0;
-                    if (data.length) {
-                        var items = [];
-                        for (var i = 0, len = code.length; i < len; i++) {
-                            var d = data[code[i]];
-                            d.salePrice = d.price2;
-                            var eachCount = (+d.salePrice) * (+d.quantity);
-                            d.product = {};
-                            d.product.name = d.productName;
-                            d.product.advPic = d.advPic;
-                            d.product.productCode = d.productCode;
-                            d.product.discountPrice = (+d.salePrice / 1000).toFixed(2);
-                            totalCount += eachCount;
-                            items.push(d);
-                        }
-                        var html = contentTmpl({ items: items });
-                        $("#items-cont").html(html);
-                        $("#amount").html(base.fZeroMoney(totalCount));
-                    } else {
-                        doError("#items-cont");
-                    }
+                    totalCount = 0;
+                    $.each(data, function (i, d) {
+                        var eachCount = (+d.price1) * (+d.quantity);
+                        totalCount += eachCount;
+                    });
+                    var html = contentTmpl({ items: data });
+                    $("#items-cont").html(html);
+                    $("#amount").html(base.fZeroMoney(totalCount));
                 } else {
                     doError("#items-cont");
                 }
@@ -177,9 +176,9 @@ define([
                     };
                 } else if (type == 2) {
                     var cartList = [],
-                        $lis = $("#items-cont > ul > li");
+                        $lis = $("#items-cont .order-list-item-center");
                     for (var i = 0, len = $lis.length; i < len; i++) {
-                        cartList.push($($lis[i]).attr("modelCode"));
+                        cartList.push($($lis[i]).attr("data-code"));
                     }
                     config = {
                         "receiver": $a.find(".a-addressee").text(),

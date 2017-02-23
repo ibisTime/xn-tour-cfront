@@ -19,12 +19,12 @@
             </div>
 			<header class="p_r">
 		    	<div class="search-wrap">
-		    		<div class="address-wrap t_norwrap">杭州杭州杭州</div>
+		    		<div class="address-wrap t_norwrap" id="headDW">杭州杭州杭州</div>
 		    		<div class="search-input-wrap">
 		        		<div class="search-input-cont">
 		        			<input type="text" id="searchInput" class="index-search-input" />
-		        			<span class="index-search-placeholder">输入关键字</span>
-		        			<img src="../images/search-icon.png?__inline" class="index-search-icon" />
+		        			<span class="index-search-placeholder">输入线路关键字</span>
+		        			<img src="../images/search-icon.png?__inline" id="searchIcon" class="index-search-icon" />
 		        		</div>
 		        	</div>
 		    	</div>
@@ -39,7 +39,7 @@
 		    </header>
 		    <div class="wp100">
 				<ul class="top-nav clearfix J_Content0 active" id="module">
-		            <li class="nav-li nav-li-4">
+		            <!-- <li class="nav-li nav-li-4">
 		                <a href="home/signIn.html">
 		                    <div class="nav-li-img"><img src="../images/mrqd-icon.png?__inline"/></div>
 		                    <div class="nav-li-text">每日签到</div>
@@ -76,15 +76,15 @@
 		            <li class="nav-li nav-li-4">
 		                <div class="nav-li-img"><img src="../images/jd-icon.png?__inline"/></div>
 		                <div class="nav-li-text">出行</div>
-		            </li>
+		            </li> -->
 		        </ul>
 		    </div>
 		    <div class="index-bar">
 		    	<div class="ib-left"></div>推荐线路
 		    </div>
 			
-            <div class="content mt0">
-                <div class="item">
+            <div class="content mt0" id="content">
+                <!-- <div class="item">
                     <div class="item-c-div item-l">
                         <img class="cente" src="../images/detailxx.png?__inline"/>
                     </div>
@@ -93,67 +93,7 @@
                         <div class="index-item-bottom">杭州出发</div>
                     </div>
                     <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
-                <div class="item">
-                    <div class="item-c-div item-l">
-                        <img class="cente" src="../images/detailxx.png?__inline"/>
-                    </div>
-                    <div class="item-c">
-                        <div class="item-c-top1 twoline-ellipsis">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
-                        <div class="index-item-bottom">杭州出发</div>
-                    </div>
-                    <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
-                <div class="item">
-                    <div class="item-c-div item-l">
-                        <img class="cente" src="../images/detailxx.png?__inline"/>
-                    </div>
-                    <div class="item-c">
-                        <div class="item-c-top1 twoline-ellipsis">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
-                        <div class="index-item-bottom">杭州出发</div>
-                    </div>
-                    <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
-                <div class="item">
-                    <div class="item-c-div item-l">
-                        <img class="cente" src="../images/detailxx.png?__inline"/>
-                    </div>
-                    <div class="item-c">
-                        <div class="item-c-top1 twoline-ellipsis">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
-                        <div class="index-item-bottom">杭州出发</div>
-                    </div>
-                    <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
-                <div class="item">
-                    <div class="item-c-div item-l">
-                        <img class="cente" src="../images/detailxx.png?__inline"/>
-                    </div>
-                    <div class="item-c">
-                        <div class="item-c-top1 twoline-ellipsis">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
-                        <div class="index-item-bottom">杭州出发</div>
-                    </div>
-                    <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
-                <div class="item">
-                    <div class="item-c-div item-l">
-                        <img class="cente" src="../images/detailxx.png?__inline"/>
-                    </div>
-                    <div class="item-c">
-                        <div class="item-c-top1 twoline-ellipsis">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
-                        <div class="index-item-bottom">杭州出发</div>
-                    </div>
-                    <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
-                <div class="item">
-                    <div class="item-c-div item-l">
-                        <img class="cente" src="../images/detailxx.png?__inline"/>
-                    </div>
-                    <div class="item-c">
-                        <div class="item-c-top1 twoline-ellipsis">杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖-杭州-青岛湖</div>
-                        <div class="index-item-bottom">杭州出发</div>
-                    </div>
-                    <div class="item-c-div item-r item-r1">¥2340<span class="smf">起</span></div>
-                </div>
+                </div> -->
             </div>
             <div id="pullUp" class="idle" style="display: block;">
                 <div class="pullUpLabel">

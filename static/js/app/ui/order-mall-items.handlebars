@@ -1,0 +1,14 @@
+{{#each items}}
+    <div class="order-list-item-center item">
+        <a href="./order-mall-detail.html?code={{productCode}}" class="wp100 show">
+            <div class="item-c-div item-l">
+                <img class="cente" src="{{formatImage advPic}}"/>
+            </div>
+            <div class="item-c flex flex-dv flex-jb">
+                <div class="item-c-top1 pb0_i t_norwrap pr50">{{productName}}</div>
+                <div class="c_f64444 fs13">积分数：{{formatZeroMoney price1}}</div>
+                <div class="item-c-center t_norwrap pr50">x{{quantity}}</div>
+            </div>
+        </a>
+    </div>
+{{/each}}
