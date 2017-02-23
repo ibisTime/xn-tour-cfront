@@ -75,6 +75,7 @@ define([
         if(!isLoading && (!isEnd || refresh) ){
             isLoading = true;
             base.showPullUp();
+            config.start = refresh && 1 || config.start;
             return Ajax.get("618100", config, !refresh)
                 .then(function(res){
                     if(res.success && res.data.list.length){
@@ -83,6 +84,7 @@ define([
                             isEnd = true;
                         }
                         $("#content")[refresh ? "html" : "append"](travelTmpl({items: list}));
+                        config.start++;
                     }else{
                         if(refresh){
                             $("#content").html('<div class="item-error">暂无相关数据</div>');
@@ -109,6 +111,7 @@ define([
             getPageTravel(true);
         }
         $pullDownEl = $("#pullDown");
+
         pullDownEl = $pullDownEl[0];
         pullDownOffset = pullDownEl.offsetHeight;
         

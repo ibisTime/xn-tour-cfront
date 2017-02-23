@@ -123,7 +123,6 @@ define([
                     $pullDownEl.removeClass("flip");
                     this.minScrollY = -pullDownOffset;
                 } else if (this.y - 120 < this.maxScrollY) {
-                    // console.log("上拉加载更多");
                     getPageFood();
                 }
             },

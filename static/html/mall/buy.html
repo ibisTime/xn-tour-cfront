@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>来来旺旺</title>
+</head>
+
+<body class="bg_f3f3f3">
+	<div class="swiper-container index-banner" id="swiper">
+        <div class="swiper-wrapper"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <div class="buy-top-wrap">
+    	<div class="buy-top-title" id="name"></div>
+    	<div class="clearfix lh30p">
+    		<div class="fl buy-top-jf sm-99">
+    			<span class="buy-price" id="price"></span>积分
+    		</div>
+    		<div class="fr">
+	        	<img id="subBtn" src="../../images/sub-btn-icon.png?__inline" class="inline_block jian va">
+	            <input type="number" class="special-line-input" value="1" id="quantity">
+	            <img id="addBtn" src="../images/add-btn-icon.png?__inline" class="inline_block jia va">
+	        </div>
+    	</div>
+    </div>
+
+    <div class="buy-detail-title-bar"><div class="buy-detail-title-bar-icon"></div>产品介绍</div>
+    <div class="p10 bg_fff" id="description"></div>
+
+    <div class="hp50"></div>
+    <div class="fix-bottom clearfix">
+    	<div class="fl wp40">
+	    	<div class="buy-bottom-icon bottom-kefu-icon" id="kefuIcon"></div>
+	    	<div class="buy-bottom-icon bottom-cart-icon" id="cartIcon"></div>
+	    </div>
+	    <div class="fl wp60">
+	    	<div class="fr wp50 pl2">
+	    		<input type="button" class="buy-detail-button buy-button" id="buyBtn" value="立即购买"/>
+	    	</div>
+	    	<div class="fr wp50 pr2">
+	    		<input type="button" class="buy-detail-button cart-button" id="addCartBtn" value="加入购物车"/>
+	    	</div>
+    	</div>
+    </div>
+	<link rel="import" href="../footer.html?__inline">
+    <script data-loader>
+        require(['app/controller/mall/Buy']);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>新增地址</title>
+</head>
+
+<body class="bg_f5">
+    <form id="addForm" class="wp100">
+        <div class="bg_fff">
+            <table class="wp100 addr-table fs14">
+                <tr>
+                    <th class="wp30">收货人：</th>
+                    <td class="wp70 p_r">
+                        <input class="fs14 wp100" placeholder="真实姓名" type="text" id="addressee" name="addressee" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="wp30">手机号码：</th>
+                    <td class="wp70 p_r">
+                        <input class="fs14 wp100" placeholder="手机号" type="tel" id="mobile" name="mobile" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="wp30">省份：</th>
+                    <td class="wp70 p_r">
+                        <input class="fs14 wp100" placeholder="省份" type="text" id="province" name="province"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="wp30">城市：</th>
+                    <td class="wp70 p_r">
+                        <input class="fs14 wp100" placeholder="城市" type="text" id="city" name="city"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="wp30">区/县：</th>
+                    <td class="wp70 p_r">
+                        <input class="fs14 wp100" placeholder="区/县" type="text" id="district" name="district"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="wp30">街道地址：</th>
+                    <td class="wp70 p_r">
+                        <input class="fs14 wp100" placeholder="街道地址" type="text" id="detailAddress" name="detailAddress"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="hp50"></div>
+        <div class="fix-b">
+            <input type="button" value="保存地址" id="sbtn" class="default-big-btn" />
+        </div>
+    </form>
+    <!-- <i id="loaddingIcon" class="icon-loading bg_0005 top_0 bg_pc"></i> -->
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['app/controller/mall/AddAddress']);
+    </script>
+</body>
+
+</html>

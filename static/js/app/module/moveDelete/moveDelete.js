@@ -12,7 +12,7 @@ define([
                 me.data("x", touches.clientX);
                 me.data("offsetLeft", left);
             })
-                .on("touchmove", ".addr_div", function (e) {
+                .on("touchmove",  "." + cl, function (e) {
                     e.stopPropagation();
                     var touches = e.originalEvent.changedTouches[0],
                         me = $(this),
@@ -31,7 +31,7 @@ define([
                         });
                     }
                 })
-                .on("touchend", ".addr_div", function (e) {
+                .on("touchend",  "." + cl, function (e) {
                     e.stopPropagation();
                     var me = $(this);
                     var touches = e.originalEvent.changedTouches[0],

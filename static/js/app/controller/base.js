@@ -426,6 +426,15 @@ define([
                 d.showModal();
             }));
 
+        },
+        setTitle: function (title) {
+            document.title = title;
+            var $iframe = $('<iframe src="../images/favicon.ico" style="visibility: hidden;"></iframe>');
+            $iframe.on('load', function() {
+                setTimeout(function() {
+                    $iframe.off('load').remove();
+                }, 0);
+            }).appendTo($('body'));
         }
     };
     Base.addIcon();

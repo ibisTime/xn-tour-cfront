@@ -21,7 +21,7 @@ define([
         }
         bizType = "618052";
         payBizType = "618042";
-        // 0:酒店 1:线路 2:专线 3:大巴
+        // 0:酒店 1:线路 2:专线 3:大巴 4:拼车 5:商品
         if(type == 1){
             bizType = "618152";
             payBizType = "618141";
@@ -33,6 +33,12 @@ define([
         else if(type == 3){
             bizType = "618222";
             payBizType = "618216";
+        }else if(type == 4){
+            bizType = "618255";
+            payBizType = "618242";//尾款：618246
+        }else if(type == 5){
+            bizType = "618472";
+            payBizType = "618452";
         }
         getCont();
     }
@@ -58,7 +64,7 @@ define([
             .then(function(res) {
                 loading.hideLoading();
                 if (res.success) {
-                    $("#price").html(base.formatMoney(res.data.amount || res.data.price));
+                    $("#price").html(base.formatMoney(res.data.amount || res.data.price || res.data.amount1));
                     addListener();
                 } else {
                     base.showMsg("订单信息获取失败");
@@ -84,109 +90,6 @@ define([
                     base.showMsg("ip获取失败");
             });
     }
-    // // 酒店
-    // function getCont0() {
-    //     loading.createLoading("加载中...");
-    //     Ajax.get("618052", { code: code })
-    //         .then(function(res) {
-    //             loading.hideLoading();
-    //             if (res.success) {
-    //                 $("#price").html(base.formatMoney(res.data.amount));
-    //                 addListener();
-    //             } else {
-    //                 base.showMsg("订单信息获取失败");
-    //             }
-    //         });
-    // }
-    // // 线路
-    // function getCont1() {
-    //     loading.createLoading("加载中...");
-    //     Ajax.get("618152", { code: code })
-    //         .then(function(res) {
-    //             loading.hideLoading();
-    //             if (res.success) {
-    //                 $("#price").html(base.formatMoney(res.data.amount));
-    //                 addListener();
-    //             } else {
-    //                 base.showMsg("订单信息获取失败");
-    //             }
-    //         });
-    // }
-    // // 专线
-    // function getCont2() {
-    //     loading.createLoading("加载中...");
-    //     Ajax.get("618192", { code: code })
-    //         .then(function(res) {
-    //             loading.hideLoading();
-    //             if (res.success) {
-    //                 $("#price").html(base.formatMoney(res.data.amount));
-    //                 addListener();
-    //             } else {
-    //                 base.showMsg("订单信息获取失败");
-    //             }
-    //         });
-    // }
-    // 酒店
-    // function wxPayOrder0(){
-    //     loading.createLoading("支付中...");
-    //     Ajax.getIp()
-    //         .then(function(res){
-    //             Ajax.post("618042", {
-    //                 json: {
-    //                     code: code,
-    //                     payType: "2",
-    //                     ip: res.ip
-    //                 }
-    //             }).then(wxPay, function(){
-    //                 loading.hideLoading();
-    //                 base.showMsg("非常抱歉，支付请求提交失败");
-    //             });
-    //         }, function() {
-    //                 loading.hideLoading();
-    //                 base.showMsg("ip获取失败");
-    //         });
-    // }
-    // // 线路
-    // function wxPayOrder1() {
-    //     loading.createLoading("支付中...");
-    //     Ajax.getIp()
-    //         .then(function(res) {
-    //             Ajax.post("618141", {
-    //                 json: {
-    //                     code: code,
-    //                     ip: res.ip,
-    //                     payType: "2"
-    //                 }
-    //             }).then(wxPay, function() {
-    //                 loading.hideLoading();
-    //                 base.showMsg("非常抱歉，支付请求提交失败");
-    //             });
-    //         }, function() {
-    //             loading.hideLoading();
-    //             base.showMsg("ip获取失败");
-    //         });
-
-    // }
-    // // 专线
-    // function wxPayOrder2() {
-    //     loading.createLoading("支付中...");
-    //     Ajax.getIp()
-    //         .then(function(res) {
-    //             Ajax.post("618181", {
-    //                 json: {
-    //                     code: code,
-    //                     ip: res.ip,
-    //                     payType: "2"
-    //                 }
-    //             }).then(wxPay, function() {
-    //                 loading.hideLoading();
-    //                 base.showMsg("非常抱歉，支付请求提交失败");
-    //             });
-    //         }, function() {
-    //             loading.hideLoading();
-    //             base.showMsg("ip获取失败");
-    //         });
-    // }
     var response = {};
 
     function onBridgeReady() {

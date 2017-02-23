@@ -16,9 +16,10 @@ define([
         carpoolStatus = Dict.get("carpoolStatus"),
         commodityStatus = Dict.get("commodityStatus");
     var index1 = base.getUrlParam("index") || 0,
-        index = 2;
+        index = 0;
     var hhType = {},
-        specialModule = {};
+        specialModule = {},
+        pageFirst = true;
     var statusList = [
         ["", "1", "2", "4"],
         ["", "1", "2", "7"],
@@ -87,7 +88,8 @@ define([
     function init() {
         initIScroll();
         addListener();
-        $(".order-list-top-nav2").find(".order-list-top-nav2-item:eq(" + index1 + ")").addClass("active");
+        // $(".order-list-top-nav2").find(".order-list-top-nav2-item:eq(" + index1 + ")").addClass("active");
+        config[index].status = getStatusByIndex(index1);
         $(".order-list-top-nav1").find(".order-list-top-nav1-item:eq(" + index + ")").click();
         $("#content").find(".order-list-content" + index).removeClass("hidden");
     }
@@ -116,9 +118,12 @@ define([
                 getPageBusOrderList(true);
             else if(index == 5)
                 getPageCarpoolOrderList(true);
+            else if (index == 0)
+                getPageMallOrderList(true);
         }
         $pullDownEl = $("#pullDown");
         pullDownEl = $pullDownEl[0];
+        // $pullUpEl = $("#pullUp");
         pullDownOffset = pullDownEl.offsetHeight;
 
         myScroll = new iScroll('wrapper', {
@@ -147,6 +152,8 @@ define([
                         getPageBusOrderList();
                     else if(index == 5)
                         getPageCarpoolOrderList();
+                    else if (index == 0)
+                        getPageMallOrderList();
                 }
             },
             onScrollEnd: function() {
@@ -169,6 +176,7 @@ define([
                 .end().find(".order-list-content" + idx).removeClass("hidden");
             index = idx;
             var idx1 = getIndexByStatus(config[idx].status);
+            pageFirst = false;
             $(".order-list-top-nav2")
                 .find(".order-list-top-nav2-item.active").removeClass("active")
                 .end().find(".order-list-top-nav2-item:eq(" + idx1 + ")").addClass("active");
@@ -183,6 +191,8 @@ define([
                 getPageBusOrderList();
             else if (idx == 5 && config1.first5)
                 getPageCarpoolOrderList();
+            else if (idx == 0 && config1.first5)
+                getPageMallOrderList();
             // myScroll.refresh();
         });
         $(".order-list-top-nav2").on("click", ".order-list-top-nav2-item", function() {
@@ -208,6 +218,8 @@ define([
                 getPageBusOrderList();
             else if (idx == 5)
                 getPageCarpoolOrderList();
+            else if (idx == 0)
+                getPageMallOrderList();
             myScroll.refresh();
         });
         //酒店支付订单
@@ -598,7 +610,6 @@ define([
                 });
         }
     }
-
     //分页查询拼车订单
     function getPageCarpoolOrderList(refresh) {
         if ((!config1["isEnd" + index].isEnd || refresh) && !config1.isLoading) {
@@ -634,6 +645,107 @@ define([
                                 '<div class="y-big1 p-a-r-b">¥' + base.formatMoney(d.price) + '</div>' +
                                 '<div class="order-status">' + carpoolStatus[d.status] + '</div>' +
                                 '</div>' +
+                                '</a></div>';
+                            if (d.status == "0") {
+                                html += '<div class="order-oper-btns">' +
+                                    '<input type="button" class="fr mlr10 item-order-btn item-pay-btn" value="付款"/>' +
+                                    '<input type="button" class="fr ml10 item-order-btn od-cancel-order" value="取消订单"/>' +
+                                    '</div>';
+                            } else if (d.status == "1") {
+                                // html += '<div class="order-oper-btns">' +
+                                //     '<input type="button" class="fr mlr10 item-order-btn od-tuik-btn" value="退款"/>' +
+                                //     '</div>';
+                            } else if (d.status == "4") {
+                                // html += '<div class="order-oper-btns">' +
+                                //     '<input type="button" class="fr mlr10 item-order-btn od-cancel-tuik-btn" value="撤回退款"/>' +
+                                //     '</div>';
+                            }
+                            html += '</div>';
+                        });
+                        $("#content").find(".order-list-content" + index)[(refresh || config1["first" + index]) ? "html" : "append"](html);
+                        config[index].start++;
+                    } else {
+                        if (config1["first" + index] || refresh) {
+                            $("#content").find(".order-list-content" + index).html('<div class="item-error">暂时没有订单</div>');
+                            base.hidePullUp();
+                            res.msg && base.showMsg(res.msg);
+                            config1["isEnd" + index] = true;
+                        }
+                    }
+                    config1["first" + index] = false;
+                    config1.isLoading = false;
+                    loading.hideLoading();
+                    myScroll.refresh();
+                }, function() {
+                    config1["first" + index] = false;
+                    config1.isLoading = false;
+                    $("#content").find(".order-list-content" + index).html('<div class="item-error">暂时没有订单</div>');
+                    myScroll.refresh();
+                    loading.hideLoading();
+                });
+        }
+    }
+    // 分页查询商品订单
+    function getPageMallOrderList(refresh) {
+        if ((!config1["isEnd" + index].isEnd || refresh) && !config1.isLoading) {
+            config1.isLoading = true;
+            if (refresh) {
+                config[index].start = 1;
+                loading.showLoading();
+            }
+            return Ajax.get("618470", config[index], !refresh)
+                .then(function(res) {
+                    if (res.success && res.data.list.length) {
+                        var data = res.data.list;
+                        if (data.length < config[index].limit) {
+                            config1["isEnd" + index] = true;
+                            base.hidePullUp();
+                        } else {
+                            base.showPullUp();
+                        }
+                        /*
+                            <div class="order-list-item">
+                                <div class="order-list-item-top">
+                                    <span class="order-list-item-top-left fl">s2893928373823</span>
+                                    <span class="order-list-item-top-right fr">2017-01-01</span>
+                                </div>
+                                <div class="order-list-item-center item">
+                                    <div class="item-c-div item-l">
+                                        <img class="cente" src="../../images/detailxx.png?__inline"/>
+                                    </div>
+                                    <div class="item-c">
+                                        <div class="item-c-top1 t_norwrap pr50">香格里拉大酒店</div>
+                                        <div class="item-c-center t_bbb t_norwrap pr50">标准单人床</div>
+                                        <div class="y-big1 p-a-b-0">¥234</div>
+                                        <div class="order-status order-step-pay">待支付</div>
+                                        <div class="order-amount">x1</div>
+                                    </div>
+                                </div>
+                                <div class="order-oper-btns">
+                                    <input type="button" class="fr mlr10 item-order-btn item-pay-btn" value="付款"/>
+                                    <input type="button" class="fr ml10 item-order-btn" value="取消订单"/>
+                                </div>
+                            </div>
+                        */
+                        var html = "";
+                        $.each(data, function(i, d) {
+                            html += '<div class="order-list-item" data-code="' + d.code + '">' +
+                                '<div class="order-list-item-top">' +
+                                '<span class="order-list-item-top-left fl">' + d.code + '</span>' +
+                                '<span class="order-list-item-top-right fr">' + base.formatDate(d.applyDatetime, "yyyy-MM-dd") + '</span>' +
+                                '</div>' +
+                                '<div class="order-list-item-center item">' +
+                                '<a href="./order-mall-detail.html?code=' + d.code + '" class="wp100 show">' +
+                                    '<div class="item-c-div item-l">'+
+                                        '<img class="cente" src="'+base.getImg(d.productOrderList[0].advPic)+'"/>'+
+                                    '</div>'+
+                                    '<div class="item-c flex flex-dv flex-jb">' +
+                                        '<div class="item-c-top1 pb0_i t_norwrap pr50">' + d.productOrderList[0].productName + '</div>' +
+                                        '<div class="item-c-center t_norwrap pr50">x' + d.productOrderList[0].quantity + '</div>' +
+                                        '<div class="y-big1">¥'+ base.formatMoney(d.amount1) +'</div>'+
+                                        '<div class="order-status order-step-pay">¥' + commodityStatus[d.status] + '</div>' +
+                                        // '<div class="order-amount">x' + d.productOrderList[0].quantity + '</div>' +
+                                    '</div>' +
                                 '</a></div>';
                             if (d.status == "0") {
                                 html += '<div class="order-oper-btns">' +
@@ -760,7 +872,8 @@ define([
         var idx = 0;
         for(var i = 0; i < list.length; i++){
             if(list[i] == status){
-                return idx;
+                idx = i;
+                break;
             }
         }
         return idx;

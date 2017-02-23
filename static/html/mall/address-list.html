@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>地址选择</title>
+</head>
+
+<body class="bg_f5">
+    <div class="wp100" id="container">
+        <div class="order-small-item">收货地址</div>
+        <div class="wp100 lh2em bg_fff" id="addressDiv"></div>
+    </div>
+    <!-- <div id="od-tipbox" class="od-dialog s_14 wp80 mlr_auto bg_fff shadow-box hidden">
+        <div class="pl10 t_80 ptb4 b_bd_b">提示</div>
+        <div class="wp100 tc ptb20 b_bd_b">确定要删除该地址吗？</div>
+        <div class="wp100 clearfix tc lh2_5em">
+            <div class="wp50 fl od-okbtn" id="odOk">确认</div>
+            <div class="wp50 fl t_80" id="odCel">取消</div>
+        </div>
+    </div> -->
+    <div class="hp50"></div>
+    <div class="fix-b">
+        <input type="button" value="添加新地址" id="sbtn" class="default-big-btn" />
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['app/controller/mall/AddressList']);
+    </script>
+</body>
+
+</html>

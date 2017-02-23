@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>提交订单</title>
+</head>
+
+<body class="bg_f5">
+    <div class="wp100" id="container">
+        <div class="order-small-item">收货信息</div>
+        <div class="wp100 plr10 ptb20 lh2em p_r bg_fff" id="addressDiv">
+            <div class="fs14 hidden" id="noAddressDiv">
+                <div class="wp100 tc"><img class="wp44p" src="../../images/no-address.png?__inline" /></div>
+                <p class="wp100 tc">还没有收货地址，去<span id="add-addr" class="t_f64444">添加</span></p>
+            </div>
+            <i class="address-bottom hidden" id="addressRight"></i>
+        </div>
+        <div class="order-small-item">购物清单</div>
+        <div id="items-cont" class="content bg_fff mt0">
+            <!-- <div class="order-list-item-center item">
+                <div class="item-c-div item-l">
+                    <img class="cente" src="../../images/detailxx.png?__inline"/>
+                </div>
+                <div class="flex-dv item-c flex flex-jb">
+                    <div class="t_norwrap pr50 mall-submit-title">地方就是发生地</div>
+                    <div class="t_norwrap pr50 mall-submit-jf">积分：</div>
+                    <div class="mall-submit-qua">x1</div>
+                </div>
+            </div> -->
+        </div>
+        <div class="order-small-item">买家嘱托</div>
+        <div id="areaWrap" class="bg_fff plr10 pb10 b-tb-ed">
+            <div class="submit-textarea-wrap">
+                <div class="p_r wp100">
+                    <textarea class="submit-textarea" name="applyNote" id="applyNote"></textarea>
+                    <div class="placeholder-text" id="applyPlaceholder">有什么特殊要求，写在这里！</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hp50"></div>
+    <div class="fs14 ba plr10 wp100 border fixft hig50 xxx">
+        <div class="inline_block va">
+            <span class="fs14 co9">合计:</span>
+            <span class="price fs16" id="amount"></span>
+        </div>
+        <input type="button" id="sbtn" value="提交订单" class="release fs15 inline_block fr">
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['app/controller/mall/SubmitOrder']);
+    </script>
+</body>
+
+</html>
