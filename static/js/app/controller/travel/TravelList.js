@@ -8,9 +8,10 @@ define([
 
     var myScroll, isEnd = false, isLoading = false;
     var travelTmpl = __inline("../../ui/travel.handlebars");
+    var dName = base.getUrlParam("name");
     var config = {
         category: base.getUrlParam("category") || "",
-        name: "",
+        name: dName || "",
         type: "",
         style: "",
         travelTime: "",
@@ -98,6 +99,25 @@ define([
         });
     }
     function addListener() {
-        
+       
+        $("#btn-search").click(function(){
+        	dName = $("#searchInput").val();
+        	config = {
+		        category: base.getUrlParam("category") || "",
+		        name: dName || "",
+		        type: "",
+		        style: "",
+		        travelTime: "",
+		        joinPlace: "",
+		        start: 1,
+		        limit: 10
+		    }
+        	getPageTravel(true)
+            .then(function(){
+                loading.hideLoading();
+            }, function(){
+                loading.hideLoading();
+            });
+        }) 
     }
 });

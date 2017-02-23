@@ -23,6 +23,7 @@
 .pt30 {
     padding-top: 30px;
 }
+.mt44{ margin-top: 44px;}
 
 
 
@@ -128,6 +129,9 @@ margin-right: 10px;color:#ffffff;}
 @media only screen and (max-width: 480px) {
 	.sign-in{ height: 530px;}
 }
+@media only screen and (max-width: 400px) {
+	.sign-in{ height: 420px;}
+}
 @media only screen and (max-width: 330px) {
 	.sign-in{ height: 350px;}
 }
@@ -176,4 +180,24 @@ margin-right: 10px;color:#ffffff;}
 	display: inline-block;
 	width: 100px;
 	text-align: right;
+}
+
+/*搜索*/
+.searchWrap{
+	background-color: #fff !important;
+	text-align: left !important;
+}
+.searchWrap .index-search-icon{
+	width: 20px;
+}
+.searchWrap .search-input-wrap{
+	padding: 0 10px;
+}
+.searchWrap .search-input-wrap .search-input-cont{
+	border-radius: 5px;
+	background-color: #F5F5F5;
+}
+.searchWrap .search-input-wrap .search-input-cont .index-search-input,
+.searchWrap .search-input-wrap .search-input-cont .index-search-placeholder{
+	color: #595959;
 }
