@@ -42,6 +42,7 @@ define([
 	        	accountNumber = res1.data[1].accountNumber;
 	        	
 	        	amount = res1.data[1].amount;
+	        	amount = amount/1000;
 	        	
 	        	$("#balance").html("积分余额："+amount);
 			   
