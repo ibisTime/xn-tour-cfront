@@ -39,6 +39,8 @@ define([
         }else if(type == 5){
             bizType = "618472";
             payBizType = "618452";
+            $("#content").hide();
+            $("#content1").show();
         }
         getCont();
     }
@@ -51,12 +53,38 @@ define([
             choseIdx = idx;
         });
         $("#payBtn").on("click", function() {
-            // 微信支付
-            if(choseIdx == 0){
-                wxPayOrder();  
-            // 支付宝支付
-            }else{}
+            if(type != 5){
+                // 微信支付
+                if(choseIdx == 0){
+                    wxPayOrder();  
+                // 支付宝支付
+                }else{}
+            //商品支付
+            }else{
+                payMall();
+            }
         });
+    }
+    function payMall() {
+        loading.createLoading("支付中...");
+        Ajax.getIp()
+            .then(function(res){
+                Ajax.post("618452", {
+                    json: {
+                        code: code,
+                        payType: "1",
+                        ip: res.ip
+                    }
+                }).then(function (res) {
+                    loading.hideLoading();
+                }, function(){
+                    loading.hideLoading();
+                    base.showMsg("非常抱歉，支付请求提交失败");
+                });
+            }, function() {
+                loading.hideLoading();
+                base.showMsg("ip获取失败");
+            });
     }
     function getCont() {
         loading.createLoading("加载中...");

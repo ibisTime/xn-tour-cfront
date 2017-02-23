@@ -26,7 +26,7 @@ define([
             area: "",
             longitude: "",
             latitude: "",
-            // status: "1"
+            status: "1"
         },
         hotel: {
             start: 1,
@@ -80,9 +80,6 @@ define([
         initIScroll();
         addListener();
         base.initLocation(initConfig);
-        // Handlebars.registerHelper('formatCarpoolStatus', function(text, places, options){
-        //     return carpoolStatus[text];
-        // });
     }
 
     function getModuleNav(){
@@ -356,6 +353,7 @@ define([
             $("#top-content").find(".top-nav").removeClass("active");
             $("#top-nav").find(".active").removeClass("active");
             $(".J_Content" + idx).addClass("active");
+
             myScroll.refresh();
             if(idx == 0){
                 if(config1.outting.first){
@@ -385,6 +383,7 @@ define([
                     showPullUp();
                 }
             }
+            
         });
     }
 

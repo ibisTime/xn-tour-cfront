@@ -4,8 +4,9 @@ define([
     'app/util/handlebarsHelpers',
     'app/module/loading/loading',
     'iScroll',
-    'app/module/loadImg/loadImg'
-], function(base, Ajax, Handlebars, loading, iScroll, loadImg) {
+    'app/module/loadImg/loadImg',
+    'app/module/showContent/showContent'
+], function(base, Ajax, Handlebars, loading, iScroll, loadImg, showContent) {
 
     var myScroll, isLoading = false, isEnd = false,
         config = {
@@ -20,7 +21,26 @@ define([
     function init() {
         addListener();
         initIScroll();
+        getAccountList();
         getPageData(true);
+    }
+
+    function getAccountList() {
+        Ajax.get("802503", {
+            userId: base.getUserId()
+        }).then(function (res) {
+            if(res.success && res.data.length){
+                var data = res.data;
+                $.each(data, function (i, d) {
+                    if(d.currency == "XNB")
+                        $("#amount").html(base.fZeroMoney(d.amount));
+                });
+            }else{
+                res.msg && base.showMsg(res.msg);
+            }
+        }, function () {
+            base.showMsg("账号信息获取失败");
+        });
     }
 
     function initIScroll() {
@@ -92,7 +112,6 @@ define([
                 }, function () {
                     if(refresh){
                         $("#content").html('<div class="item-error">暂无商品信息</div>');
-                        // base.showMsg("商品信息获取失败");
                         isEnd = true;
                     }
                     isLoading = false;
@@ -103,6 +122,16 @@ define([
     }
 
     function addListener() {
+        // showContent.addCont({
+        //     key: "description",
+        //     title: "积分规则",
+        //     param: {
+        //         userId: base.getUserId()
+        //     },
+        //     bizType: ''
+        // });
+        $("#integral").on("click", function () {
 
+        });
     }
 });

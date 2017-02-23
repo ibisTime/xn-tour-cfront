@@ -6,9 +6,8 @@ define([
     'app/util/handlebarsHelpers',
     'app/module/loading/loading',
     'swiper',
-    'app/module/showImg/showImg',
     'app/module/citySelect/citySelect'
-], function(base, Ajax, iScroll, Foot, Handlebars, loading, Swiper, showImg, citySelect) {
+], function(base, Ajax, iScroll, Foot, Handlebars, loading, Swiper, citySelect) {
 
     var myScroll, isEnd = false, isLoading = false, bannerArr = []
         pic_suffix = '?imageMogr2/auto-orient/thumbnail/!375x180r';
@@ -181,7 +180,9 @@ define([
                 _self.siblings(".index-search-placeholder").show();
             else
                 _self.siblings(".index-search-placeholder").hide();
-
+        });
+        $("#searchIcon").on("click", function () {
+            location.href = "../home/search.html?name=" + $("#searchInput").val();
         });
     }
 });

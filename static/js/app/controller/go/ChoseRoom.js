@@ -91,7 +91,7 @@ define([
         if(!isLoading && !isEnd){
             showPullUp();
             isLoading = true;
-            return Ajax.get("618030", {
+            return Ajax.get("618013", {
                 hotalCode: hotelCode,
                 start: start,
                 limit: limit

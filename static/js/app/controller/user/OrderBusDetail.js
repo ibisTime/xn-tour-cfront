@@ -39,8 +39,6 @@ define([
                         $(".order-hotel-detail-btn0").removeClass("hidden");
                     else if(data.status == "1")
                         $(".order-hotel-detail-btn1").removeClass("hidden");
-                    // else if(data.status == "4")
-                        // $(".order-hotel-detail-btn2").removeClass("hidden");
                 }else{
                     base.showMsg("订单信息获取失败");
                 }
@@ -70,27 +68,6 @@ define([
                 base.showMsg("申请失败");
             })
     }
-    // function tuikcx(remark){
-    //     loading.createLoading("提交申请中...");
-    //     Ajax.post("", {
-    //         json: {
-    //             code: code,
-    //             remark: remark,
-    //             userId: base.getUserId()
-    //         }
-    //     }).then(function(res){
-    //             loading.hideLoading();
-    //             if(res.success){
-    //                 base.showMsg("申请提交成功");
-    //                 $(".order-hotel-detail-btn2").addClass("hidden");
-    //             }else{
-    //                 base.showMsg(res.msg || "申请失败");
-    //             }
-    //         }, function(){
-    //             loading.hideLoading();
-    //             base.showMsg("申请失败");
-    //         })
-    // }
     function addListeners(){
         //支付
         $("#payBtn").on("click", function(){
@@ -152,34 +129,6 @@ define([
             });
             d.showModal();
         });
-        //撤销退款
-        // $("#tuikchBtn").on("click", function(){
-        //     var d = dialog({
-        //         title: '撤销退款申请',
-        //         content: '撤销退款理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
-        //                  '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写撤销退款理由</div>'+
-        //                  '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">撤销退款理由中包含非法字符</div>',
-        //         ok: function (argument) {
-        //             var remark = $(".dialog-textarea").val();
-        //             if(!remark || remark.trim() == ""){
-        //                 $(".dialog-error-tip1").addClass("hidden");
-        //                 $(".dialog-error-tip0").removeClass("hidden");
-        //                 return false;
-        //             }else if(!base.isNotFace(remark)){
-        //                 $(".dialog-error-tip0").addClass("hidden");
-        //                 $(".dialog-error-tip1").removeClass("hidden");
-        //                 return false;
-        //             }
-        //             tuikcx(remark);
-        //         },
-        //         okValue: '确定',
-        //         cancel: function(){
-        //             d.close().remove();
-        //         },
-        //         cancelValue: '取消'
-        //     });
-        //     d.showModal();
-        // });
     }
 
 });

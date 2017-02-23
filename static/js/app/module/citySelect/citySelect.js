@@ -9,6 +9,7 @@ define([
     var defaultOpt = {};
     var searchData = [];
     var PROVINCE, CITY, AREA;
+    var innerScroll, firstSelect = true;
     init();
     function init(){
         $("head").append('<style>'+css+'</style>');
@@ -107,7 +108,7 @@ define([
             }
         });
         $("#city-select-module-city-list").html(html);
-        new iScroll('city-select-module-wrapper', {
+        innerScroll = new iScroll('city-select-module-wrapper', {
             useTransition: false
         });
     }
@@ -137,7 +138,12 @@ define([
             var cont = $("#city-select-module-wrap");
             cont.show().animate({
                 top: 0
-            }, 200);
+            }, 200, function () {
+                if(firstSelect){
+                    innerScroll.refresh();
+                }
+                firstSelect = false;
+            });
             return this;
         },
         hideCont: function (func){

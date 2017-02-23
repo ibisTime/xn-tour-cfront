@@ -111,6 +111,9 @@ define([
                 }, 200, function () {
                     wrap.hide();
                     func && func($("#bind-mobile").val());
+                    $("#bind-mobile").val("");
+                    $("#bind-smsCaptcha").val("");
+                    wrap.find("label.error").remove();
                 });
             }
             return this;

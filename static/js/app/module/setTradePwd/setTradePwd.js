@@ -167,6 +167,9 @@ define([
                 }, 200, function () {
                     wrap.hide();
                     func && func();
+                    $("#set-trade-pwd-smsCaptcha").val("");
+                    $("#set-trade-pwd-password").val("");
+                    wrap.find("label.error").remove();
                 });
             }
             return this;

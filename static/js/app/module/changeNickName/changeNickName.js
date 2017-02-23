@@ -99,6 +99,8 @@ define([
                 }, 200, function () {
                     wrap.hide();
                     func && func($("#nicknameChangeName").val());
+                    $("#nicknameChangeName").val("");
+                    wrap.find("label.error").remove();
                 });
             }
             return this;

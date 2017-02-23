@@ -41,6 +41,10 @@ define([
 
     function addListener() {
         $("#scjdIcon").on("click", function(){
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             loading.createLoading();
             Ajax.post("618320", {
                 json: {

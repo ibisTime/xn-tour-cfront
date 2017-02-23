@@ -19,13 +19,14 @@ define([
     var hhType = {},
         specialModule = {},
         pageFirst = true;
+        /*全部、待支付、已支付、退款*/
     var statusList = [
-        ["", "1", "2", "4"],
-        ["", "1", "2", "7"],
-        ["", "1", "2", "7"],
-        ["", "1", "2", "5"],
-        ["", "0", "1", "5"],
-        ["", "0", "3", "4"]
+        ["", "0", "1", "2"],
+        ["", "0", "1", "2"],
+        ["", "0", "1", "2"],
+        ["", "0", "1", "2"],
+        ["", "0", "1", "2"],
+        [[""], [0,1,2], [3]],
     ];
     var config = {
             "0": {
@@ -61,7 +62,7 @@ define([
             "5": {
                 start: 1,
                 limit: 10,
-                status: "",
+                statusList: [],
                 userId: base.getUserId()
             }
         },
@@ -80,7 +81,7 @@ define([
             isEnd5: false,
             isLoading: false
         };
-    /*全部、待支付、已支付、退款*/
+    
 
     init();
 
@@ -174,12 +175,18 @@ define([
                 .addClass("hidden")
                 .end().find(".order-list-content" + idx).removeClass("hidden");
             index = idx;
-            var idx1 = getIndexByStatus(config[idx].status);
+            var idx1;
+            if(index != 5){
+                idx1 = getIndexByStatus(config[idx].status);
+            }else{
+                idx1 = getIndexByStatusList(config["5"])
+            }
             pageFirst = false;
             $(".order-list-top-nav2")
                 .find(".order-list-top-nav2-item.active").removeClass("active")
                 .end().find(".order-list-top-nav2-item:eq(" + idx1 + ")").addClass("active");
             index1 = idx1;
+            $("#top-tk").show();
             if (idx == 1 && config1.first1)
                 getPageLineOrderList();
             else if (idx == 2 && config1.first2)
@@ -188,11 +195,13 @@ define([
                 getSDict().then(getPageSpecialLineOrderList);
             else if (idx == 4 && config1.first4)
                 getPageBusOrderList();
-            else if (idx == 5 && config1.first5)
+            else if (idx == 5 && config1.first5){
+                $("#top-tk").hide();
                 getPageCarpoolOrderList();
+            }
             else if (idx == 0 && config1.first5)
                 getPageMallOrderList();
-            // myScroll.refresh();
+            myScroll.refresh();
         });
         $(".order-list-top-nav2").on("click", ".order-list-top-nav2-item", function() {
             var _self = $(this),
@@ -202,7 +211,10 @@ define([
             var idx = $(".order-list-top-nav1").find(".order-list-top-nav1-item.active").index();
             index = idx;
             config[idx].start = 1;
-            config[idx].status = getStatusByIndex(idx1);
+            if(index != 5)
+                config[idx].status = getStatusByIndex(idx1);
+            else
+                config[idx].statusList = getStatusByIndex(idx1);
             config1["first" + idx] = true;
             config1["isEnd" + idx] = false;
             index1 = idx1;
@@ -247,7 +259,7 @@ define([
             location.href = "../pay/pay.html?code=" + code + "&type=4";
         });
         //商品支付订单
-        $("#content").on("click", ".order-list-content5 .item-pay-btn", function() {
+        $("#content").on("click", ".order-list-content0 .item-pay-btn", function() {
             var code = $(this).closest("[data-code]").attr("data-code");
             location.href = "../pay/pay.html?code=" + code + "&type=5";
         });
@@ -297,28 +309,8 @@ define([
         });
         //商品退款
         $("#content").on("click", ".order-list-content0 .od-tuik-btn", function() {
-            showCancelOrTKModal.call(this, cancelMallOrder, 1);
+            showCancelOrTKModal.call(this, tuikMallOrder, 1);
         });
-        // //酒店撤销退款
-        // $("#content").on("click", ".order-list-content2 .od-cancel-tuik-btn", function() {
-        //     var code = $(this).closest("[data-code]").attr("data-code");
-        //     tuikcx_hotel(code);
-        // });
-        // //线路撤销退款
-        // $("#content").on("click", ".order-list-content1 .od-cancel-tuik-btn", function() {
-        //     var code = $(this).closest("[data-code]").attr("data-code");
-        //     tuikcx_line(code);
-        // });
-        // //线路撤销退款
-        // $("#content").on("click", ".order-list-content3 .od-cancel-tuik-btn", function() {
-        //     var code = $(this).closest("[data-code]").attr("data-code");
-        //     tuikcx_special_line(code);
-        // });
-        // //大巴撤销退款
-        // $("#content").on("click", ".order-list-content4 .od-cancel-tuik-btn", function() {
-        //     var code = $(this).closest("[data-code]").attr("data-code");
-        //     tuikcx_bus(code);
-        // });
     }
     //酒店数据字典
     function getHHType() {
@@ -353,22 +345,6 @@ define([
                 base.showMsg("数据加载失败");
             });
     }
-    // //酒店撤销退款
-    // function tuikcx_hotel(code) {
-    //     tuikcx("618047", code, getPageHotelOrderList);
-    // }
-    // //线路撤销退款
-    // function tuikcx_line(code) {
-    //     tuikcx("618146", code, getPageLineOrderList);
-    // }
-    // // 专线退款撤销
-    // function tuikcx_special_line(code) {
-    //     tuikcx("618185", code, getPageSpecialLineOrderList);
-    // }
-    // // 大巴退款撤销
-    // function tuikcx_bus(code) {
-    //     tuikcx("", code, getPageBusOrderList);
-    // }
     //取消酒店订单
     function cancelHotelOrder(code, remark) {
         cancelOrder("618043", code, remark, getPageHotelOrderList);
@@ -392,6 +368,10 @@ define([
     // 取消拼车订单
     function cancelCarpoolOrder(code, remark){
         cancelOrder("618243", code, remark, getPageCarpoolOrderList);
+    }
+    // 商品退款
+    function tuikMallOrder(code, remark) {
+        cancelOrder("618461", code, remark, getPageMallOrderList);
     }
     //分页查询酒店订单
     function getPageHotelOrderList(refresh) {
@@ -434,18 +414,14 @@ define([
                                 '<div class="order-status">' + hotelOrderStatus[d.status] + '</div>' +
                                 '</div>' +
                                 '</a></div>';
-                            if (d.status == "1") {
+                            if (d.status == "0") {
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn item-pay-btn" value="付款"/>' +
                                     '<input type="button" class="fr ml10 item-order-btn od-cancel-order" value="取消订单"/>' +
                                     '</div>';
-                            } else if (d.status == "2") {
+                            } else if (d.status == "1") {
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn od-tuik-btn" value="退款"/>' +
-                                    '</div>';
-                            } else if (d.status == "6") {
-                                html += '<div class="order-oper-btns">' +
-                                    '<input type="button" class="fr mlr10 item-order-btn od-cancel-tuik-btn" value="撤回退款"/>' +
                                     '</div>';
                             }
                             html += '</div>';
@@ -509,18 +485,14 @@ define([
                                 '<div class="order-status order-step-pay">' + lineOrderStatus[d.status] + '</div>' +
                                 '</div>' +
                                 '</a></div>';
-                            if (d.status == "1") {
+                            if (d.status == "0") {
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn item-pay-btn" value="付款"/>' +
                                     '<input type="button" class="fr ml10 item-order-btn od-cancel-order" value="取消订单"/>' +
                                     '</div>';
-                            } else if (d.status == "2") {
+                            } else if (d.status == "1") {
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn od-tuik-btn" value="退款"/>' +
-                                    '</div>';
-                            } else if (d.status == "6") {
-                                html += '<div class="order-oper-btns">' +
-                                    '<input type="button" class="fr mlr10 item-order-btn od-cancel-tuik-btn" value="撤回退款"/>' +
                                     '</div>';
                             }
                             html += '</div>';
@@ -587,18 +559,14 @@ define([
                                 '<div class="order-status">' + specialLineOrderStatus[d.status] + '</div>' +
                                 '</div>' +
                                 '</a></div>';
-                            if (d.status == "1") {
+                            if (d.status == "0") {
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn item-pay-btn" value="付款"/>' +
                                     '<input type="button" class="fr ml10 item-order-btn od-cancel-order" value="取消订单"/>' +
                                     '</div>';
-                            } else if (d.status == "2") {
+                            } else if (d.status == "1") {
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn od-tuik-btn" value="退款"/>' +
-                                    '</div>';
-                            } else if (d.status == "4") {
-                                html += '<div class="order-oper-btns">' +
-                                    '<input type="button" class="fr mlr10 item-order-btn od-cancel-tuik-btn" value="撤回退款"/>' +
                                     '</div>';
                             }
                             html += '</div>';
@@ -646,6 +614,8 @@ define([
                         }
                         var html = "";
                         $.each(data, function(i, d) {
+                            var price;
+                            
                             html += '<div class="order-list-item" data-code="' + d.code + '">' +
                                 '<div class="order-list-item-top">' +
                                 '<span class="order-list-item-top-left fl">' + d.code + '</span>' +
@@ -654,27 +624,19 @@ define([
                                 '<div class="order-list-item-center item">' +
                                 '<a href="./order-carpool-detail.html?code=' + d.code + '" class="wp100 show">' +
                                 '<div class="item-c pl0_i flex flex-dv flex-jb">' +
-                                '<div class="item-c-top t_norwrap pr50">上车地点：' + d.startSite + '</div>' +
-                                '<div class="item-c-center t_norwrap pr50">下车地点：' + d.endSite + '</div>' +
-                                '<div class="item-c-center t_bbb item-c-ctr c_f64444">发车时间：' + base.formatDate(d.outDatetime, 'yyyy-MM-dd hh:mm') + '</span></div>' +
-                                '<div class="item-c-center t_bbb t_norwrap">拼车人数：' + d.totalNum + '人</div>' +
+                                '<div class="item-c-top t_norwrap pr50">上车地点：' + d.carpool.startSite + '</div>' +
+                                '<div class="item-c-center t_norwrap pr50">下车地点：' + d.carpool.endSite + '</div>' +
+                                '<div class="item-c-center t_bbb item-c-ctr c_f64444">发车时间：' + base.formatDate(d.carpool.outDatetime, 'yyyy-MM-dd hh:mm') + '</span></div>' +
+                                '<div class="item-c-center t_bbb t_norwrap">拼车人数：' + d.carpool.totalNum + '人</div>' +
                                 '<div class="y-big1 p-a-r-b">¥' + base.formatMoney(d.price) + '</div>' +
                                 '<div class="order-status">' + carpoolStatus[d.status] + '</div>' +
                                 '</div>' +
                                 '</a></div>';
-                            if (d.status == "0") {
+                            if (d.status == "0" || d.status == "1" || d.status == "2") {
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn item-pay-btn" value="付款"/>' +
                                     '<input type="button" class="fr ml10 item-order-btn od-cancel-order" value="取消订单"/>' +
                                     '</div>';
-                            } else if (d.status == "1") {
-                                // html += '<div class="order-oper-btns">' +
-                                //     '<input type="button" class="fr mlr10 item-order-btn od-tuik-btn" value="退款"/>' +
-                                //     '</div>';
-                            } else if (d.status == "4") {
-                                // html += '<div class="order-oper-btns">' +
-                                //     '<input type="button" class="fr mlr10 item-order-btn od-cancel-tuik-btn" value="撤回退款"/>' +
-                                //     '</div>';
                             }
                             html += '</div>';
                         });
@@ -744,13 +706,9 @@ define([
                                     '<input type="button" class="fr ml10 item-order-btn od-cancel-order" value="取消订单"/>' +
                                     '</div>';
                             } else if (d.status == "1") {
-                                // html += '<div class="order-oper-btns">' +
-                                //     '<input type="button" class="fr mlr10 item-order-btn od-tuik-btn" value="退款"/>' +
-                                //     '</div>';
-                            } else if (d.status == "4") {
-                                // html += '<div class="order-oper-btns">' +
-                                //     '<input type="button" class="fr mlr10 item-order-btn od-cancel-tuik-btn" value="撤回退款"/>' +
-                                //     '</div>';
+                                html += '<div class="order-oper-btns">' +
+                                    '<input type="button" class="fr mlr10 item-order-btn od-tuik-btn" value="退款"/>' +
+                                    '</div>';
                             }
                             html += '</div>';
                         });
@@ -823,10 +781,6 @@ define([
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn od-tuik-btn" value="退款"/>' +
                                     '</div>';
-                            } else if (d.status == "4") {
-                                // html += '<div class="order-oper-btns">' +
-                                //     '<input type="button" class="fr mlr10 item-order-btn od-cancel-tuik-btn" value="撤回退款"/>' +
-                                //     '</div>';
                             }
                             html += '</div>';
                         });
@@ -856,6 +810,14 @@ define([
 
     function getStatusByIndex(idx) {
         return statusList[index][idx];
+    }
+    function getIndexByStatusList(statusList) {
+        if(statusList.length == 3){
+            return 1;
+        }else if(statusList[0] == 3){
+            return 2;
+        }
+        return 0;
     }
 
     function getIndexByStatus(status) {
@@ -926,29 +888,4 @@ define([
             base.showMsg("申请失败");
         });
     }
-
-    // function tuikcx(bizType, code, success) {
-    //     base.confirm("确定撤销退款吗?")
-    //         .then(function() {
-    //             loading.createLoading("提交申请中...");
-    //             Ajax.post(bizType, {
-    //                 json: {
-    //                     code: code,
-    //                     userId: base.getUserId()
-    //                 }
-    //             }).then(function(res) {
-    //                 if (res.success) {
-    //                     base.showMsg("申请提交成功");
-    //                     loading.createLoading();
-    //                     success(true);
-    //                 } else {
-    //                     loading.hideLoading();
-    //                     base.showMsg(res.msg || "申请失败");
-    //                 }
-    //             }, function() {
-    //                 loading.hideLoading();
-    //                 base.showMsg("申请失败");
-    //             });
-    //         });
-    // }
 });

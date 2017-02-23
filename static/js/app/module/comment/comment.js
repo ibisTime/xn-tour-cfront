@@ -119,6 +119,9 @@ define([
                 }, 200, function(){
                     $("#plunCont").val("");
                     plunCont.hide();
+                    defaultOpt.content = "";
+                    $("#plunCont").val("");
+                    plunCont.find("label.error").remove();
                 });
             }
             return this;

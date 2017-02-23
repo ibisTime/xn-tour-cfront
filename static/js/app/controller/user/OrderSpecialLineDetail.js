@@ -56,12 +56,10 @@ define([
                 $("#applyNote").html(data.applyNote || "无");
                 $("#amount").html(base.formatMoney(data.amount));
                 $("#orderA").attr("href", "../go/special-line-detail.html?code=" + data.code);
-                if(data.status == "1")
+                if(data.status == "0")
                     $(".order-hotel-detail-btn0").removeClass("hidden");
-                else if(data.status == "2")
+                else if(data.status == "1")
                     $(".order-hotel-detail-btn1").removeClass("hidden");
-                else if(data.status == "4")
-                    $(".order-hotel-detail-btn2").removeClass("hidden");
             }else{
                 loading.hideLoading();
                 base.showMsg(res0.msg || res.msg);
@@ -102,27 +100,6 @@ define([
                 if(res.success){
                     base.showMsg("申请提交成功");
                     $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
-                }else{
-                    base.showMsg(res.msg || "申请失败");
-                }
-            }, function(){
-                loading.hideLoading();
-                base.showMsg("申请失败");
-            })
-    }
-    function tuikcx(remark){
-        loading.createLoading("提交申请中...");
-        Ajax.post("618185", {
-            json: {
-                code: code,
-                remark: remark,
-                userId: base.getUserId()
-            }
-        }).then(function(res){
-                loading.hideLoading();
-                if(res.success){
-                    base.showMsg("申请提交成功");
-                    $(".order-hotel-detail-btn2").addClass("hidden");
                 }else{
                     base.showMsg(res.msg || "申请失败");
                 }
@@ -183,34 +160,6 @@ define([
                         return false;
                     }
                     cancelOrder(remark);
-                },
-                okValue: '确定',
-                cancel: function(){
-                    d.close().remove();
-                },
-                cancelValue: '取消'
-            });
-            d.showModal();
-        });
-        //撤销退款
-        $("#tuikchBtn").on("click", function(){
-            var d = dialog({
-                title: '撤销退款申请',
-                content: '撤销退款理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
-                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写撤销退款理由</div>'+
-                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">撤销退款理由中包含非法字符</div>',
-                ok: function (argument) {
-                    var remark = $(".dialog-textarea").val();
-                    if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip1").addClass("hidden");
-                        $(".dialog-error-tip0").removeClass("hidden");
-                        return false;
-                    }else if(!base.isNotFace(remark)){
-                        $(".dialog-error-tip0").addClass("hidden");
-                        $(".dialog-error-tip1").removeClass("hidden");
-                        return false;
-                    }
-                    tuikcx(remark);
                 },
                 okValue: '确定',
                 cancel: function(){

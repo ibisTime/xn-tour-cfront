@@ -118,6 +118,10 @@ define([
                 }, 200, function () {
                     wrap.hide();
                     func && func($("#change-mobile").val());
+                    $("#change-mobile").val("");
+                    $("#change-smsCaptcha").val("");
+                    $("#change-trade-pwd").val("");
+                    wrap.find("label.error").remove();
                 });
             }
             return this;

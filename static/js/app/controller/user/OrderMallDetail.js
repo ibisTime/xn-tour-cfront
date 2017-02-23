@@ -47,9 +47,9 @@ define([
 
                 $("#applyNote").html(data.applyNote || "无");
 
-                if(data.status == "1")
+                if(data.status == "0")
                     $(".order-hotel-detail-btn0").removeClass("hidden");
-                else if(data.status == "2")
+                else if(data.status == "1")
                     $(".order-hotel-detail-btn1").removeClass("hidden");
             }else{
                 base.showMsg(res0.msg || res.msg || "订单信息获取失败");
@@ -60,9 +60,9 @@ define([
         });
     }
 
-    function cancelOrder(remark){
+    function cancelOrTkOrder(bizType, remark){
         loading.createLoading("提交申请中...");
-        Ajax.post("618455", {
+        Ajax.post(bizType, {
             json: {
                 code: code,
                 remark: remark,
@@ -81,6 +81,12 @@ define([
                 base.showMsg("申请失败");
             })
     }
+    function tuikOrder(remark) {
+        cancelOrTkOrder("618461", remark);
+    }
+    function cancelOrder(remark) {
+        cancelOrTkOrder("618455", remark);
+    }
     function addListeners(){
         //支付
         $("#payBtn").on("click", function(){
@@ -92,7 +98,7 @@ define([
         });
         //退款申请
         $("#tuikBtn").on("click", function(){
-            showCancelOrTKModal(cancelOrder, 1);
+            showCancelOrTKModal(tuikOrder, 1);
         });
     }
     function showCancelOrTKModal(success, type) {

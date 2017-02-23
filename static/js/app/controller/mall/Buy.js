@@ -93,7 +93,7 @@ define([
                 initSwiper();
 
                 $("#description").html(data.description);
-                $("#price").text(price);
+                $("#price").text(base.fZeroMoney(price));
                 $("#name").text(data.name);
             }else{
                 base.showMsg(res.msg);

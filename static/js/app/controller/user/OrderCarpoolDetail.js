@@ -33,12 +33,11 @@ define([
 
                     var price = data.totalPrice || ( +(data.firstPayAmount || data.firstAmount) + +(data.secondPayAmount || data.secondAmount || 0) );
                     $("#price").html(base.formatMoney(price));
-                    if(data.status == "0")
+                    if(data.status == "0" || data.status == "1" || data.status == "2"){
+                        if(data.status == "1" || data.status == "2")
+                            $("#payBtn").val("支付尾款")
                         $(".order-hotel-detail-btn0").removeClass("hidden");
-                    // else if(data.status == "1")
-                    //     $(".order-hotel-detail-btn1").removeClass("hidden");
-                    // else if(data.status == "4")
-                        // $(".order-hotel-detail-btn2").removeClass("hidden");
+                    }
                 }else{
                     base.showMsg("订单信息获取失败");
                 }

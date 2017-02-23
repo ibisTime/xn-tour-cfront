@@ -112,6 +112,9 @@ define([
                 }, 200, function () {
                     wrap.hide();
                     func && func();
+                    $("#identityRealName").val("");
+                    $("#identityIdNo").val("");
+                    wrap.find("label.error").remove();
                 });
             }
             return this;

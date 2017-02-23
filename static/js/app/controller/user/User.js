@@ -18,9 +18,35 @@ define([
             return;
         }
         Foot.addFoot(3);
-        getUser();
+        $.when(
+            getAccountList(),
+            getUser()
+        ).then(function () {
+            loading.hideLoading();
+        }, function () {
+            loading.hideLoading();
+        })
+        // getUser();
         initIScroll();
         addListener();
+    }
+
+    function getAccountList() {
+        Ajax.get("802503", {
+            userId: base.getUserId()
+        }).then(function (res) {
+            if(res.success && res.data.length){
+                var data = res.data;
+                $.each(data, function (i, d) {
+                    if(d.currency == "XNB")
+                        $("#jfAmount").html(base.fZeroMoney(d.amount));
+                });
+            }else{
+                res.msg && base.showMsg(res.msg);
+            }
+        }, function () {
+            base.showMsg("账号信息获取失败");
+        });
     }
 
     function initIScroll(){
@@ -75,10 +101,8 @@ define([
                     $("#avatar").attr("src", base.getWXAvatar(res.data.userExt.photo));
                 }
                 myScroll.refresh();
-                loading.hideLoading();
             }, function(){
                 myScroll.refresh();
-                loading.hideLoading();
             });
     }
 });

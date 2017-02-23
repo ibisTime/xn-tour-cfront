@@ -1005,6 +1005,7 @@
 .search-input-wrap .search-input-cont .index-search-placeholder{
     font-size: 11px;
     color: #fff;
+    padding-left: 2px;
 }
 .search-input-wrap .search-input-cont .index-search-input{
     font-size: 11px;
@@ -1455,7 +1456,7 @@ label.error{
     width: 30px;
     height: 30px;
     background: url(../images/jdsc-icon.png?__inline) center no-repeat;
-    z-index: 9999;
+    z-index: 1000;
 }
 .active.h-detail-icon{
     background: url(../images/dzcg-icon.png?__inline) center no-repeat;
