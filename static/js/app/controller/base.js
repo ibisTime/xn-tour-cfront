@@ -89,6 +89,11 @@ define([
                     Base.showMsg("定位失败");
                     errFun && errFun();
                 }else{
+                    sessionStorage.setItem("dw-province", province);
+                    sessionStorage.setItem("dw-city", city);
+                    sessionStorage.setItem("dw-area", area);
+                    sessionStorage.setItem("dw-longitude", longitude);
+                    sessionStorage.setItem("dw-latitude", latitude);
                     //直辖市
                     if(area == ""){
                         area = city;

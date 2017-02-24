@@ -85,6 +85,8 @@ define([
                 }, 200, function () {
                     wrap.hide();
                     func && func($("#normalTextInputText").val());
+                    $("#normalTextInputText").val("");
+                    wrap.find("label.error").remove();
                 });
             }
             return this;

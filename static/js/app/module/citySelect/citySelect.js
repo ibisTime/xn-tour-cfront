@@ -9,6 +9,7 @@ define([
     var defaultOpt = {};
     var searchData = [];
     var PROVINCE, CITY, AREA;
+    var DW_PROVINCE, DW_CITY, DW_AREA;
     var innerScroll, firstSelect = true;
     init();
     function init(){
@@ -40,10 +41,24 @@ define([
                 $("#city-select-module-dq").html('<span prov="' + prov + '">'+PROVINCE+'</span>');
                 CITY = PROVINCE;
             }
-            sessionStorage.setItem("province", PROVINCE);
-            sessionStorage.setItem("city", CITY);
-            sessionStorage.setItem("area", AREA);
-            obj.hideCont(defaultOpt.success);
+            loading.createLoading(" ");
+            var myGeo = new BMap.Geocoder();
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint(PROVINCE+CITY, function(point){
+                loading.hideLoading();
+                if (point) {
+                    sessionStorage.setItem("province", PROVINCE);
+                    sessionStorage.setItem("city", CITY);
+                    sessionStorage.setItem("area", AREA);
+                    sessionStorage.setItem("longitude", point.lng);
+                    sessionStorage.setItem("latitude", point.lat);
+                }else{
+                    // alert("您选择地址没有解析到结果!");
+                    base.showMsg("地址选择解析失败");
+                }
+                obj.hideCont(defaultOpt.success);
+            });
+            
         });
         $("#city-select-module-dw, #city-select-module-dq").on("click", function () {
             var _self = $(this),
@@ -63,16 +78,33 @@ define([
                 wrap.find(".on").removeClass("on");
                 wrap.find(".city-select-module-city-list-item[prov="+PROVINCE+"]").addClass("on");
             }
-            sessionStorage.setItem("province", PROVINCE);
-            sessionStorage.setItem("city", CITY);
-            sessionStorage.setItem("area", AREA);
-            obj.hideCont(defaultOpt.success);
+            loading.createLoading(" ");
+            var myGeo = new BMap.Geocoder();
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint(PROVINCE+CITY, function(point){
+                loading.hideLoading();
+                if (point) {
+                    sessionStorage.setItem("province", PROVINCE);
+                    sessionStorage.setItem("city", CITY);
+                    sessionStorage.setItem("area", AREA);
+                    sessionStorage.setItem("longitude", point.lng);
+                    sessionStorage.setItem("latitude", point.lat);
+                }else{
+                    // alert("您选择地址没有解析到结果!");
+                    base.showMsg("地址选择解析失败");
+                }
+                obj.hideCont(defaultOpt.success);
+            });
         })
     }
     function _getCitySelect(cityList) {
         PROVINCE = sessionStorage.getItem("province");
         CITY = sessionStorage.getItem("city");
         AREA = sessionStorage.getItem("area");
+        DW_PROVINCE = sessionStorage.getItem("dw-province");
+        DW_CITY = sessionStorage.getItem("dw-city");
+        DW_AREA = sessionStorage.getItem("dw-area");
+        defaultOpt.success(CITY);
         if(PROVINCE == CITY){
             CITY = AREA;
             AREA = "";
@@ -88,9 +120,11 @@ define([
                     if (city.n == CITY) {
                         html += '<div class="city-select-module-city-list-item on" prov="' + i + '" city="' + j + '">' + city.n + '</div>';
                         $("#city-select-module-dq").html('<span prov="' + i + '" city="' + j + '">'+city.n+'</span>');
-                        $("#city-select-module-dw").html('<span prov="' + i + '" city="' + j + '">'+city.n+'</span>');
                     } else {
                         html += '<div class="city-select-module-city-list-item" prov="' + i + '" city="' + j + '">' + city.n + '</div>';
+                    }
+                    if(city.n == DW_CITY){
+                        $("#city-select-module-dw").html('<span prov="' + i + '" city="' + j + '">'+city.n+'</span>');
                     }
                 });
             //市区
@@ -100,10 +134,12 @@ define([
                 //如果是当前定位的位置，则显示并保存到session中
                 if (prov.p == PROVINCE) {
                     $("#city-select-module-dq").html('<span prov="' + i + '">'+prov.p+'</span>');
-                    $("#city-select-module-dw").html('<span prov="' + i + '">'+prov.p+'</span>');
                     html += '<div class="city-select-module-city-list-item on" prov="' + i + '">' + prov.p + '</div>';
                 } else {
                     html += '<div class="city-select-module-city-list-item" prov="' + i + '">' + prov.p + '</div>';
+                }
+                if(prov.p == DW_PROVINCE){
+                    $("#city-select-module-dw").html('<span prov="' + i + '">'+prov.p+'</span>');
                 }
             }
         });

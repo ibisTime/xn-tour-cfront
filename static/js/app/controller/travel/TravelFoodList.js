@@ -81,7 +81,7 @@ define([
                         $("#content")[refresh ? "html" : "append"](foodTmpl({items: arr}));
                         start++;
                     }else{
-                        refresh && $("#content").html('<div class="item-error">暂无推荐酒店</div>');
+                        refresh && $("#content").html('<div class="item-error">暂无推荐美食</div>');
                         isEnd = true;
                         base.hidePullUp();
                         res.msg && base.showMsg(res.msg);
@@ -92,7 +92,7 @@ define([
                 }, function(){
                     isLoading = false;
                     isEnd = true;
-                    refresh && $("#content").html('<div class="item-error">暂无推荐酒店</div>');
+                    refresh && $("#content").html('<div class="item-error">暂无推荐美食</div>');
                     myScroll.refresh();
                     loading.hideLoading();
                 });

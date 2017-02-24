@@ -201,9 +201,9 @@ define([
             var _self = $(this), idx = _self.index();
             _self.siblings(".active").removeClass("active")
                 .end().addClass("active");
-            var o_idx = idx && 0 || 1;
-            $("#content" + o_idx).removeClass("active");
-            $("#content"+idx).addClass("active");
+            var o_idx = idx ? 0 : 1;
+            $("#content" + o_idx).addClass("hidden");
+            $("#content"+idx).removeClass("hidden");
         });
         $("#wyrzBtn").on("click", function(){
             if(hotelCode)
