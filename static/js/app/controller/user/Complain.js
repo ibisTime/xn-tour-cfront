@@ -39,7 +39,7 @@ define([
             if($("#compForm").valid()){
                 var data = $("#compForm").serializeObject();
                 if(isEmpty(data.tsContent) && isEmpty(data.fkContent)){
-                    base.showMsg("xxx");
+                    base.showMsg("投诉或反馈意见不能为空");
                     return;
                 }
                 data.commiter = base.getUserId();
@@ -47,9 +47,12 @@ define([
                     json: data
                 }).then(function(res){
                     if(res.success){
-                        // history.back();
+                        console.log("提交成功！")
+                        base.showMsg("提交成功！");
+                        //history.back();
                     }else{
-                        // 
+                       base.showMsg("网络原因提交失败!");
+                          
                     }
                 });
             }

@@ -104,7 +104,7 @@ define([
 
     //邮箱或手机验证规则  
     jQuery.validator.addMethod("mm", function(value, element) {
-        var mm = /^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^.*$/;
+        var mm = /^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/;
         return this.optional(element) || (mm.test(value));
     }, "邮箱或手机格式错误");
 
