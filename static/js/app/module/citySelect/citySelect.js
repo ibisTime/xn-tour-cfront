@@ -41,7 +41,7 @@ define([
                 $("#city-select-module-dq").html('<span prov="' + prov + '">'+PROVINCE+'</span>');
                 CITY = PROVINCE;
             }
-            loading.createLoading(" ");
+            loading.createLoading();
             var myGeo = new BMap.Geocoder();
             // 将地址解析结果显示在地图上,并调整地图视野
             myGeo.getPoint(PROVINCE+CITY, function(point){
@@ -78,7 +78,7 @@ define([
                 wrap.find(".on").removeClass("on");
                 wrap.find(".city-select-module-city-list-item[prov="+PROVINCE+"]").addClass("on");
             }
-            loading.createLoading(" ");
+            loading.createLoading();
             var myGeo = new BMap.Geocoder();
             // 将地址解析结果显示在地图上,并调整地图视野
             myGeo.getPoint(PROVINCE+CITY, function(point){
