@@ -10,12 +10,12 @@ define([
 		getAboutus()
 	}
 	function getAboutus(){
-		return Ajax.get("", {
-
+		return Ajax.get("807717", {
+            "ckey": "aboutus"
 		}).then(function(res){
 		 	if(res.success){
 			 	//
-			 	$("#content").html();
+			 	$("#content").html(res.data.cvalue);
 			}else{
 				base.showMsg("加载失败");
 			}
