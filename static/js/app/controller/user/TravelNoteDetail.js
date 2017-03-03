@@ -1,12 +1,12 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'iScroll',
     'app/module/loading/loading',
     'app/module/showImg/showImg',
     'app/module/comment/comment',
+    'app/module/scroll/scroll',
     'app/util/dialog'
-], function(base, Ajax, iScroll, loading, showImg, comment, dialog) {
+], function(base, Ajax, loading, showImg, comment, scroll, dialog) {
     var myScroll,
         noteCode = base.getUrlParam("code");
     var width = ( +$(window).width() - 20 ) / 3 - 12;
@@ -30,13 +30,8 @@ define([
     }
 
     function initIScroll(){
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            onScrollMove: function () {
-                if (this.y - 120 < this.maxScrollY) {
-                    getPageComment();
-                }
-            }
+        myScroll = scroll.getInstance().getOnlyDownScroll({
+            loadMore: getPageComment
         });
     }
 
@@ -61,6 +56,7 @@ define([
                 data.isCollect == "1" ? $("#scIcon").addClass("active") : "";
                 data.isLike == "1" ? $("#dzIcon").addClass("active") : "";
                 data.isReport == "1" ? $("#jbIcon").addClass("active") : "";
+                myScroll.refresh();
             }else{
                 base.showMsg(res.msg);
             }
@@ -199,7 +195,7 @@ define([
                     html = '<div class="plun-cont-item flex">'+
                         '<div class="plun-left">'+
                             '<div class="plun-left-wrap">'+
-                                '<img class="center-img wp100" src="'+base.getAvatar(userInfo.userExt && userInfo.userExt.photo)+'" />'+
+                                '<img class="center-img wp100" src="'+base.getWXAvatar(userInfo.userExt && userInfo.userExt.photo)+'" />'+
                             '</div>'+
                         '</div>'+
                         '<div class="plun-right">'+

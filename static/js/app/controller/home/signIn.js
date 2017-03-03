@@ -48,21 +48,24 @@ define([
 				.then(function(res){
 		            if(res.success){
 		            	console.log(res.data);
+		            	var num = $(".signInNum").text();
+		            	num = +num++;
+		            	$(".signInNum").text(num);
 		            	$("#btn-signIn").val("明天再来").addClass("a-qiandao");
 		            }else{
 		                base.showMsg(res.msg);
 		            }
 		        })
 				
-			Ajax.get("805103",{"userId":userId})
-				.then(function(res){
-		            if(res.success){
-		            	$(".signInNum").html(res.data);
-		            }else{
+			// Ajax.get("805103",{"userId":userId})
+			// 	.then(function(res){
+		 //            if(res.success){
+		 //            	$(".signInNum").html(res.data);
+		 //            }else{
 		            	
-		                base.showMsg(res.msg);
-		            }
-		        })
+		 //                base.showMsg(res.msg);
+		 //            }
+		 //        })
     	})
 		
 		

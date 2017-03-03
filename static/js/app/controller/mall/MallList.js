@@ -3,10 +3,10 @@ define([
     'app/util/ajax',
     'app/util/handlebarsHelpers',
     'app/module/loading/loading',
-    'iScroll',
     'app/module/loadImg/loadImg',
-    'app/module/showContent/showContent'
-], function(base, Ajax, Handlebars, loading, iScroll, loadImg, showContent) {
+    'app/module/showContent/showContent',
+    'app/module/scroll/scroll'
+], function(base, Ajax, Handlebars, loading, loadImg, showContent, scroll) {
 
     var myScroll, isLoading = false, isEnd = false,
         config = {
@@ -44,40 +44,13 @@ define([
     }
 
     function initIScroll() {
-        var pullDownEl, pullDownOffset, $pullDownEl;
-
-        function pullDownAction() {
-            isEnd = false;
-            getPageData(true);
-        }
-        $pullDownEl = $("#pullDown");
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = pullDownEl.offsetHeight;
-
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function() {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
+        myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function () {
+                getPageData();
             },
-            onScrollMove: function() {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 120 < this.maxScrollY) {
-                    getPageData();
-                }
-            },
-            onScrollEnd: function() {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");
-                    pullDownAction();
-                }
+            refresh: function () {
+                isEnd = false;
+                getPageData(true);
             }
         });
     }
@@ -122,16 +95,19 @@ define([
     }
 
     function addListener() {
-        // showContent.addCont({
-        //     key: "description",
-        //     title: "积分规则",
-        //     param: {
-        //         userId: base.getUserId()
-        //     },
-        //     bizType: ''
-        // });
+        showContent.addCont({
+            key: "note",
+            title: "积分规则",
+            param: {
+                "ckey": "inte"
+            },
+            bizType: '807717',
+            error: function (msg) {
+                base.showMsg(msg);
+            }
+        });
         $("#integral").on("click", function () {
-
+            showContent.showCont();
         });
     }
 });

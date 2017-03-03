@@ -1,13 +1,13 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'iScroll',
     'app/module/foot/foot',
     'app/util/handlebarsHelpers',
     'app/module/loading/loading',
     'swiper',
-    'app/module/citySelect/citySelect'
-], function(base, Ajax, iScroll, Foot, Handlebars, loading, Swiper, citySelect) {
+    'app/module/citySelect/citySelect',
+    'app/module/scroll/scroll'
+], function(base, Ajax, Foot, Handlebars, loading, Swiper, citySelect, scroll) {
 
     var myScroll, isEnd = false, isLoading = false, bannerArr = []
         pic_suffix = '?imageMogr2/auto-orient/thumbnail/!375x180r';
@@ -56,42 +56,14 @@ define([
         });
     }
     function initIScroll(){
-        var pullDownEl, pullDownOffset, $pullDownEl;
 
-        function pullDownAction () {
-            isEnd = false;
-            getPageLine(true);
-        }
-        $pullDownEl = $("#pullDown");
-
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = pullDownEl.offsetHeight;
-        
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function () {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
+        myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function () {
+                getPageLine();
             },
-            onScrollMove: function () {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 120 < this.maxScrollY) {
-                    getPageLine();
-                }
-            },
-            onScrollEnd: function () {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading"); 
-                    isEnd = false;          
-                    pullDownAction();
-                }
+            refresh: function () {
+                isEnd = false;          
+                getPageLine(true);
             }
         });
     }

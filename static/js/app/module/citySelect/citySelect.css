@@ -23,13 +23,13 @@
 .city-select-module-back {
     width: 40px;
     height: 40px;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAhCAMAAADj/gtmAAAAXVBMVEUAAACPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4/ShKOpAAAAHnRSTlMA+/ICzBILBtT27OfYwrupnmhYSTsyJxm2sWBQQSxZCgntAAAAc0lEQVQoz4XSSQ6DMBBEUXAmJxAS5rnuf0zYFl8CL58suV1dyeF0eXGUTNFlzZT3Ju1HEXJ/mDThWpag79OkfotSuMyphpdJlWqE/FymXW4mpfS/kiQomuAWjC9yrrPp+UcmwbyYKrM/M+6R22Yn2Bz2awMrKgnwgdZu+wAAAABJRU5ErkJggg==);
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABR0lEQVRYR+2WPW7CQBCF34Ast9yAI5Ao9MEdlNyQG1C6xOmDCDdxCytYtMYkxPJ6fkCisUtrNe/b2fdml/Dij16sjx6g70C0A8l3vgJo7IbpEu9ZaTLrbjNKToc1AeVxOl+21YgDbPOCQJ/e48cN00wNcRXfEOHNw3+5j8VMBYBQ4HwoCJioIf6JY+8G6Sy2gW4TWiAU4qEjfAo0EEpxGUBYJYEwiMsBOAijuA4gBgHgz+3dhtOlIBb8xnFUu6iiphfXd+AGdQcRflnFHwOoh0wFYB1Wohg2j6JhuHoX+mFV1+XnwD1Am9uDCa0TU9WBrqhJ5kTE1LIOSHJuhOABJOIt6ZAak7+Mfq9UYc6VnYgDaHbelhShMfkHiXHCNS6wwk3nmWoUJ9u8AGjU9Zhgn2n1cQC+1L+I2OrPWcCn4Dk60So9QN+BC0CuQzApVg2BAAAAAElFTkSuQmCC);
     background-position: 10px center;
     background-repeat: no-repeat;
     position: absolute;
     left: 0;
     top: 0;
-    background-size: 12px;
+    background-size: 24px;
 }
 .city-select-module-title-name {
     text-align: center;

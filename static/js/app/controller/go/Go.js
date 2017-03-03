@@ -1,12 +1,12 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'iScroll',
     'app/module/foot/foot',
     'app/util/handlebarsHelpers',
     'app/module/loading/loading',
-    'app/util/dict'
-], function(base, Ajax, iScroll, Foot, Handlebars, loading, Dict) {
+    'app/util/dict',
+    'app/module/scroll/scroll'
+], function(base, Ajax, Foot, Handlebars, loading, Dict, scroll) {
 
     var hotelTmpl = __inline("../../ui/go-hotel.handlebars"),
         outtingTmpl = __inline("../../ui/go-carpool.handlebars"),
@@ -184,40 +184,17 @@ define([
     }
 
     function initIScroll(){
-        var pullDownEl, pullDownOffset, $pullDownEl;
-
-        $pullDownEl = $("#pullDown");
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = pullDownEl.offsetHeight;
-        
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function () {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
+        myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function () {
+                getMoreData();
             },
-            onScrollMove: function () {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 120 < this.maxScrollY) {
-                    getMoreData();
-                }
-            },
-            onScrollEnd: function () {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");            
-                    pullDownAction();
-                }
+            refresh: function () {
+                pullDownAction();
             }
         });
     }
-
+    /*UNPUBLISHED("0", "未发布"), PUBLISHED("1", "已发布"), FULL("2", "已满员"), PLAT_TAKE(
+            "3", "已接单待发车"), PLAT_CANCEL("91", "平台取消"), DONE("92", "已发车宣告结束");*/
     function getOuttingData(refresh){
         config1.outting.isEnd = true;
         loading.hideLoading();

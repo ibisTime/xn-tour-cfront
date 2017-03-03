@@ -56,6 +56,10 @@ define([
                 $("#applyNote").html(data.applyNote || "无");
                 $("#amount").html(base.formatMoney(data.amount));
                 $("#orderA").attr("href", "../go/special-line-detail.html?code=" + data.code);
+                if(data.remark){
+                    $("#remarkWrap").show();
+                    $("#remark").html(data.remark);
+                }
                 if(data.status == "0")
                     $(".order-hotel-detail-btn0").removeClass("hidden");
                 else if(data.status == "1")
@@ -87,13 +91,32 @@ define([
             })
     }
 
-    function cancelOrder(remark){
+    function cancelOrder(){
         loading.createLoading("提交申请中...");
-        Ajax.post("618182", {
+        Ajax.post("618181", {
             json: {
-                code: code,
+                orderCodeList: [code]
+            }
+        }).then(function(res){
+                loading.hideLoading();
+                if(res.success){
+                    base.showMsg("申请提交成功");
+                    $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
+                }else{
+                    base.showMsg(res.msg || "申请失败");
+                }
+            }, function(){
+                loading.hideLoading();
+                base.showMsg("申请失败");
+            });
+    }
+    function tuik(remark) {
+        loading.createLoading("提交申请中...");
+        Ajax.post("618185", {
+            json: {
+                orderCodeList: [code],
                 remark: remark,
-                userId: base.getUserId()
+                updater: base.getUserId()
             }
         }).then(function(res){
                 loading.hideLoading();
@@ -115,31 +138,8 @@ define([
         });
         //取消订单
         $("#cancelBtn").on("click", function(){
-            var d = dialog({
-                title: '取消订单',
-                content: '取消理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
-                    '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写取消理由</div>'+
-                    '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">取消理由中包含非法字符</div>',
-                ok: function (argument) {
-                    var remark = $(".dialog-textarea").val();
-                    if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip0").removeClass("hidden");
-                        $(".dialog-error-tip1").addClass("hidden");
-                        return false;
-                    } else if(!base.isNotFace(remark)){
-                        $(".dialog-error-tip0").addClass("hidden");
-                        $(".dialog-error-tip1").removeClass("hidden");
-                        return false;
-                    }
-                    cancelOrder(remark);
-                },
-                okValue: '确定',
-                cancel: function(){
-                    d.close().remove();
-                },
-                cancelValue: '取消'
-            });
-            d.showModal();
+            base.confirm("确定取消订单吗？")
+                .then(cancelOrder, base.emptyFun);
         });
         //退款申请
         $("#tuikBtn").on("click", function(){
@@ -159,7 +159,7 @@ define([
                         $(".dialog-error-tip1").removeClass("hidden");
                         return false;
                     }
-                    cancelOrder(remark);
+                    tuik(remark);
                 },
                 okValue: '确定',
                 cancel: function(){

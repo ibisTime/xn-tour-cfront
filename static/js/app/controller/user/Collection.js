@@ -2,9 +2,9 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/module/loading/loading',
-    'iScroll',
-    'app/util/handlebarsHelpers'
-], function(base, Ajax, loading, iScroll, Handlebars) {
+    'app/util/handlebarsHelpers',
+    'app/module/scroll/scroll'
+], function(base, Ajax, loading, Handlebars, scroll) {
 	var config = {
 		"0": {
 			start: 1,
@@ -71,7 +71,7 @@ define([
 		initIScroll();
 		addListeners();
 		loading.createLoading();
-		$("#collection-top-nav").find(".order-list-top-nav1-item:eq("+index+")").click();
+		$("#collection-top-nav").find(".collection-list-top-item:eq("+index+")").click();
 	}
 	function getModuleList(){
 		return Ajax.get("806052", {
@@ -100,36 +100,12 @@ define([
         getPageData(index, true);
     }
 	function initIScroll(){
-        var pullDownEl, pullDownOffset, $pullDownEl;
-
-        $pullDownEl = $("#pullDown");
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = pullDownEl.offsetHeight;
-        
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function () {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
+		myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function() {
+                getPageData(index);
             },
-            onScrollMove: function () {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 20 < this.maxScrollY) {
-                    getPageData(index);
-                }
-            },
-            onScrollEnd: function () {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");            
-                    pullDownAction();
-                }
+            refresh: function() {
+                pullDownAction();
             }
         });
     }
@@ -180,13 +156,13 @@ define([
 		}
 	}
 	function addListeners(){
-		$("#collection-top-nav").on("click", ".order-list-top-nav1-item", function (e) {
+		$("#collection-top-nav").on("click", ".collection-list-top-item", function (e) {
             var _self = $(this);
             index = _self.index();
             $("#content").find(".jcont.active").removeClass("active")
             	.end().find(".J_Content" + index).addClass("active");
             $("#collection-top-nav").find(".active").removeClass("active")
-            	.end().find(".order-list-top-nav1-item:eq("+index+")").addClass("active");
+            	.end().find(".collection-list-top-item:eq("+index+")").addClass("active");
             if(config1[index].isEnd){
             	base.hidePullUp();
             }else{
@@ -197,7 +173,6 @@ define([
             	if(index == 2){
             		getModuleList()
             			.then(function(){
-            				// getData(index, true);
             				getPageData(index, true);
             			});
             	}else{

@@ -57,13 +57,13 @@ define([
     function addListener() {
         searchMap.addMap();
 
-        $("#bookNote").on("keyup", function(){
-            var val = $(this).val();
-            if(!val)
-                $("#bookNotePlaceholder").show();
-            else
-                $("#bookNotePlaceholder").hide();
-        });
+        // $("#bookNote").on("keyup", function(){
+        //     var val = $(this).val();
+        //     if(!val)
+        //         $("#bookNotePlaceholder").show();
+        //     else
+        //         $("#bookNotePlaceholder").hide();
+        // });
 
         $("#submitForm").validate({
             'rules': {

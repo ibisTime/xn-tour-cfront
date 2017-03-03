@@ -8,7 +8,7 @@ define([
     var code = base.getUrlParam("code"), remainNum = 0;
     var price, startSelectArr, endSelectArr;
     var returnUrl = base.getUrlParam("return");
-    var outName = "";
+    var outName, outPic, startSite, outDatetime, outNum = 1;
 
     init();
 
@@ -35,28 +35,32 @@ define([
             base.showMsg("数据加载失败");
         });
     }
-
     function getDetail(){
         Ajax.get("618172", {
             code: code
         }).then(function(res){
+            loading.hideLoading();
             if(res.success){
                 var data = res.data;
+                startSite = base.findObj(startSelectArr, "dkey", data.startSite)["dvalue"];
+                outDatetime = base.formatDate(data.outDatetime, "hh:mm");
                 $("#date").text(base.formatDate(data.outDatetime, "yyyy-MM-dd"));
-                $("#startSite").text(base.findObj(startSelectArr, "dkey", data.startSite)["dvalue"]);
+                $("#startSite").text(startSite);
                 $("#endSite").text(base.findObj(endSelectArr, "dkey", data.endSite)["dvalue"]);
-                $("#time").text(base.formatDate(data.outDatetime, "hh:mm"));
+                $("#time").text(outDatetime);
                 remainNum = +data.remainNum;
                 $("#remainNum").text(data.remainNum);
                 $("#address").text(data.address);
+                outPic = data.pic;
                 outName = data.name;
                 price = +data.price;
+                outModule = data.type;
                 $("#totalAmount").text(base.formatMoney(price));
                 addListener();
             }else{
                 base.showMsg(res.msg);
             }
-            loading.hideLoading();
+            return res;
         }, function(){
             loading.hideLoading();
             base.showMsg("数据加载失败");
@@ -98,9 +102,15 @@ define([
             lineInfo = $.parseJSON(lineInfo);
         }
         var lCode = base.getUrlParam("lineCode", returnUrl.replace(/(.+)\?/i, "?"));
+        var ticket = +$("#totalTicket").val();
         var obj = lineInfo[lCode] || {};
         obj.outCode = code;
         obj.outName = outName;
+        obj.outPic = outPic;
+        obj.outStartSite = startSite;
+        obj.outDatetime = outDatetime;
+        obj.totalOutAmount = price * ticket;
+        obj.outNum = ticket;
         lineInfo[lCode] = obj;
         sessionStorage.setItem("line-info", JSON.stringify(lineInfo));
     }

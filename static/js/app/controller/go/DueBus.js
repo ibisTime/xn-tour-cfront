@@ -24,24 +24,13 @@ define([
 			lng: "",
 			lat: ""
 		}
-	}, unitPrice;
+	};
     init();
 
     function init() {
-    	loading.createLoading();
-        base.getDictList("bus_unit_price")
-            .then(function (res) {
-                if (res.success) {
-                    unitPrice = +res.data[0].dkey;
-                    addListener();
-                } else {
-                    base.showMsg(res.msg);
-                }
-                loading.hideLoading();
-            }, function () {
-                loading.hideLoading();
-                base.showMsg("数据加载失败");
-            });
+        setTimeout(function () {
+            addListener();
+        }, 1);
     }
 
     function addListener() {
@@ -51,12 +40,6 @@ define([
             success: function(result){
                 var rtn = $("#totalNum").val(result).valid();
                 $("#showNum").text(result);
-                if(rtn){
-
-                    $("#amount").html( base.formatMoney(+result * unitPrice) );
-                }else{
-                    $("#amount").html("--");
-                }
             },
             title: "预定人数"
         });
@@ -65,7 +48,7 @@ define([
             format: 'YYYY-MM-DD hh:mm',
             choose: function(datas){ //选择日期完毕的回调
                 $("#showDate").text(datas);
-                $("#outDatetime").val(datas);
+                $("#outDatetime").val(datas).valid();
             },
             isclear: false, //是否显示清空
             min: laydate.now(),
@@ -81,7 +64,7 @@ define([
 	        		startSite.point.lng = point.lng;
 	        		startSite.point.lat = point.lat;
                     $("#showStartSite").text(text);
-	        		$("#startSite").val(text);
+	        		$("#startSite").val(text).valid();
 	        	}
         	});
         });
@@ -94,7 +77,7 @@ define([
 	        		endSite.point.lng = point.lng;
 	        		endSite.point.lat = point.lat;
                     $("#showEndSite").text(text);
-	        		$("#endSite").val(text);
+	        		$("#endSite").val(text).valid();
 	        	}
         	});
         });
@@ -107,7 +90,7 @@ define([
 	        		midSite.point.lng = point.lng;
 	        		midSite.point.lat = point.lat;
                     $("#showMidSite").text(text);
-	        		$("#midSite").val(text);
+	        		$("#midSite").val(text).valid();
 	        	}
         	});
         });
@@ -138,6 +121,10 @@ define([
                 "totalNum": {
                     required: true,
                     "Z+": true
+                },
+                "bookNote": {
+                    isNotFace: true,
+                    maxlength: 255
                 }
             }
         });
@@ -156,15 +143,44 @@ define([
         var data = $("#deuBusForm").serializeObject();
         data.distance = result.cg;
         data.booker = base.getUserId();
-
-        data.otherInfo = {
-            "sPoint": startSite.point,
-            "ePoint": endSite.point,
-            "mPoint": midSite.point,
-            "unitPrice": unitPrice
-        }
-
-        sessionStorage.setItem("due-bus-info", JSON.stringify(data));
-        location.href = "./bus-submit-order.html";
+        data.outDatetime = data.outDatetime + ":00";
+        Ajax.post("618210", {
+            json: data
+        }).then(function(res){
+            if(res.success){
+                getOrderDetail(res.data.code);
+            }else{
+                loading.hideLoading();
+                base.showMsg(res.msg);
+            }
+        }, function(){
+            loading.hideLoading();
+            base.showMsg("订单提交失败")
+        });
+    }
+    function getOrderDetail(code) {
+        Ajax.get("618222", {code: code})
+            .then(function (res) {
+                loading.hideLoading();
+                if(res.success){
+                    base.confirm("大巴预定成功，总价为：" + base.formatMoney(res.data.distancePrice) + "。<br/>点击确认前往支付")
+                        .then(function () {
+                            location.href = "../pay/pay.html?code=" + code + "&type=3"; 
+                        }, function () {
+                            history.back();
+                        });
+                }else{
+                    base.showMsg("大巴预定成功");
+                    setTimeout(function () {
+                        history.back();
+                    }, 1000);
+                }
+            }, function () {
+                loading.hideLoading();
+                base.showMsg("大巴预定成功");
+                setTimeout(function () {
+                    history.back();
+                }, 1000);
+            });
     }
 });

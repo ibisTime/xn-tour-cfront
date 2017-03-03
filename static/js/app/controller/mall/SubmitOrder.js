@@ -122,11 +122,11 @@ define([
         return Ajax.get(postCode, config)
             .then(function(response) {
                 if (response.success) {
-                    var data = response.data;
+                    var data = response.data.product;
                     data.quantity = q;
                     var html = contentTmpl({ items: [data] });
                     $("#items-cont").html(html);
-                    $("#amount").html(base.fZeroMoney(+q * +data.costPrice));
+                    $("#amount").html(base.fZeroMoney(+q * +data.price1));
                 } else {
                     doError("#items-cont");
                 }
@@ -136,13 +136,6 @@ define([
     }
 
     function addListeners() {
-        $("#applyNote").on("keyup", function(){
-            var val = $(this).val();
-            if(!val)
-                $("#applyPlaceholder").show();
-            else
-                $("#applyPlaceholder").hide();
-        });
         $("#addressDiv").on("click", "a", function() {
             location.href = "./address-list.html?c=" + $(this).attr("code") + "&return=" + base.makeReturnUrl();
         });

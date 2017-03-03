@@ -25,16 +25,20 @@ define([
                 if(res.success){
                     var data = res.data;
                     $("#code").html(code);
-                    $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
+                    $("#createDatetime").html(base.formatDate(data.bookDatetime, 'yyyy-MM-dd hh:mm'));
                     $("#status").html(busStatus[data.status]);
                     $("#startSite").html(data.startSite);
                     $("#endSite").html(data.endSite);
                     $("#outDatetime")
                         .html(base.formatDate(data.outDatetime, 'yyyy-MM-dd hh:mm'));
                     $("#midSite").html(data.midSite);
-                    $("#booker").html(data.booker);
-                    $("#price").html(base.formatMoney(data.price));
-                    $("#applyNote").html(data.applyNote);
+                    $("#totalNum").html(data.totalNum);
+                    $("#price").html(base.formatMoney(data.distancePrice));
+                    $("#applyNote").html(data.bookNote);
+                    if(data.remark){
+                        $("#remarkWrap").show();
+                        $("#remark").html(data.remark);
+                    }
                     if(data.status == "0")
                         $(".order-hotel-detail-btn0").removeClass("hidden");
                     else if(data.status == "1")
@@ -49,15 +53,36 @@ define([
     }
     function cancelOrder(remark){
         loading.createLoading("提交申请中...");
-        Ajax.post("618213", {
+        Ajax.post("618211", {
             json: {
-                code: code,
-                remark: remark,
-                userId: base.getUserId()
+                orderCodeList: [code]
             }
         }).then(function(res){
                 loading.hideLoading();
                 if(res.success){
+                    $("#status").html(busStatus['91']);
+                    base.showMsg("申请提交成功");
+                    $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
+                }else{
+                    base.showMsg(res.msg || "申请失败");
+                }
+            }, function(){
+                loading.hideLoading();
+                base.showMsg("申请失败");
+            })
+    }
+    function tuik(remark) {
+        loading.createLoading("提交申请中...");
+        Ajax.post("618215", {
+            json: {
+                code: code,
+                remark: remark,
+                updater: base.getUserId()
+            }
+        }).then(function(res){
+                loading.hideLoading();
+                if(res.success){
+                    $("#status").html(busStatus['2']);
                     base.showMsg("申请提交成功");
                     $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
                 }else{
@@ -75,31 +100,8 @@ define([
         });
         //取消订单
         $("#cancelBtn").on("click", function(){
-            var d = dialog({
-                title: '取消订单',
-                content: '取消理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
-                    '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写取消理由</div>'+
-                    '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">取消理由中包含非法字符</div>',
-                ok: function (argument) {
-                    var remark = $(".dialog-textarea").val();
-                    if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip0").removeClass("hidden");
-                        $(".dialog-error-tip1").addClass("hidden");
-                        return false;
-                    } else if(!base.isNotFace(remark)){
-                        $(".dialog-error-tip0").addClass("hidden");
-                        $(".dialog-error-tip1").removeClass("hidden");
-                        return false;
-                    }
-                    cancelOrder(remark);
-                },
-                okValue: '确定',
-                cancel: function(){
-                    d.close().remove();
-                },
-                cancelValue: '取消'
-            });
-            d.showModal();
+            base.confirm("确定取消订单吗？")
+                .then(cancelOrder, base.emptyFun);
         });
         //退款申请
         $("#tuikBtn").on("click", function(){
@@ -119,7 +121,7 @@ define([
                         $(".dialog-error-tip1").removeClass("hidden");
                         return false;
                     }
-                    cancelOrder(remark);
+                    tuik(remark);
                 },
                 okValue: '确定',
                 cancel: function(){

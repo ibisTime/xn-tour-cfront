@@ -25,7 +25,11 @@ define([
             'direction': 'horizontal',
             'autoplay': 4000,
             'autoplayDisableOnInteraction': false,
-            'pagination': '.swiper-pagination'
+            'pagination': '.swiper-pagination',
+            'paginationType' : 'custom',
+            'paginationCustomRender': function (swiper, current, total) {
+              return current + '/' + total;
+            }
         });
     }
     function addListener() {
@@ -82,12 +86,12 @@ define([
             code: code
         }).then(function(res){
             if(res.success){
-                var data = res.data;
+                var data = res.data.product;
                 var pic = data.pic1.split(/\|\|/), html = "";
                 $.each(pic, function(i, p){
                     html += '<div class="swiper-slide"><img class="wp100 center-img" src="' + base.getPic(p, pic_suffix) +'"></div>'
                 });
-                price = res.data.price1;
+                price = data.price1;
                 $("#swiper").find(".swiper-wrapper").html(html);
 
                 initSwiper();

@@ -7,7 +7,7 @@ define([
 	init();
 	function init(){
 		loading.createLoading();
-		base.getSysConfig("aboutus")
+		base.getSysConfig("soft")
 			.then(function(res){
 			 	if(res.success){
 				 	$("#content").html(res.data.note);

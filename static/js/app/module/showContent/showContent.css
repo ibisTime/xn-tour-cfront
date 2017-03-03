@@ -9,11 +9,12 @@
     background-color: #f0f0f0;
 }
 .right-left-cont-title {
-    height: 40px;
     line-height: 40px;
     font-size: 16px;
     color: #000;
-    position: relative;
+    position: fixed;
+    top: 0;
+    width: 100%;
     border-bottom: 1px solid #ededed;
     background-color: #fff;
 }
@@ -34,4 +35,5 @@
 }
 .showContent-cont{
     padding: 10px;
+    font-size: 12px;
 }

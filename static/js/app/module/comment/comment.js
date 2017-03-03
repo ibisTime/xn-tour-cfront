@@ -63,13 +63,13 @@ define([
             _publishPl();
         });
         var $tip = $(".fbplun-cont-area-tip");
-        $("#plunCont").on("keyup", function(){
-            var _self = $(this), val = _self.val();
-            if(val) 
-                $tip.hide();
-            else 
-                $tip.show();
-        });
+        // $("#plunCont").on("keyup", function(){
+        //     var _self = $(this), val = _self.val();
+        //     if(val) 
+        //         $tip.hide();
+        //     else 
+        //         $tip.show();
+        // });
     }
     function _showMsg(msg, time) {
         var d = dialog({

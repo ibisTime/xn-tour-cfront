@@ -49,6 +49,7 @@ define([
                 $("#name").text(data.name);
                 $("#address").text(data.address);
                 $("#ticket").text(quantity);
+                $("#pic").attr("src", base.getImg(data.pic || ""));
                 price = +data.price;
                 $("#totalAmount").text(base.formatMoney(price * +quantity));
                 $("#amount").text(base.formatMoney(price));
@@ -65,13 +66,6 @@ define([
     }
 
 	function addListener(){
-		$("#applyNote").on("keyup", function(){
-			var val = $(this).val();
-			if(!val)
-				$("#applyPlaceholder").show();
-			else
-				$("#applyPlaceholder").hide();
-		});
         $("#submitBtn").on("click", function(){
         	if($("#submitForm").valid()){
                 submitOrder();

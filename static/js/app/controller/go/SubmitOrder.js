@@ -10,9 +10,9 @@ define([
 	var roomCode = base.getUrlParam("roomcode") || "";
 	var startDate = base.getUrlParam("start") || getNow();
 	var endDate = base.getUrlParam("end") || getNow();
-	var hmType2 = {}, ssType = {}, price = 0, roomType = 1,
+	var hmType2 = {}, ssType = {}, price = 0, roomName = 1,
         roomDescription = "", roomPic = "", hotelAddr = "",
-        roomTypeName = "", roomPrice, totalDays;
+        roomPrice, totalDays, roomType = 1;
     var returnUrl = base.getUrlParam("return");
 
 	init();
@@ -37,18 +37,19 @@ define([
 		loading.createLoading("加载中...");
 		$.when(
             base.getDictList("hh_type"),
-            base.getDictList("ss_type")
-        ).then(function (res1, res2) {
-            if(res1.success && res2.success){
-                $.each(res1.data, function(i, d){
+            base.getDictList("ss_type"),
+            getHotel()
+        ).then(function (res0, res) {
+            if(res0.success && res.success){
+                $.each(res0.data, function(i, d){
                     hmType2[d.dkey] = d.dvalue;
                 });
-                $.each(res2.data, function(i, d){
+                $.each(res.data, function(i, d){
                     ssType[d.dkey] = d.dvalue;
                 });
 
-                $.when(getHotel(), getRoom())
-                    .then(function(res1, res2){
+                getRoom()
+                    .then(function(){
                         loading.hideLoading();
                         addListener();
                     });
@@ -59,13 +60,6 @@ define([
 	}
 
 	function addListener(){
-		$("#applyNote").on("keyup", function(){
-			var val = $(this).val();
-			if(!val)
-				$("#applyPlaceholder").show();
-			else
-				$("#applyPlaceholder").hide();
-		});
 		$("#submitForm").validate({
             'rules': {
                 quantity: {
@@ -118,7 +112,7 @@ define([
         data.endDate = endDate;
         data.applyUser = base.getUserId();
         data.hotalCode = hotelCode;
-        data.roomType = roomType;
+        data.hotalRoomCode = hotalRoomCode;
         Ajax.get("618040", data).then(function(res){
             if(res.success){
                 location.href = "../pay/pay.html?code=" + res.data.code;
@@ -138,6 +132,7 @@ define([
         var lCode = base.getUrlParam("lineCode", returnUrl.replace(/(.+)\?/i, "?"));
         var obj = lineInfo[lCode] || {};
         obj.hotalCode = hotelCode;
+        obj.roomName = roomName;
         obj.roomType = roomType;
         obj.startDate = startDate;
         obj.endDate = endDate;
@@ -148,7 +143,7 @@ define([
         obj.roomDescription = roomDescription;
         obj.roomPic = roomPic;
         obj.hotelAddr = hotelAddr;
-        obj.roomTypeName = roomTypeName;
+        // obj.hotalRoomCode = hotalRoomCode;
         obj.roomPrice = roomPrice;
         lineInfo[lCode] = obj;
         sessionStorage.setItem("line-info", JSON.stringify(lineInfo));
@@ -158,7 +153,7 @@ define([
             code: hotelCode
         }).then(function(res){
             if(res.success){
-                var data = res.data;
+                var data = res.data.hotal;
                 $("#name").html(data.name);
                 hotelAddr = getAddr(data);
                 $("#addr").html(hotelAddr);
@@ -182,8 +177,9 @@ define([
         }).then(function(res){
             if(res.success){
                 var data = res.data;
-                roomTypeName = hmType2[data.type] || "--";
-                $("#hmType").html(roomTypeName);
+                roomType = data.code;
+                roomName = hmType2[data.name];
+                $("#hmType").html(roomName);
                 var arr = data.description.split(/,/), str = "";
                 $.each(arr, function(i, a){
                     str += ssType[a] + "、";
@@ -192,7 +188,7 @@ define([
                 roomPic = base.getPic(data.picture);
                 $("#ssType").html(str || "--");
                 price = data.price;
-                roomType = data.type;
+                hotalRoomCode = data.code;
                 roomPrice = price;
                 $("#price").html(base.formatMoney(+roomPrice * +totalDays));
                 // $("#price").html(base.formatMoney(price));

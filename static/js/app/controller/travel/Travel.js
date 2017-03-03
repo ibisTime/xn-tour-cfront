@@ -1,11 +1,11 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'iScroll',
     'app/util/handlebarsHelpers',
     'app/module/loading/loading',
-    'app/module/foot/foot'
-], function(base, Ajax, iScroll, Handlebars, loading, Foot) {
+    'app/module/foot/foot',
+    'app/module/scroll/scroll'
+], function(base, Ajax, Handlebars, loading, Foot, scroll) {
 
     var myScroll, isEnd = false, isLoading = false, innerScroll;
     var travelTmpl = __inline("../../ui/travel.handlebars");
@@ -104,49 +104,19 @@ define([
     }
 
     function initIScroll(){
-        var pullDownEl, pullDownOffset, $pullDownEl;
-
-        function pullDownAction () {
-            isEnd = false;
-            getPageTravel(true);
-        }
-        $pullDownEl = $("#pullDown");
-
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = pullDownEl.offsetHeight;
-        
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function () {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
+        myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function () {
+                getPageTravel();
             },
-            onScrollMove: function () {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 120 < this.maxScrollY) {
-                    getPageTravel();
-                }
-            },
-            onScrollEnd: function () {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading"); 
-                    isEnd = false;          
-                    pullDownAction();
-                }
+            refresh: function () {
+                isEnd = false;
+                getPageTravel(true);
             }
         });
     }
     function initInnerScroll(){
-        innerScroll = new iScroll('innerWrap', {
-            useTransition: false,
-            click: true
+        innerScroll = scroll.getInstance().getSimpleClickScroll({
+            wrapper: 'innerWrap'
         });
     }
     function getDropData(){

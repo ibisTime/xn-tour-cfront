@@ -34,13 +34,14 @@ define([
         loading.createLoading("加载中...");
         $.when(
             base.getDictList("hh_type"),
-            base.getDictList("ss_type")
-        ).then(function (res1, res2) {
-            if(res1.success && res2.success){
-                $.each(res1.data, function(i, d){
+            base.getDictList("ss_type"),
+            getHotel()
+        ).then(function (res0, res) {
+            if(res0.success && res.success){
+                $.each(res0.data, function(i, d){
                     hmType2[d.dkey] = d.dvalue;
                 });
-                $.each(res2.data, function(i, d){
+                $.each(res.data, function(i, d){
                     ssType[d.dkey] = d.dvalue;
                 });
                 Handlebars.registerHelper('formatType', function(text, options){
@@ -54,8 +55,8 @@ define([
                     })
                     return str && str.substr(0, str.length - 2) || "--";
                 });
-                $.when(getHotel(), getPageRoom())
-                    .then(function(res1, res2){
+                getPageRoom()
+                    .then(function(){
                         loading.hideLoading();
                         addListener();
                     });
@@ -70,7 +71,7 @@ define([
             code: hotelCode
         }).then(function(res){
             if(res.success){
-                var data = res.data;
+                var data = res.data.hotal;
                 var pic = data.pic2.split(/\|\|/), html = "";
                 $.each(pic, function(i, p){
                     html += '<div class="swiper-slide"><img class="wp100 center-img" src="' + base.getPic(p, pic_suffix) +'"></div>'
@@ -91,7 +92,7 @@ define([
         if(!isLoading && !isEnd){
             showPullUp();
             isLoading = true;
-            return Ajax.get("618013", {
+            return Ajax.get("618030", {
                 hotalCode: hotelCode,
                 start: start,
                 limit: limit
@@ -111,7 +112,7 @@ define([
                         $("#content").html('<div class="item-error">该酒店暂无房间</div>');
                     }
                     hidePullUp();
-                    base.showMsg(res.msg || "房间加载失败");
+                    base.showMsg(res.msg);
                 }
                 first = false;
                 isLoading = false;

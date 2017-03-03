@@ -2,9 +2,9 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/module/loading/loading',
-    'iScroll',
-    'app/util/handlebarsHelpers'
-], function(base, Ajax, loading, iScroll, Handlebars) {
+    'app/util/handlebarsHelpers',
+    'app/module/scroll/scroll'
+], function(base, Ajax, loading, Handlebars, scroll) {
     var lineCode = base.getUrlParam("code");
     var myScroll, start = 1, limit = 10, isLoading = false,
         isEnd = false, foodTmpl = __inline("../../ui/go-food.handlebars");
@@ -16,41 +16,13 @@ define([
     }
 
     function initIScroll(){
-        var pullDownEl, pullDownOffset, $pullDownEl;
-
-        function pullDownAction () {
-            isEnd = false;
-            getPageFood(true);
-        }
-        $pullDownEl = $("#pullDown");
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = pullDownEl.offsetHeight;
-        
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function () {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
+        myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function () {
+                getPageFood();
             },
-            onScrollMove: function () {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 120 < this.maxScrollY) {
-                    // console.log("上拉加载更多");
-                    getPageFood();
-                }
-            },
-            onScrollEnd: function () {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");           
-                    pullDownAction();
-                }
+            refresh: function () {
+                isEnd = false;
+                getPageFood(true);
             }
         });
     }

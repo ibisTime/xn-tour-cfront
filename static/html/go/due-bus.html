@@ -11,28 +11,31 @@
             <div class="p-r">
             	<div class="inline_block fs14 co9">上车地点</div>
                 <input type="text" class="op-0" name="startSite" id="startSite">
-                <div class="due-bus-ellipsis-item fs15" id="showStartSite"></div>
+                <div class="due-bus-ellipsis-item pr20 fs15" id="showStartSite"></div>
             </div>
+            <img src="../images/xyjt.png?__inline" class="more">
         </div>
 
         <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="endSiteWrap">
         	<div class="p-r">
                 <div class="inline_block fs14 co9">下车地点</div>
                 <input type="text" class="op-0" name="endSite" id="endSite">
-                <div class="due-bus-ellipsis-item fs15" id="showEndSite"></div>
+                <div class="due-bus-ellipsis-item pr20 fs15" id="showEndSite"></div>
             </div>
+            <img src="../images/xyjt.png?__inline" class="more">
         </div>
 
         <div class="fs15 ba lh50 wp100 plr10 bb p-r clearfix" id="midSiteWrap">
         	<div class="p-r">
                 <div class="inline_block fs14 co9">途经站点</div>
                 <input type="text" class="op-0" name="midSite" id="midSite">
-                <div class="due-bus-ellipsis-item fs15" id="showMidSite"></div>
+                <div class="due-bus-ellipsis-item pr20 fs15" id="showMidSite"></div>
             </div>
+            <img src="../images/xyjt.png?__inline" class="more">
         </div>
 
         <div class="fs15 ba lh50 wp100 plr10 bb p-r mt10 clearfix">
-            <input id="choseDate" class="spec-all-date"/>
+            <input id="choseDate" type="button" class="spec-all-date"/>
         	<div class="p-r">
                 <div class="inline_block fs14 co9">预定时间</div>
                 <input type="text" class="op-0" name="outDatetime" id="outDatetime">
@@ -50,15 +53,19 @@
             </div>
             <img src="../images/xyjt.png?__inline" class="more ">
         </div>
-    </form>
-
-    <div class="fs14 ba plr10 wp100 border fixft hig50 xxx">
-    	<div class="inline_block va">
-        	<span class="fs14 co9">合计:</span>
-       	    <span class="price fs13">¥</span>
-            <span class="price fs18" id="amount">--</span>
+        <div class="bg_fff plr10 mt10 pb10 b-tb-ed">
+            <div class="submit-textarea-wrap">
+                <div class="p_r wp100">
+                    <textarea class="submit-textarea" name="bookNote" id="bookNote" placeholder="有什么特殊要求，写在这里！"></textarea>
+                    <!-- <div class="placeholder-text" id="bookNotePlaceholder">有什么特殊要求，写在这里！</div> -->
+                </div>
+            </div>
         </div>
-    	<input type="button" id="sbtn" value="预定" class="release fs15 inline_block fr">
+    </form>
+    <div class="fix-b1">
+        <div class="croom-buy">
+            <input type="button" class="croom-buy-btn" id="sbtn" value="预定">
+        </div>
     </div>
 
     <link rel="import" href="../footer.html?__inline">

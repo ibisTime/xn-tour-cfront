@@ -1,6 +1,7 @@
 define([
-    'jquery'
-], function ($) {
+    'jquery',
+    'app/util/dialog'
+], function ($, dialog) {
     var tmpl = __inline("showInMap.html");
     var defaultOpt = {
         title: "地址",
@@ -13,7 +14,16 @@ define([
     function init(){
         $("head").append('<style>'+css+'</style>');
     }
-    
+    function _showMsg(msg, time) {
+        var d = dialog({
+            content: msg,
+            quickClose: true
+        });
+        d.show();
+        setTimeout(function() {
+            d.close().remove();
+        }, time || 1500);
+    }
     return {
         addMap: function (option) {
             option = option || {};
@@ -80,9 +90,15 @@ define([
                     map.enableScrollWheelZoom(true);
                     first = false;
                 }
+                var that = this;
                 map.clearOverlays();
                 function myFun() {
-                    var pp = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+                    var result = local.getResults().getPoi(0);
+                    if(!result){
+                        _showMsg("定位失败");
+                        return;
+                    }
+                    var pp = result.point; //获取第一个智能搜索的结果
                     var point = pp;
                     map.centerAndZoom(pp, 18);
                     map.addOverlay(new BMap.Marker(pp)); //添加标注

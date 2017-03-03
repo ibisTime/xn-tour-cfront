@@ -1,11 +1,11 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'iScroll',
     'app/module/foot/foot',
     'app/module/loading/loading',
-    'app/module/showImg/showImg'
-], function(base, Ajax, iScroll, Foot, loading, showImg) {
+    'app/module/showImg/showImg',
+    'app/module/scroll/scroll'
+], function(base, Ajax, Foot, loading, showImg, scroll) {
 
     var myScroll;
 
@@ -20,26 +20,42 @@ define([
         Foot.addFoot(3);
         $.when(
             getAccountList(),
-            getUser()
+            getUser(),
+            getTel()
         ).then(function () {
             loading.hideLoading();
         }, function () {
             loading.hideLoading();
         })
-        // getUser();
         initIScroll();
         addListener();
     }
 
-    function getAccountList() {
-        Ajax.get("802503", {
+    function getTel() {
+        return base.getSysConfig("telephone")
+            .then(function (res) {
+                if(res.success){
+                    var tel = res.data.note;
+                    $("#telephone")
+                        .html(  '<a class="show wp100" href="tel://'+tel+'">'+
+                                '<div class="default-icon-wrap fwrx-icon"></div>'+
+                                '服务热线：<span>400-832-0989</span>'+
+                                '<div class="st-jt"></div></a>');
+                }
+            })
+    }
+
+    function getAccountList(refresh) {
+        return Ajax.get("802503", {
             userId: base.getUserId()
-        }).then(function (res) {
+        }, !refresh).then(function (res) {
             if(res.success && res.data.length){
                 var data = res.data;
                 $.each(data, function (i, d) {
                     if(d.currency == "XNB")
                         $("#jfAmount").html(base.fZeroMoney(d.amount));
+                    else if(d.currency == "CNY")
+                        $("#amount").html("¥" + base.formatMoney(d.amount));
                 });
             }else{
                 res.msg && base.showMsg(res.msg);
@@ -50,38 +66,10 @@ define([
     }
 
     function initIScroll(){
-        var pullDownEl, pullDownOffset, $pullDownEl;
-
-        function pullDownAction () {
-            getUser(true);
-        }
-        $pullDownEl = $("#pullDown");
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = pullDownEl.offsetHeight;
-        
-        myScroll = new iScroll('wrapper', {
-            // scrollbarClass: 'myScrollbar', /* 重要样式 */
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function () {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
-            },
-            onScrollMove: function () {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                }
-            },
-            onScrollEnd: function () {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");           
-                    pullDownAction();
-                }
+        myScroll = scroll.getInstance().getOnlyUpScroll({
+            refresh: function () {
+                getUser(true);
+                getAccountList(true);
             }
         });
     }
@@ -93,10 +81,10 @@ define([
     }
 
     function getUser(refresh){
-        base.getUser(refresh)
+        return base.getUser(refresh)
             .then(function(res){
                 if(res.success){
-                    $("#jfAmount").html(res.data.ljAmount);
+                    // $("#jfAmount").html(res.data.ljAmount);
                     $("#nickname").html(res.data.nickname);
                     $("#avatar").attr("src", base.getWXAvatar(res.data.userExt.photo));
                 }

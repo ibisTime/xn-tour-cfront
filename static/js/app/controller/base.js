@@ -164,6 +164,11 @@ define([
                 parentKey: type
             });
         },
+        getSysConfig: function (key) {
+            return Ajax.get("807717", {
+                "ckey": key
+            });
+        },
         calculateSecurityLevel: function(password) {
             var strength_L = 0;
             var strength_M = 0;
@@ -445,6 +450,9 @@ define([
                     $iframe.off('load').remove();
                 }, 0);
             }).appendTo($('body'));
+        },
+        emptyFun: function () {
+            
         }
     };
     Base.addIcon();

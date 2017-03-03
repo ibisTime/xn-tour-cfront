@@ -1,11 +1,11 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'iScroll',
     'app/util/handlebarsHelpers',
     'app/module/loading/loading',
-    'app/util/dict'
-], function(base, Ajax, iScroll, Handlebars, loading, Dict) {
+    'app/util/dict',
+    'app/module/scroll/scroll'
+], function(base, Ajax, Handlebars, loading, Dict, scroll) {
 
     var myScroll, isEnd = false, isLoading = false;
     var travelTmpl = __inline("../../ui/travel-note-list.handlebars");
@@ -66,40 +66,13 @@ define([
     }
 
     function initIScroll(){
-        var pullDownEl, pullDownOffset, $pullDownEl;
-
-        function pullDownAction () {
-            getPageTravelNote(true);
-        }
-        $pullDownEl = $("#pullDown");
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = pullDownEl.offsetHeight;
-        
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function () {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
+        myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function () {
+                getPageTravelNote();
             },
-            onScrollMove: function () {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 120 < this.maxScrollY) {
-                    getPageTravelNote();
-                }
-            },
-            onScrollEnd: function () {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");
-                    isEnd = false;        
-                    pullDownAction();
-                }
+            refresh: function () {
+                isEnd = false;
+                getPageTravelNote(true);
             }
         });
     }

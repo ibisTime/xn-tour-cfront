@@ -1326,8 +1326,22 @@ label.error{
 }
 .order-list-top-nav1-item{
     float: left;
-    /*width: 25%;*/
     width: 90px;
+    text-align: center;
+    border-bottom: 1px solid #ededed;
+    border-right: 1px solid #ededed;
+}
+.collection-list-top-nav{
+    background-color: #fff;
+    color: #3e3e3e;
+    font-size: 15px;
+    height: 45px;
+    line-height: 44px;
+    width: 100%;
+}
+.collection-list-top-item{
+    float: left;
+    width: 25%;
     text-align: center;
     border-bottom: 1px solid #ededed;
     border-right: 1px solid #ededed;
@@ -1335,7 +1349,7 @@ label.error{
 .order-list-top-nav1 .order-list-top-nav1-item:last-child{
     border-right: none;
 }
-.order-list-top-nav1-item.active{
+.order-list-top-nav1-item.active, .collection-list-top-item.active{
     border-bottom: 2px solid #33c4b1;
     color: #06cdb8;
     height: 45px;
@@ -2595,6 +2609,42 @@ label.error{
 .hp165p{
     height: 165px;
 }
-
-
-
+.hp80p{
+    height: 80px;
+}
+.pr64{
+    padding-right: 64px;
+}
+.swiper-pagination-bullet{
+    background: transparent !important;
+    border: 1px solid #fff !important;
+}
+.swiper-pagination-bullet-active {
+    background: #ffc000 !important;
+    border: none !important;
+}
+.swiper-pagination-custom{
+    right: 13px;
+    bottom: 8px !important;
+    left: inherit !important;
+    padding-left: 20px;
+    background: url(../images/swiper.png?__inline) no-repeat left center;
+    width: initial !important;
+    color: #fff;
+    background-size: 13px;
+}
+.full-scroll-wrapper{
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    width: 100%;
+}
+.b-50i{
+    bottom: 50px !important;
+}
+.integral-scroll-wrapper{
+    position: absolute;
+    bottom: 0;
+    top: 50px;
+    width: 100%;
+}

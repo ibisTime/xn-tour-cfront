@@ -47,6 +47,8 @@ define([
         }).then(function(res){
             if(res.success){
                 var data = res.data;
+                data.isCollect == "1" ? $("#scjdIcon").addClass("active") : "";
+                data = data.food;
                 var pic = data.pic.split(/\|\|/), html = "";
                 $.each(pic, function(i, p){
                     html += '<div class="swiper-slide"><img class="wp100 center-img" src="' + base.getPic(p, pic_suffix) +'"></div>'
@@ -65,7 +67,6 @@ define([
                 });
                 $("#telephone")
                     .html('<a class="show c_78" href="tel://'+data.telephone+'">'+data.telephone+'<div class="st-jt"></div></a>');
-                data.isCollect == "1" ? $("#scjdIcon").addClass("active") : "";
             }else{
                 base.showMsg("加载失败");
             }
@@ -79,7 +80,11 @@ define([
             'autoplay': 4000,
             'autoplayDisableOnInteraction': false,
             'pagination': '.swiper-pagination',
-            'preventClicks': false
+            'preventClicks': false,
+            'paginationType' : 'custom',
+            'paginationCustomRender': function (swiper, current, total) {
+              return current + '/' + total;
+            }
         });
     }
 
@@ -115,6 +120,7 @@ define([
                         '</div>';
                     });
                     $("#content").append(html);
+                    myScroll.refresh();
                     start++;
                 }else{
                     if(start == 1){
@@ -126,12 +132,12 @@ define([
                 }
                 isLoading = false;
             }, function(){
+                base.hidePullUp();
                 if(start == 1){
                     $("#content").html( '<div class="item-error">暂无相关评论</div>' );
                     myScroll.refresh();
                     isEnd = true;
                 }
-                base.hidePullUp();
             });
         }
     }
@@ -149,9 +155,23 @@ define([
             loading.createLoading();
             collectFood();
         });
-        $("#swiper").on("click", ".swiper-slide .center-img", function(){
-            showImg.createImg($(this).attr("src")).showImg();
+
+        $("#swiper").on("touchstart", ".swiper-slide .center-img", function (e) {
+            var touches = e.originalEvent.targetTouches[0],
+                me = $(this);
+            me.data("x", touches.clientX);
         });
+        $("#swiper").on("touchend", ".swiper-slide .center-img", function (e) {
+            var me = $(this),
+                touches = e.originalEvent.changedTouches[0],
+                ex = touches.clientX,
+                xx = parseInt(me.data("x")) - ex;
+            if(Math.abs(xx) < 6){
+                showImg.createImg($(this).attr("src")).showImg();
+            }
+        });
+
+
         $("#addrDiv").on("click", function (e) {
             showInMap.showMap();
         });
@@ -171,7 +191,7 @@ define([
                     html = '<div class="plun-cont-item flex">'+
                         '<div class="plun-left">'+
                             '<div class="plun-left-wrap">'+
-                                '<img class="center-img wp100" src="'+base.getAvatar(userInfo.userExt && userInfo.userExt.photo)+'" />'+
+                                '<img class="center-img wp100" src="'+base.getWXAvatar(userInfo.userExt && userInfo.userExt.photo)+'" />'+
                             '</div>'+
                         '</div>'+
                         '<div class="plun-right">'+

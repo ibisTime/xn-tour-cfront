@@ -7,11 +7,20 @@ define([
 
 	init();
 	function init(){
-		// loading.createLoading();
         addListener();
-		
 	}
     function addListener() {
+        $.validator.setDefaults({
+            errorPlacement: function(error, element) {
+                if(element[0].id == "contact"){
+                    error.insertAfter(element);
+                }else{
+                    error.css({
+                        top: "8px"
+                    }).insertAfter(element.parent());
+                }
+            }
+        });
         $("#compForm").validate({
             'rules': {
                 contact: {
@@ -26,14 +35,7 @@ define([
                     maxlength: 255,
                     isNotFace: true
                 }
-            },
-            onkeyup: false
-        });
-        //
-        $("#tsContent, #fkContent").on('keyup', function(){
-            var _self = $(this);
-            var val = _self.val();
-            _self.siblings(".complain-tip")[val ? "hide": "show"]();
+            }
         });
         $("#submit").on("click", function(){
             if($("#compForm").valid()){
@@ -47,13 +49,15 @@ define([
                     json: data
                 }).then(function(res){
                     if(res.success){
-                        console.log("提交成功！")
                         base.showMsg("提交成功！");
-                        //history.back();
+                        setTimeout(function () {
+                            history.back();
+                        }, 500);
                     }else{
-                       base.showMsg("网络原因提交失败!");
-                          
+                       base.showMsg(res.msg);
                     }
+                }, function () {
+                    base.showMsg("信息提交失败");
                 });
             }
         });

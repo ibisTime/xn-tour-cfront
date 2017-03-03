@@ -1,10 +1,10 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'iScroll',
     'app/module/loading/loading',
-    'app/util/handlebarsHelpers'
-], function(base, Ajax, iScroll, loading, Handlebars) {
+    'app/util/handlebarsHelpers',
+    'app/module/scroll/scroll'
+], function(base, Ajax, loading, Handlebars, scroll) {
 
     var lineCode = base.getUrlParam('code'),
         start = 1, limit = 10, isEnd = false, isLoading = false;
@@ -38,7 +38,7 @@ define([
                         Handlebars.registerHelper('formatCategory', function(category, options){
                             return base.findObj(module, "code", category)["name"];
                         });
-                        $("#chosedCont").html(hotelTmpl({items: [res2.data]}));
+                        $("#chosedCont").html(hotelTmpl({items: [res2.data.hotal]}));
                     }else{
                         base.showMsg("加载失败");
                     }
@@ -86,48 +86,20 @@ define([
     }
 
     function initIScroll(){
-        var pullDownEl, pullDownOffset, $pullDownEl;
-
-        function pullDownAction () {
-            isEnd = false;
-            if(hotelCode){
-                getPageHotel(true);
-            }else{
-                getNormalPageHotel(true);
-            }
-        }
-        $pullDownEl = $("#pullDown");
-        pullDownEl = $pullDownEl[0];
-        pullDownOffset = 30 || pullDownEl.offsetHeight;
-        
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function () {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
+        myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function () {
+                if(hotelCode){
+                    getPageHotel();
+                }else{
+                    getNormalPageHotel();
                 }
             },
-            onScrollMove: function () {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 120 < this.maxScrollY) {
-                    // console.log("上拉加载更多");
-                    if(hotelCode){
-                        getPageHotel();
-                    }else{
-                        getNormalPageHotel();
-                    }
-                }
-            },
-            onScrollEnd: function () {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");           
-                    pullDownAction();
+            refresh: function () {
+                isEnd = false;
+                if(hotelCode){
+                    getPageHotel(true);
+                }else{
+                    getNormalPageHotel(true);
                 }
             }
         });

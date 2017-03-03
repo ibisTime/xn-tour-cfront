@@ -62,6 +62,9 @@ fis.media("prod")
         packTo: '/pkg/common.js',
         packOrder: -90
     })
+    .match('/js/app/controller/config.js', {
+        packTo: '/pkg/config.js'
+    })
     .match('/js/module/**', {
         requires: ['/js/require.js']
     })

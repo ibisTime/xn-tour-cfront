@@ -12,8 +12,8 @@ define([
         $("head").append('<style>'+css+'</style>');
     }
     function getContent(){
-        loading.createLoading("绑定中...");
-        Ajax.post(defaultOpt.bizType, {
+        loading.createLoading("");
+        return Ajax.post(defaultOpt.bizType, {
             json: defaultOpt.param
         }).then(function(res){
             loading.hideLoading();
@@ -22,10 +22,18 @@ define([
             }else{
                 defaultOpt.error && defaultOpt.error(res.msg);
             }
+            return res;
         }, function(){
             loading.hideLoading();
             defaultOpt.error && defaultOpt.error("内容获取失败");
         });
+    }
+    function _showCont() {
+        var wrap = $("#showContentWrap");
+        wrap.css("top", $(window).scrollTop()+"px");
+        wrap.show().animate({
+            left: 0
+        }, 200);  
     }
     var ShowContent = {
         addCont: function (option) {
@@ -35,16 +43,17 @@ define([
                 var temp = $(tmpl);
                 $("body").append(tmpl);
             }
+            var that = this;
             var wrap = $("#showContentWrap");
             defaultOpt.title && wrap.find(".right-left-cont-title-name").html(defaultOpt.title);
-            var that = this;
-            if(first){
-                wrap.find(".right-left-cont-title")
-                    .on("touchmove", function(e){
-                        e.preventDefault();
-                    });
-            }
-            first = false;
+            wrap.find(".right-left-cont-title")
+                .on("touchmove", function(e){
+                    e.preventDefault();
+                });
+            wrap.find(".right-left-cont-back")
+                .on("click", function () {
+                    that.hideCont();
+                })
             return this;
         },
         hasCont: function(){
@@ -54,11 +63,16 @@ define([
         },
         showCont: function (){
             if(this.hasCont()){
-                var wrap = $("#showContentWrap");
-                wrap.css("top", $(window).scrollTop()+"px");
-                wrap.show().animate({
-                    left: 0
-                }, 200);                
+                if(first){
+                    getContent()
+                        .then(function (res) {
+                            if(res.success)
+                                _showCont();
+                        })
+                }else{
+                    _showCont();
+                }
+                first = false;
             }
             return this;
         },

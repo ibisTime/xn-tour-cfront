@@ -6,66 +6,71 @@ define([
     'app/module/loading/loading',
     'app/util/dict'
 ], function(base, Ajax, iScroll, Handlebars, loading, Dict) {
-	var accountNumber;
+
 	var userId = base.getUserId();
+    var kind = base.getUrlParam("k") || 0;
 	
 	var myScroll, isEnd = false, isLoading = false, innerScroll;
 	
 	var integralTmpl = __inline("../../ui/integral.handlebars");
 	var config = {
-		accountNumber: accountNumber,
 		currency:"XNB",
         start: 1,
         limit: 15
     };
 	
 	var integralStatus = Dict.get("integralStatus");
+    var accountFlowStatus = Dict.get("accountFlowStatus");
 	
     init();
 
     function init() {
         initIScroll();
-        getInitData();
         Handlebars.registerHelper('formatintegralStatus', function(text, places, options){
-            return integralStatus[text];
+            return kind == 0 ? accountFlowStatus[text] : integralStatus[text];
         });
+        Handlebars.registerHelper('formatAmount', function(num, options){
+            if(kind == 1){
+                if (typeof num == 'undefined' || typeof num != 'number') {
+                    return 0;
+                }
+                num = +(num || 0) / 1000;
+                return num >0 ? "+" + num.toFixed(0) : num.toFixed(0);
+            }else{
+                if(!num && num !== 0)
+                    return "--";
+                num = +num;
+                return num >0 ? "+" + (num / 1000).toFixed(2) : (num / 1000).toFixed(2);
+            }
+        });
+        getInitData();
     }
    
     function getInitData(){
         
         loading.createLoading();
-        $.when(
-        	Ajax.get("802503",{"userId":userId}),
-        	getPageintegral(true)
-        ).then(function(res1,res2){
-        	if(res1.success){
-	        	accountNumber = res1.data[1].accountNumber;
-	        	
-	        	amount = res1.data[1].amount;
-	        	amount = amount/1000;
-	        	
-	        	$("#balance").html("积分余额："+amount);
-			   
-	        }else{
-	            base.showMsg(res.msg);
-	        }
-            loading.hideLoading();
-        })
-        Ajax.get("802520", {
-		"accountNumber": accountNumber,
-		"currency":"XNB",
-        start: 1,
-        limit: 15
-    }).then(function(res){
-        	if(res.success){
-			   
-	        }else{
-	            base.showMsg(res.msg);
-	        }
-            loading.hideLoading();
-        })
-        
-        
+        Ajax.get("802503",{"userId":userId})
+            .then(function(res1){
+            	if(res1.success){
+    	        	config.accountNumber = res1.data[1].accountNumber;
+                    var format = "fZeroMoney";
+    	        	if(kind == 0){
+                        config.currency = "CNY";
+                        format = "formatMoney";
+                    }
+                    getPageintegral(true);
+                    var amount = "--";
+                    $.each(res1.data, function (i, d) {
+                        if(d.currency == config.currency)
+                            amount = base[format](d.amount);
+                    })
+                    kind == 1 ? $("#balance").html("积分余额：" + amount):
+    	        	            $("#balance").html("账户余额：¥" + amount);
+    	        }else{
+    	            base.showMsg(res.msg);
+    	        }
+                loading.hideLoading();
+            });
     }
     
    

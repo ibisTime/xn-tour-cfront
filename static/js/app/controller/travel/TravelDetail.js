@@ -1,13 +1,13 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'iScroll',
     'swiper',
     'app/module/showImg/showImg',
     'app/module/loading/loading',
     'app/util/handlebarsHelpers',
-    'app/module/comment/comment'
-], function(base, Ajax, iScroll, Swiper, showImg, loading, Handlebars, comment) {
+    'app/module/comment/comment',
+    'app/module/scroll/scroll'
+], function(base, Ajax, Swiper, showImg, loading, Handlebars, comment, scroll) {
 
     var travelCode = base.getUrlParam('code'),
         pic_suffix = '?imageMogr2/auto-orient/thumbnail/!375x180r',
@@ -29,9 +29,9 @@ define([
                     lineInfo[travelCode].hotelName && $("#tjjdCont").html(lineInfo[travelCode].hotelName);
                 }
             }
+            initIScroll();
             getInitData();
             addListener();
-            initIScroll();
         }else{
             base.showMsg("为传入线路编号");
         }
@@ -44,20 +44,20 @@ define([
             getPageYJ(),
             getPageComment()
         ).then(function(){
+            myScroll.refresh();
             loading.hideLoading();
         }, function(){
+            myScroll.refresh();
             loading.hideLoading();
         });
     }
 
     function initIScroll(){
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            onScrollMove: function () {
-                if (this.y - 120 < this.maxScrollY) {
-                    getPageComment();
-                }
-            }
+        myScroll = scroll.getInstance().getOnlyDownScroll({
+            loadMore: function () {
+                getPageComment();
+            },
+            pullDownEl: "#pullUp"
         });
     }
 
@@ -100,7 +100,11 @@ define([
             'autoplay': 4000,
             'autoplayDisableOnInteraction': false,
             'pagination': '.swiper-pagination',
-            'preventClicks': false
+            'preventClicks': false,
+            'paginationType' : 'custom',
+            'paginationCustomRender': function (swiper, current, total) {
+              return current + '/' + total;
+            }
         });
     }
     function getPageGL(){
@@ -190,9 +194,24 @@ define([
     }
 
     function addListener() {
-        $("#swiper").on("click", ".swiper-slide .center-img", function(){
-            showImg.createImg($(this).attr("src")).showImg();
+        $("#swiper").on("touchstart", ".swiper-slide .center-img", function (e) {
+            var touches = e.originalEvent.targetTouches[0],
+                me = $(this);
+            me.data("x", touches.clientX);
         });
+        $("#swiper").on("touchend", ".swiper-slide .center-img", function (e) {
+            var me = $(this),
+                touches = e.originalEvent.changedTouches[0],
+                ex = touches.clientX,
+                xx = parseInt(me.data("x")) - ex;
+            if(Math.abs(xx) < 6){
+                showImg.createImg($(this).attr("src")).showImg();
+            }
+        });
+        $("#swiper").on("touchstart", ".swiper-slide .center-img", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        })
         $("#writePlIcon").on("click", function (e) {
             if(!base.isLogin()){
                 base.goLogin();
@@ -208,7 +227,7 @@ define([
                     html = '<div class="plun-cont-item flex">'+
                         '<div class="plun-left">'+
                             '<div class="plun-left-wrap">'+
-                                '<img class="center-img wp100" src="'+base.getAvatar(userInfo.userExt && userInfo.userExt.photo)+'" />'+
+                                '<img class="center-img wp100" src="'+base.getWXAvatar(userInfo.userExt && userInfo.userExt.photo)+'" />'+
                             '</div>'+
                         '</div>'+
                         '<div class="plun-right">'+
@@ -235,6 +254,7 @@ define([
                 .end().addClass("active");
             $(".tr-center-cont.active").removeClass("active");
             $("#content" + idx).addClass("active");
+            myScroll.refresh();
         });
         $("#kefuIcon").on("click", function (e) {
             location.href = "http://kefu.easemob.com/webim/im.html?tenantId=" + TENANTID;

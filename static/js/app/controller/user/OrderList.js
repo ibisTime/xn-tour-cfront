@@ -2,10 +2,10 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/module/loading/loading',
-    'iScroll',
     'app/util/dialog',
-    'app/util/dict'
-], function(base, Ajax, loading, iScroll, dialog, Dict) {
+    'app/util/dict',
+    'app/module/scroll/scroll'
+], function(base, Ajax, loading, dialog, Dict, scroll) {
 
     var myScroll, navScroll,
         hotelOrderStatus = Dict.get("hotelOrderStatus"),
@@ -19,14 +19,16 @@ define([
     var hhType = {},
         specialModule = {},
         pageFirst = true;
-        /*全部、待支付、已支付、退款*/
+    /*全部、待支付、已支付、退款*/
     var statusList = [
         ["", "0", "1", "2"],
         ["", "0", "1", "2"],
         ["", "0", "1", "2"],
         ["", "0", "1", "2"],
         ["", "0", "1", "2"],
-        [[""], [0,1,2], [3]],
+        [null, [0, 1, 2, 97],
+            [3]
+        ],
     ];
     var config = {
             "0": {
@@ -45,25 +47,25 @@ define([
                 start: 1,
                 limit: 10,
                 status: "",
-                userId: base.getUserId()
+                applyUser: base.getUserId()
             },
             "3": {
                 start: 1,
                 limit: 10,
                 status: "",
-                userId: base.getUserId()
+                applyUser: base.getUserId()
             },
             "4": {
                 start: 1,
                 limit: 10,
                 status: "",
-                userId: base.getUserId()
+                booker: base.getUserId()
             },
             "5": {
                 start: 1,
                 limit: 10,
-                statusList: [],
-                userId: base.getUserId()
+                statusList: null,
+                applyUser: base.getUserId()
             }
         },
         config1 = {
@@ -81,7 +83,7 @@ define([
             isEnd5: false,
             isLoading: false
         };
-    
+
 
     init();
 
@@ -95,72 +97,52 @@ define([
     }
 
     function initIScroll() {
-        navScroll = new iScroll('navWrap', {
-            scrollX: true,
-            scrollY: false,
-            eventPassthrough: true,
-            snap: true,
-            hideScrollbar: true,
-            hScrollbar: false,
-            vScrollbar: false
+
+        navScroll = scroll.getInstance().getScrollByParam({
+            id: 'navWrap',
+            param: {
+                scrollX: true,
+                scrollY: false,
+                eventPassthrough: true,
+                snap: true,
+                hideScrollbar: true,
+                hScrollbar: false,
+                vScrollbar: false
+            }
         });
 
-        var pullDownEl, pullDownOffset, $pullDownEl;
 
-        function pullDownAction() {
-            if (index == 1)
-                getPageLineOrderList(true);
-            else if (index == 2)
-                getPageHotelOrderList(true);
-            else if (index == 3)
-                getPageSpecialLineOrderList(true);
-            else if(index == 4)
-                getPageBusOrderList(true);
-            else if(index == 5)
-                getPageCarpoolOrderList(true);
-            else if (index == 0)
-                getPageMallOrderList(true);
-        }
-        $pullDownEl = $("#pullDown");
-        pullDownEl = $pullDownEl[0];
-        // $pullUpEl = $("#pullUp");
-        pullDownOffset = pullDownEl.offsetHeight;
-
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            topOffset: pullDownOffset,
-            onRefresh: function() {
-                if ($pullDownEl.hasClass('scroll-loading')) {
-                    $pullDownEl.removeClass('scroll-loading flip');
-                }
-            },
-            onScrollMove: function() {
-                if (this.y > 5 && !$pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("flip");
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && $pullDownEl.hasClass("flip")) {
-                    $pullDownEl.removeClass("flip");
-                    this.minScrollY = -pullDownOffset;
-                } else if (this.y - 120 < this.maxScrollY && !config1["isEnd" + index]) {
+        myScroll = scroll.getInstance().getNormalScroll({
+            loadMore: function() {
+                if (!config1["isEnd" + index]) {
                     if (index == 1)
                         getPageLineOrderList();
                     else if (index == 2)
                         getPageHotelOrderList();
-                    else if(index == 3)
+                    else if (index == 3)
                         getPageSpecialLineOrderList();
-                    else if(index == 4)
+                    else if (index == 4)
                         getPageBusOrderList();
-                    else if(index == 5)
+                    else if (index == 5)
                         getPageCarpoolOrderList();
                     else if (index == 0)
                         getPageMallOrderList();
                 }
             },
-            onScrollEnd: function() {
-                if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");
-                    pullDownAction();
-                }
+            refresh: function() {
+                config1["isEnd" + index].isEnd = false;
+                if (index == 1)
+                    getPageLineOrderList(true);
+                else if (index == 2)
+                    getPageHotelOrderList(true);
+                else if (index == 3)
+                    getPageSpecialLineOrderList(true);
+                else if (index == 4)
+                    getPageBusOrderList(true);
+                else if (index == 5)
+                    getPageCarpoolOrderList(true);
+                else if (index == 0)
+                    getPageMallOrderList(true);
             }
         });
     }
@@ -176,9 +158,9 @@ define([
                 .end().find(".order-list-content" + idx).removeClass("hidden");
             index = idx;
             var idx1;
-            if(index != 5){
+            if (index != 5) {
                 idx1 = getIndexByStatus(config[idx].status);
-            }else{
+            } else {
                 idx1 = getIndexByStatusList(config["5"])
             }
             pageFirst = false;
@@ -195,11 +177,11 @@ define([
                 getSDict().then(getPageSpecialLineOrderList);
             else if (idx == 4 && config1.first4)
                 getPageBusOrderList();
-            else if (idx == 5 && config1.first5){
+            else if (idx == 5) {
                 $("#top-tk").hide();
-                getPageCarpoolOrderList();
-            }
-            else if (idx == 0 && config1.first5)
+                if (config1.first5)
+                    getPageCarpoolOrderList();
+            } else if (idx == 0 && config1.first5)
                 getPageMallOrderList();
             myScroll.refresh();
         });
@@ -211,7 +193,7 @@ define([
             var idx = $(".order-list-top-nav1").find(".order-list-top-nav1-item.active").index();
             index = idx;
             config[idx].start = 1;
-            if(index != 5)
+            if (index != 5)
                 config[idx].status = getStatusByIndex(idx1);
             else
                 config[idx].statusList = getStatusByIndex(idx1);
@@ -263,53 +245,60 @@ define([
             var code = $(this).closest("[data-code]").attr("data-code");
             location.href = "../pay/pay.html?code=" + code + "&type=5";
         });
+
         //酒店取消订单
         $("#content").on("click", ".order-list-content2 .od-cancel-order", function() {
-            showCancelOrTKModal.call(this, cancelHotelOrder);
-        });
-        //线路取消订单
-        $("#content").on("click", ".order-list-content1 .od-cancel-order", function() {
-            showCancelOrTKModal.call(this, cancelLineOrder);
-        });
-        //专线取消订单
-        $("#content").on("click", ".order-list-content3 .od-cancel-order", function() {
-            showCancelOrTKModal.call(this, cancelSpecialLineOrder);
+            // showTKModal.call(this, cancelHotelOrder);
+            cancelHotelOrder($(this).closest("[data-code]").attr("data-code"));
         });
         //大巴取消订单
         $("#content").on("click", ".order-list-content4 .od-cancel-order", function() {
-            showCancelOrTKModal.call(this, cancelBusOrder);
+            // showTKModal.call(this, cancelBusOrder);
+            cancelBusOrder($(this).closest("[data-code]").attr("data-code"));
         });
         //拼车取消订单
         $("#content").on("click", ".order-list-content5 .od-cancel-order", function() {
-            showCancelOrTKModal.call(this, cancelCarpoolOrder);
+            // showTKModal.call(this, cancelCarpoolOrder);
+            cancelCarpoolOrder($(this).closest("[data-code]").attr("data-code"));
+        });
+        //专线取消订单
+        $("#content").on("click", ".order-list-content3 .od-cancel-order", function() {
+            // showTKModal.call(this, cancelSpecialLineOrder);
+            cancelSpecialLineOrder($(this).closest("[data-code]").attr("data-code"));
+        });
+        //线路取消订单
+        $("#content").on("click", ".order-list-content1 .od-cancel-order", function() {
+            // showTKModal.call(this, cancelLineOrder);
+            cancelLineOrder($(this).closest("[data-code]").attr("data-code"));
         });
         //商品取消订单
         $("#content").on("click", ".order-list-content0 .od-cancel-order", function() {
-            showCancelOrTKModal.call(this, cancelMallOrder);
+            // showTKModal.call(this, cancelMallOrder);
+            cancelMallOrder($(this).closest("[data-code]").attr("data-code"));
         });
         //酒店退款
         $("#content").on("click", ".order-list-content2 .od-tuik-btn", function() {
-            showCancelOrTKModal.call(this, cancelHotelOrder, 1);
-        });
-        //线路退款
-        $("#content").on("click", ".order-list-content1 .od-tuik-btn", function() {
-            showCancelOrTKModal.call(this, cancelLineOrder, 1);
-        });
-        //专线退款
-        $("#content").on("click", ".order-list-content3 .od-tuik-btn", function() {
-            showCancelOrTKModal.call(this, cancelSpecialLineOrder, 1);
+            showTKModal.call(this, TKHotelOrder);
         });
         //大巴退款
         $("#content").on("click", ".order-list-content4 .od-tuik-btn", function() {
-            showCancelOrTKModal.call(this, cancelBusOrder, 1);
+            showTKModal.call(this, TKBusOrder);
+        });
+        //专线退款
+        $("#content").on("click", ".order-list-content3 .od-tuik-btn", function() {
+            showTKModal.call(this, TKSpecialLineOrder);
+        });
+        //线路退款
+        $("#content").on("click", ".order-list-content1 .od-tuik-btn", function() {
+            showTKModal.call(this, TKLineOrder);
         });
         //拼车退款
         $("#content").on("click", ".order-list-content5 .od-tuik-btn", function() {
-            showCancelOrTKModal.call(this, cancelCarpoolOrder, 1);
+            showTKModal.call(this, cancelCarpoolOrder);
         });
         //商品退款
         $("#content").on("click", ".order-list-content0 .od-tuik-btn", function() {
-            showCancelOrTKModal.call(this, tuikMallOrder, 1);
+            showTKModal.call(this, tuikMallOrder);
         });
     }
     //酒店数据字典
@@ -346,32 +335,48 @@ define([
             });
     }
     //取消酒店订单
-    function cancelHotelOrder(code, remark) {
-        cancelOrder("618043", code, remark, getPageHotelOrderList);
+    function cancelHotelOrder(code) {
+        cancelOrder("618041", code, getPageHotelOrderList);
     }
-    //取消线路订单
-    function cancelLineOrder(code, remark) {
-        cancelOrder("618142", code, remark, getPageLineOrderList);
-    }
-    //取消专线订单
-    function cancelSpecialLineOrder(code, remark) {
-        cancelOrder("618183", code, remark, getPageSpecialLineOrderList);
+    //酒店订单退款
+    function TKHotelOrder(code, remark) {
+        TKOrder("618045", code, remark, getPageHotelOrderList);
     }
     // 取消大巴订单
-    function cancelBusOrder(code, remark){
-        cancelOrder("618213", code, remark, getPageBusOrderList);
+    function cancelBusOrder(code) {
+        cancelOrder("618211", code, getPageBusOrderList);
     }
-    // 取消商品订单
-    function cancelMallOrder(code, remark){
-        cancelOrder("618455", code, remark, getPageMallOrderList);
+    //大巴订单退款
+    function TKBusOrder(code, remark) {
+        TKOrder("618215", code, remark, getPageBusOrderList);
     }
     // 取消拼车订单
-    function cancelCarpoolOrder(code, remark){
-        cancelOrder("618243", code, remark, getPageCarpoolOrderList);
+    function cancelCarpoolOrder(code) {
+        cancelOrder("618243", code, getPageCarpoolOrderList);
+    }
+    //取消专线订单
+    function cancelSpecialLineOrder(code) {
+        cancelOrder("618181", code, getPageSpecialLineOrderList);
+    }
+    //专线订单退款
+    function TKSpecialLineOrder(code, remark) {
+        TKOrder("618185", code, remark, getPageSpecialLineOrderList);
+    }
+    //取消线路订单
+    function cancelLineOrder(code) {
+        cancelOrder("618141", code, getPageLineOrderList);
+    }
+    // 线路订单退款
+    function TKLineOrder(code, remark) {
+        TKOrder("618145", code, remark, getPageLineOrderList);
+    }
+    // 取消商品订单
+    function cancelMallOrder(code) {
+        cancelOrder("618452", code, getPageMallOrderList);
     }
     // 商品退款
     function tuikMallOrder(code, remark) {
-        cancelOrder("618461", code, remark, getPageMallOrderList);
+        TKOrder("618456", code, remark, getPageMallOrderList);
     }
     //分页查询酒店订单
     function getPageHotelOrderList(refresh) {
@@ -401,10 +406,10 @@ define([
                                 '<div class="order-list-item-center item">' +
                                 '<a href="./order-hotel-detail.html?code=' + d.code + '" class="wp100 show">' +
                                 '<div class="item-c-div item-l">' +
-                                '<img class="center-img" src="' + base.getImg(d.hotal.pic1) + '"/>' +
+                                '<img class="center-img" src="' + base.getImg(d.pic1 || "") + '"/>' +
                                 '</div>' +
                                 '<div class="item-c">' +
-                                '<div class="item-c-top t_norwrap pr50">' + d.hotal.name + '</div>' +
+                                '<div class="item-c-top t_norwrap pr50">' + d.name + '</div>' +
                                 '<div class="item-c-center t_bbb t_norwrap">' + hhType[d.roomType] + '</div>' +
                                 '<div class="item-c-center t_bbb item-c-ctr">' + base.formatDate(d.startDate, 'MM月dd号') +
                                 ' - ' + base.formatDate(d.endDate, 'MM月dd号') + '<span class="pl4">' +
@@ -614,8 +619,7 @@ define([
                         }
                         var html = "";
                         $.each(data, function(i, d) {
-                            var price;
-                            
+
                             html += '<div class="order-list-item" data-code="' + d.code + '">' +
                                 '<div class="order-list-item-top">' +
                                 '<span class="order-list-item-top-left fl">' + d.code + '</span>' +
@@ -624,15 +628,15 @@ define([
                                 '<div class="order-list-item-center item">' +
                                 '<a href="./order-carpool-detail.html?code=' + d.code + '" class="wp100 show">' +
                                 '<div class="item-c pl0_i flex flex-dv flex-jb">' +
-                                '<div class="item-c-top t_norwrap pr50">上车地点：' + d.carpool.startSite + '</div>' +
-                                '<div class="item-c-center t_norwrap pr50">下车地点：' + d.carpool.endSite + '</div>' +
+                                '<div class="item-c-top t_norwrap pr64">上车地点：' + d.carpool.startSite + '</div>' +
+                                '<div class="item-c-center t_norwrap pr64">下车地点：' + d.carpool.endSite + '</div>' +
                                 '<div class="item-c-center t_bbb item-c-ctr c_f64444">发车时间：' + base.formatDate(d.carpool.outDatetime, 'yyyy-MM-dd hh:mm') + '</span></div>' +
                                 '<div class="item-c-center t_bbb t_norwrap">拼车人数：' + d.carpool.totalNum + '人</div>' +
-                                '<div class="y-big1 p-a-r-b">¥' + base.formatMoney(d.price) + '</div>' +
+                                '<div class="y-big1 p-a-r-b">¥' + base.formatMoney(d.carpool.curPrice) + '</div>' +
                                 '<div class="order-status">' + carpoolStatus[d.status] + '</div>' +
                                 '</div>' +
                                 '</a></div>';
-                            if (d.status == "0" || d.status == "1" || d.status == "2") {
+                            if (d.status == "0" || d.status == "1" || d.status == "2" || d.status == "97") {
                                 html += '<div class="order-oper-btns">' +
                                     '<input type="button" class="fr mlr10 item-order-btn item-pay-btn" value="付款"/>' +
                                     '<input type="button" class="fr ml10 item-order-btn od-cancel-order" value="取消订单"/>' +
@@ -690,15 +694,15 @@ define([
                                 '</div>' +
                                 '<div class="order-list-item-center item">' +
                                 '<a href="./order-mall-detail.html?code=' + d.code + '" class="wp100 show">' +
-                                    '<div class="item-c-div item-l">'+
-                                        '<img class="cente" src="'+base.getImg(d.productOrderList[0].advPic)+'"/>'+
-                                    '</div>'+
-                                    '<div class="item-c flex flex-dv flex-jb">' +
-                                        '<div class="item-c-top1 pb0_i t_norwrap pr50">' + d.productOrderList[0].productName + '</div>' +
-                                        '<div class="item-c-center t_norwrap pr50">x' + d.productOrderList[0].quantity + '</div>' +
-                                        '<div class="y-big1 fs14">'+ base.fZeroMoney(d.amount1) +'积分</div>'+
-                                        '<div class="order-status order-step-pay">' + commodityStatus[d.status] + '</div>' +
-                                    '</div>' +
+                                '<div class="item-c-div item-l">' +
+                                '<img class="cente" src="' + base.getImg(d.productOrderList[0].advPic) + '"/>' +
+                                '</div>' +
+                                '<div class="item-c flex flex-dv flex-jb">' +
+                                '<div class="item-c-top1 pb0_i t_norwrap pr50">' + d.productOrderList[0].productName + '</div>' +
+                                '<div class="item-c-center t_norwrap pr50">x' + d.productOrderList[0].quantity + '</div>' +
+                                '<div class="y-big1 fs14">' + base.fZeroMoney(d.amount1) + '积分</div>' +
+                                '<div class="order-status order-step-pay">' + commodityStatus[d.status] + '</div>' +
+                                '</div>' +
                                 '</a></div>';
                             if (d.status == "0") {
                                 html += '<div class="order-oper-btns">' +
@@ -759,7 +763,7 @@ define([
                             html += '<div class="order-list-item" data-code="' + d.code + '">' +
                                 '<div class="order-list-item-top">' +
                                 '<span class="order-list-item-top-left fl">' + d.code + '</span>' +
-                                '<span class="order-list-item-top-right fr">' + base.formatDate(d.applyDatetime, "yyyy-MM-dd") + '</span>' +
+                                '<span class="order-list-item-top-right fr">' + base.formatDate(d.bookDatetime, "yyyy-MM-dd") + '</span>' +
                                 '</div>' +
                                 '<div class="order-list-item-center item">' +
                                 '<a href="./order-bus-detail.html?code=' + d.code + '" class="wp100 show">' +
@@ -768,7 +772,7 @@ define([
                                 '<div class="item-c-center t_norwrap pr50">下车地点：' + d.endSite + '</div>' +
                                 '<div class="item-c-center t_bbb item-c-ctr c_f64444">发车时间：' + base.formatDate(d.outDatetime, 'yyyy-MM-dd hh:mm') + '</span></div>' +
                                 '<div class="item-c-center t_bbb t_norwrap">人数：' + d.totalNum + '人</div>' +
-                                '<div class="y-big1 p-a-r-b">¥' + base.formatMoney(d.price) + '</div>' +
+                                '<div class="y-big1 p-a-r-b">¥' + base.formatMoney(d.distancePrice) + '</div>' +
                                 '<div class="order-status">' + busStatus[d.status] + '</div>' +
                                 '</div>' +
                                 '</a></div>';
@@ -811,10 +815,11 @@ define([
     function getStatusByIndex(idx) {
         return statusList[index][idx];
     }
+
     function getIndexByStatusList(statusList) {
-        if(statusList.length == 3){
+        if (statusList.length == 3) {
             return 1;
-        }else if(statusList[0] == 3){
+        } else if (statusList[0] == 3) {
             return 2;
         }
         return 0;
@@ -823,19 +828,19 @@ define([
     function getIndexByStatus(status) {
         var list = statusList[index];
         var idx = 0;
-        for(var i = 0; i < list.length; i++){
-            if(list[i] == status){
+        for (var i = 0; i < list.length; i++) {
+            if (list[i] == status) {
                 idx = i;
                 break;
             }
         }
         return idx;
     }
-    //显示取消订单弹框
-    function showCancelOrTKModal(success, type) {
-        var str1 = type ? "请填写退款理由" : "请填写取消理由",
-            str2 = type ? "退款理由中包含非法字符" : "取消理由中包含非法字符",
-            title = type ? "退款申请" : "取消订单";
+    //显示退款弹框
+    function showTKModal(success) {
+        var str1 = "请填写退款理由",
+            str2 = "退款理由中包含非法字符",
+            title = "退款申请";
 
         var code = $(this).closest("[data-code]").attr("data-code");
         var d = dialog({
@@ -864,14 +869,38 @@ define([
         });
         d.showModal();
     }
-    //取消订单、退款
-    function cancelOrder(bizType, code, remark, success) {
+    //取消订单
+    function cancelOrder(bizType, code, success) {
+        base.confirm("确定取消订单吗？")
+            .then(function() {
+                loading.createLoading("提交申请中...");
+                Ajax.post(bizType, {
+                    json: {
+                        orderCodeList: [code]
+                    }
+                }).then(function(res) {
+                    if (res.success) {
+                        base.showMsg("申请提交成功");
+                        loading.createLoading();
+                        success(true);
+                    } else {
+                        loading.hideLoading();
+                        base.showMsg(res.msg || "申请失败");
+                    }
+                }, function() {
+                    loading.hideLoading();
+                    base.showMsg("申请失败");
+                });
+            }, base.emptyFun);
+    }
+    //退款
+    function TKOrder(bizType, code, remark, success) {
         loading.createLoading("提交申请中...");
         Ajax.post(bizType, {
             json: {
                 code: code,
-                orderCode: code,
                 remark: remark,
+                updater: base.getUserId(),
                 userId: base.getUserId()
             }
         }).then(function(res) {

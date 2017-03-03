@@ -29,7 +29,7 @@ define([
                 endSite = res.data.endSite;
                 outDatetime = res.data.outDatetime;
                 takePartNum = res.data.takePartNum;
-                amount = res.data.totalPrice;
+                amount = res.data.nextPrice;
                 $("#startSite").html(startSite);
                 $("#endSite").html(endSite);
                 $("#outDatetime").html(base.formatDate(outDatetime, "yyyy-MM-dd hh:mm"));

@@ -57,10 +57,10 @@
 	top: 104px;
 	left: 0;
 	width: 100%;
-	bottom: 70px;
+	bottom: 50px;
 }
 .show-search-special-button{
-	padding: 13px 10px 16px;
+	padding: 5px 10px;
 	width: 100%;
 	position: absolute;
 	bottom: 0;
