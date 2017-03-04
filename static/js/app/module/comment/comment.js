@@ -47,15 +47,15 @@ define([
         $("#publishPl").on("click", function (e) {
             var cont = $("#plunCont").val();
             if(!cont || cont.trim() == ""){
-                // $err1.hide();
-                // $err2.show();
                 _showMsg("评论不能为空");
                 return;
             }
             if(!_isNotFace(cont)){
-                // $err1.show();
-                // $err2.hide();
                 _showMsg("评论不能包含特殊字符");
+                return;
+            }
+            if(cont.length > 255){
+                _showMsg("评论字数不能超过255");
                 return;
             }
             defaultOpt.content = cont;
@@ -63,13 +63,6 @@ define([
             _publishPl();
         });
         var $tip = $(".fbplun-cont-area-tip");
-        // $("#plunCont").on("keyup", function(){
-        //     var _self = $(this), val = _self.val();
-        //     if(val) 
-        //         $tip.hide();
-        //     else 
-        //         $tip.show();
-        // });
     }
     function _showMsg(msg, time) {
         var d = dialog({

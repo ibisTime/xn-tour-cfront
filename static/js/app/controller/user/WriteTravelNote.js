@@ -14,6 +14,7 @@ define([
     init();
 
     function init() {
+        loading.createLoading();
         if(!base.isLogin()){
             base.goLogin();
             return;
@@ -26,7 +27,7 @@ define([
     function getListTravelOrder(){
         Ajax.get("618151", {
             userId: base.getUserId(),
-            status: 5
+            status: 4
         }).then(function(res){
             loading.hideLoading();
             if(res.success && res.data.length){
@@ -79,7 +80,7 @@ define([
                             (function(imgCtn, id){
                                 imgCtn.find('.w-travel-close-wrap').on('click', function (e) {
                                     up.removeFile(file);
-                                    if(showImgContainer.find("w-travel-close-wrap").length == 1){
+                                    if(showImgContainer.find(".w-travel-close-wrap").length == 1){
                                         showImgContainer.hide();
                                     }
                                     var key = $("#" + id).find(".center-img").attr("data-src");

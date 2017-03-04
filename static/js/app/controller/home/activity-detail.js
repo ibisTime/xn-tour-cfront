@@ -16,7 +16,7 @@ define([
 			.then(function(res){
 				if(res.success){
 					var name = res.data.name;
-					var actDate = "活动日期："+base.formatDate(res.data.startDate,"yyyy-MM-dd") + " 至 " + base.formatDate(res.data.endDate,"yyyy-MM-dd");
+					var actDate = "活动日期："+base.formatDate(res.data.startDate,"yyyy-MM-dd hh:mm") + " 至 " + base.formatDate(res.data.endDate,"yyyy-MM-dd hh:mm");
 					var description = res.data.description;
 					
 					$("#name").html(name)

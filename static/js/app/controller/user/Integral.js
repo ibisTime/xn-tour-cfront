@@ -50,9 +50,9 @@ define([
         
         loading.createLoading();
         Ajax.get("802503",{"userId":userId})
-            .then(function(res1){
-            	if(res1.success){
-    	        	config.accountNumber = res1.data[1].accountNumber;
+            .then(function(res){
+            	if(res.success){
+    	        	config.accountNumber = res.data[1].accountNumber;
                     var format = "fZeroMoney";
     	        	if(kind == 0){
                         config.currency = "CNY";
@@ -60,7 +60,7 @@ define([
                     }
                     getPageintegral(true);
                     var amount = "--";
-                    $.each(res1.data, function (i, d) {
+                    $.each(res.data, function (i, d) {
                         if(d.currency == config.currency)
                             amount = base[format](d.amount);
                     })

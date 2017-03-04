@@ -37,7 +37,8 @@ define([
             area: "",
             longitude: "",
             latitude: "",
-            status: "1"
+            status: "1",
+            location: "2"
         },
         food: {
             start: 1,
@@ -48,7 +49,8 @@ define([
             area: "",
             longitude: "",
             latitude: "",
-            status: "1"
+            status: "1",
+            location: "2"
         }
     };
     var config1 = {

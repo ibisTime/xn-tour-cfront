@@ -22,6 +22,9 @@ define([
     init();
 
     function init() {
+        if(!base.isLogin()){
+            base.goLogin();
+        }
         loading.createLoading();
         $.when(
             base.getDictList("zero_type"),
@@ -136,6 +139,10 @@ define([
             }
         });
         $("#search").on("click", function(){
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             if(specialForm.valid()){
                 $("#startArea").parent().show();
                 var data = specialForm.serializeObject();

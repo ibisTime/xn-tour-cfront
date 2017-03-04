@@ -169,16 +169,12 @@ margin-right: 10px;color:#ffffff;}
 	overflow: hidden;
 }
 .activityList p{
-	width: calc(100% - 100px);
-	width: -webkit-calc(100% - 100px);
-	width: -moz-calc(100% - 100px);
+	width: 100%;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
 .activityList samp{
-	display: inline-block;
-	width: 100px;
 	text-align: right;
 }
 

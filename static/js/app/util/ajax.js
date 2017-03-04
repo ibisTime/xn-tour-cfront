@@ -99,7 +99,6 @@ define(["jquery"], function($) {
             return cache[cache_url].then(function(res) {
                 if (res.errorCode == "4") {
                     clearSessionUser();
-                    base.showMsg("登录超时");
                     location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
                 }
                 var result = {};

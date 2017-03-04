@@ -41,7 +41,34 @@ define([
             $("#content").hide();
             $("#content1").show();
         }
-        getCont();
+        $.when(
+            getAccount(),
+            getCont()
+        ).then(function () {
+            loading.hideLoading();
+        }, function () {
+            loading.hideLoading();
+        })
+    }
+
+    function getAccount() {
+        return Ajax.get("802503", {
+            userId: base.getUserId()
+        }).then(function (res) {
+            if(res.success && res.data.length){
+                var data = res.data;
+                $.each(data, function (i, d) {
+                    if(d.currency == "XNB")
+                        $("#XNBAmount").html(base.fZeroMoney(d.amount));
+                    else if(d.currency == "CNY")
+                        $("#CNYAmount").html(base.formatMoney(d.amount));
+                });
+            }else{
+                res.msg && base.showMsg(res.msg);
+            }
+        }, function () {
+            base.showMsg("账号信息获取失败");
+        });
     }
 
     function addListener() {
@@ -54,20 +81,21 @@ define([
         });
         $("#payBtn").on("click", function() {
             if (type != 5) {
-                if (choseIdx == 0) {
+                if (choseIdx == 1) {
                     // 微信支付
                     wxPayOrder();
-                } else {
-                    // 支付宝支付
+                } else if(choseIdx == 0){
+                    // 余额支付
+                    payOrder();
                 }
             } else {
                 //商品支付
-                payMall();
+                payOrder();
             }
         });
     }
 
-    function payMall() {
+    function payOrder() {
         loading.createLoading("支付中...");
 
         Ajax.post(payBizType, {
@@ -92,12 +120,10 @@ define([
     }
 
     function getCont() {
-        loading.createLoading("加载中...");
-        Ajax.get(bizType, {
+        return Ajax.get(bizType, {
                 code: code
             })
             .then(function(res) {
-                loading.hideLoading();
                 if (res.success) {
                     // 0:酒店 1:线路 2:专线 3:大巴 4:拼车 5:商品
                     var price = type == 0 ? res.data.hotalOrder.amount :
@@ -113,12 +139,6 @@ define([
                     }
                     
                     if(type == 4){
-                        /*
-                            "0": "待支付定金",
-                            "1": "已支付定金",
-                            "2": "待支付尾款",
-                            "3": "已支付尾款",
-                            "97": "待支付定金"*/
                         if(res.data.status == "0" || res.data.status == "97"){
                             $("#payBtn").val("支付定金");
                             $("#price").html(base.formatMoney(res.data.firstAmount));

@@ -56,6 +56,10 @@ define([
         });
 
         $("#startSiteWrap").on("click", function (e) {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
         	searchMap.showMap({
         		point: startSite.point,
         		text: startSite.name,
@@ -69,6 +73,10 @@ define([
         	});
         });
         $("#endSiteWrap").on("click", function (e) {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
         	searchMap.showMap({
         		point: endSite.point,
         		text: endSite.name,
@@ -82,6 +90,10 @@ define([
         	});
         });
         $("#midSiteWrap").on("click", function (e) {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
         	searchMap.showMap({
         		point: midSite.point,
         		text: midSite.name,
@@ -95,6 +107,10 @@ define([
         	});
         });
         $("#choseNum").on("click", function(){
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             normalTextInput.showCont($("#totalNum").val());
         });
         $("#deuBusForm").validate({
@@ -129,6 +145,10 @@ define([
             }
         });
         $("#sbtn").on("click", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             if($("#deuBusForm").valid()){
                 loading.createLoading();
         		searchMap.calculatePointDistance(startSite.point, endSite.point, [midSite.point], submit, doError);

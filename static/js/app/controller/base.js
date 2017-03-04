@@ -2,8 +2,9 @@ define([
     'jquery',
     'app/util/ajax',
     'app/util/dialog',
-    'app/module/loading/loading'
-], function($, Ajax, dialog, loading) {
+    'app/module/loading/loading',
+    'app/module/login/login'
+], function($, Ajax, dialog, loading, login) {
 
     if (Number.prototype.toFixed) {
         var ori_toFixed = Number.prototype.toFixed;
@@ -151,13 +152,18 @@ define([
             }
         },
         formatMoney: function(s, t) {
-            return $.isNumeric(s) ? (+s / 1000).toFixed(t || 2) : "--";
+            if(!$.isNumeric(s))
+                return "--";
+            var num = +s / 1000;
+            num = (num+"").replace(/^(\d+\.\d\d)\d*/i, "$1");
+            return (+num).toFixed(t || 2);
         },
         fZeroMoney: function(s) {
             if(!$.isNumeric(s))
-                return 0;
-            s = +s / 1000;
-            return s.toFixed(0);
+                return "--";
+            var num = +s / 1000;
+            num = (num+"").replace(/^(\d+)(\.\d*)?/i, "$1");
+            return (+num).toFixed(0);
         },
         getDictList: function(type){
             return Ajax.get("807706", {
@@ -416,8 +422,10 @@ define([
         },
         goLogin: function(){
             // location.href = "../user/wx-login.html?return=" + Base.makeReturnUrl();
-            sessionStorage.setItem("l-return", location.pathname + location.search);
-            location.href = "../user/wx-login.html";
+            loading.hideLoading();
+            // sessionStorage.setItem("l-return", location.pathname + location.search);
+            login.addCont().showCont();
+            // location.href = "../user/wx-login.html";
         },
         confirm: function(msg) {
             return (new Promise(function (resolve, reject) {

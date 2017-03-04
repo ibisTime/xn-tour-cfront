@@ -18,6 +18,17 @@
             <p class="pt6 fs14"><a href="./mall-list.html" class="cart-shop">去逛逛</a></p>
         </div>
     </div>
+    <div class="hidden ptb60" id="noLogin">
+        <div class="cartImg">
+            <img class="cartImg-img" src="../../images/cart-img.png?__inline" />
+            <div class="cartImg-after"></div>
+        </div>
+        <div class="tc lh18em pt14">
+            <!-- <h1 class="fs16">购物车快饿瘪了T.T</h1> -->
+            <p class="t_999 fs14">登录帐号才能看到购物车哦</p>
+            <p class="pt6 fs14" id="goLogin"><a href="javascript:void(0)" class="cart-shop">马上登录</a></p>
+        </div>
+    </div>
     <!-- hcont -->
     <div class="hcont" id="od-ul"></div>
 
@@ -31,17 +42,6 @@
         </div>
         <input type="button" id="sbtn" value="结算" class="release fs15 inline_block fr">
     </div>
-    <!-- <div id="od-mask" class="mask hidden"></div> -->
-    <!-- <div id="od-tipbox" class="od-dialog wp80 mlr_auto bg_fff s_14 shadow-box hidden">
-        <div class="pl10 t_80 ptb4 b_bd_b">提示</div>
-        <div class="wp100 tc ptb20 b_bd_b">
-            确定删除商品吗？
-        </div>
-        <div class="wp100 clearfix tc lh2_5em">
-            <div class="wp50 fl od-okbtn" id="odOk">确认</div>
-            <div class="wp50 fl t_80" id="odCel">取消</div>
-        </div>
-    </div> -->
     <link rel="import" href="../footer.html?__inline">
     <script>
         require(['app/controller/mall/Cart']);

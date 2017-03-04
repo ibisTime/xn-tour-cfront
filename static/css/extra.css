@@ -1112,7 +1112,7 @@
     border-radius: 3px;
 }
 .reg-item-captcha .captcha-btn[disabled]{
-    background-color: #ddd;
+    background-color: #d5d5d5;
 }
 
 .reg-item-password{
@@ -2030,7 +2030,7 @@ label.error{
     border-radius: 3px;
 }
 .captcha-btn[disabled]{
-    background-color: #ddd;
+    background-color: #d5d5d5;
 }
 .travel-food-wrapper{
     position: absolute;

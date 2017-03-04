@@ -223,6 +223,10 @@ define([
             myScroll.refresh();
         });
         $("#wyrzBtn").on("click", function(){
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             if(hotelCode)
                 location.href = './chose-room.html?code=' + hotelCode + "&return=" + returnUrl;
         });

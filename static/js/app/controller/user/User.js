@@ -12,23 +12,23 @@ define([
     init();
 
     function init() {
+        Foot.addFoot(3);
+        initIScroll();
+        getTel();
+        addListener();
         loading.createLoading();
         if(!base.isLogin()){
             base.goLogin();
             return;
         }
-        Foot.addFoot(3);
         $.when(
             getAccountList(),
-            getUser(),
-            getTel()
+            getUser()
         ).then(function () {
             loading.hideLoading();
         }, function () {
             loading.hideLoading();
         })
-        initIScroll();
-        addListener();
     }
 
     function getTel() {
@@ -78,13 +78,61 @@ define([
         $("#avatar").on("click", function(){
             showImg.createImg($(this).attr("src")).showImg();
         });
+        $("#userOrder").on("click", ".user-top-btn", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
+            location.href = "./order-list.html?index=" + $(this).index();
+        });
+        $("#accountFlow").on("click", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
+            location.href = "./integral.html";
+        });
+        $("#cart").on("click", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
+            location.href = "../mall/cart.html";
+        });
+        $("#integralFlow").on("click", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
+            location.href = "./integral.html?k=1";
+        });
+        $("#travel").on("click", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
+            location.href = "./travel-note-list.html";
+        });
+        $("#collection").on("click", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
+            location.href = "./collection.html";
+        });
+        $("#setting").on("click", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
+            location.href = "./setting.html";
+        })
     }
 
     function getUser(refresh){
         return base.getUser(refresh)
             .then(function(res){
                 if(res.success){
-                    // $("#jfAmount").html(res.data.ljAmount);
                     $("#nickname").html(res.data.nickname);
                     $("#avatar").attr("src", base.getWXAvatar(res.data.userExt.photo));
                 }

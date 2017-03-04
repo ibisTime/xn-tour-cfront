@@ -23,10 +23,6 @@ define([
     init();
 
     function init() {
-        if(!base.isLogin()){
-            base.goLogin();
-            return;
-        }
         setTimeout(function () {
             addListener();
         }, 1);
@@ -55,6 +51,10 @@ define([
         });
 
         $("#startSiteWrap").on("click", function (e) {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
         	searchMap.showMap({
         		point: startSite.point,
         		text: startSite.name,
@@ -68,6 +68,10 @@ define([
         	});
         });
         $("#endSiteWrap").on("click", function (e) {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
         	searchMap.showMap({
         		point: endSite.point,
         		text: endSite.name,
@@ -81,6 +85,10 @@ define([
         	});
         });
         $("#choseNum").on("click", function(){
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             normalTextInput.showCont($("#totalNum").val());
         });
         $("#carpoolForm").validate({
@@ -106,6 +114,10 @@ define([
             }
         });
         $("#sbtn").on("click", function () {
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             if($("#carpoolForm").valid()){
                 loading.createLoading();
                 // calculateDistancePrice(startSite.name, endSite.name);

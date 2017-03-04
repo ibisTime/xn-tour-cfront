@@ -24,75 +24,55 @@
 					</div>
 					<div class="user-name" id="nickname"></div>
 				</header>
-				<div class="user-top-btns clearfix">
+				<div class="user-top-btns clearfix" id="userOrder">
 					<div class="user-top-btn b-r-ed">
-						<a class="wp100" href="./order-list.html?index=0">
-							<div class="user-top-icon-wrap"><img src="../../images/qbdd-icon.png?__inline"></div>
-							<div class="user-top-btn-text">全部订单</div>
-						</a>
+						<div class="user-top-icon-wrap"><img src="../../images/qbdd-icon.png?__inline"></div>
+						<div class="user-top-btn-text">全部订单</div>
 					</div>
 					<div class="user-top-btn b-r-ed">
-						<a class="wp100" href="./order-list.html?index=1">
-							<div class="user-top-icon-wrap"><img src="../../images/dzf-icon.png?__inline"></div>
-							<div class="user-top-btn-text">待支付</div>
-						</a>
+						<div class="user-top-icon-wrap"><img src="../../images/dzf-icon.png?__inline"></div>
+						<div class="user-top-btn-text">待支付</div>
 					</div>
 					<div class="user-top-btn b-r-ed">
-						<a class="wp100" href="./order-list.html?index=2">
-							<div class="user-top-icon-wrap"><img src="../../images/dqr-icon.png?__inline"></div>
-							<div class="user-top-btn-text">待确认</div>
-						</a>
+						<div class="user-top-icon-wrap"><img src="../../images/dqr-icon.png?__inline"></div>
+						<div class="user-top-btn-text">待确认</div>
 					</div>
 					<div class="user-top-btn">
-						<a class="wp100" href="./order-list.html?index=3">
-							<div class="user-top-icon-wrap"><img src="../../images/tk-icon.png?__inline"></div>
-							<div class="user-top-btn-text">退款</div>
-						</a>
+						<div class="user-top-icon-wrap"><img src="../../images/tk-icon.png?__inline"></div>
+						<div class="user-top-btn-text">退款</div>
 					</div>
 				</div>
-				<div class="list-item-default-arrow mt12 b-t-ed">
-					<a href="../mall/cart.html" class="wp100 show">
-						<div class="default-icon-wrap cart-icon"></div>
-						购物车
-						<div class="st-jt"></div>
-					</a>
+				<div class="list-item-default-arrow mt12 b-t-ed" id="cart">
+					<div class="default-icon-wrap cart-icon"></div>
+					购物车
+					<div class="st-jt"></div>
 				</div>
-				<div class="list-item-default-arrow mt12 b-t-ed">
-					<a href="../user/integral.html" class="wp100 show">
-						<div class="default-icon-wrap wdjf-icon"></div>
-						账户余额
-						<span class="user-amount" id="amount"></span>
-						<div class="st-jt"></div>
-					</a>
+				<div class="list-item-default-arrow mt12 b-t-ed" id="accountFlow">
+					<div class="default-icon-wrap wdjf-icon"></div>
+					账户余额
+					<span class="user-amount" id="amount"></span>
+					<div class="st-jt"></div>
 				</div>
-				<div class="list-item-default-arrow">
-					<a href="../user/integral.html?k=1" class="wp100 show">
-						<div class="default-icon-wrap wdjf-icon"></div>
-						我的积分
-						<span class="user-amount" id="jfAmount"></span>
-						<div class="st-jt"></div>
-					</a>
+				<div class="list-item-default-arrow" id="integralFlow">
+					<div class="default-icon-wrap wdjf-icon"></div>
+					我的积分
+					<span class="user-amount" id="jfAmount"></span>
+					<div class="st-jt"></div>
 				</div>
-				<div class="list-item-default-arrow">
-					<a href="./travel-note-list.html" class="wp100 show">
-						<div class="default-icon-wrap wdyj-icon"></div>
-						我的游记
-						<div class="st-jt"></div>
-					</a>
+				<div class="list-item-default-arrow" id="travel">
+					<div class="default-icon-wrap wdyj-icon"></div>
+					我的游记
+					<div class="st-jt"></div>
 				</div>
-				<div class="list-item-default-arrow">
-					<a href="./collection.html" class="wp100 show">
-						<div class="default-icon-wrap wdsc-icon"></div>
-						我的收藏
-						<div class="st-jt"></div>
-					</a>
+				<div class="list-item-default-arrow" id="collection">
+					<div class="default-icon-wrap wdsc-icon"></div>
+					我的收藏
+					<div class="st-jt"></div>
 				</div>
-				<div class="list-item-default-arrow mt12 b-t-ed">
-					<a href="./setting.html" class="show wp100">
-						<div class="default-icon-wrap setting-icon"></div>
-						设置
-						<div class="st-jt"></div>
-					</a>
+				<div class="list-item-default-arrow mt12 b-t-ed" id="setting">
+					<div class="default-icon-wrap setting-icon"></div>
+					设置
+					<div class="st-jt"></div>
 				</div>
 				<div class="list-item-default-arrow" id="telephone">
 					<!-- <div class="default-icon-wrap fwrx-icon"></div>

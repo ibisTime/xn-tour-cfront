@@ -39,11 +39,10 @@ define([
             checkInfo: function () {
                 return $("#mobile").valid();
             },
-            bizType: "805171"
+            bizType: "805048"
         });
         $("#registerBtn").on("click", function(e) {
             if ($("#registForm").valid()) {
-                // $("#registerBtn").attr("disabled", "disabled").val("注册中...");
                 loading.createLoading("找回中...");
                 findPwd();
             }
@@ -55,14 +54,15 @@ define([
             "mobile": $("#mobile").val(),
             "newLoginPwd": $("#password").val(),
             "smsCaptcha": $("#verification").val(),
-            "loginPwdStrength": base.calculateSecurityLevel($("#password").val())
+            "loginPwdStrength": base.calculateSecurityLevel($("#password").val()),
+            "kind": "f1"
         };
-        Ajax.post("805171", { json: param })
+        Ajax.post("805048", { json: param })
             .then(function(response) {
                 if (response.success) {
                     base.showMsg("密码找回成功");
                     setTimeout(function() {
-                        base.goLogin();
+                        history.back();
                     }, 1000);
                 } else {
                     base.showMsg(response.msg);
@@ -71,7 +71,6 @@ define([
             }, function() {
                 loading.hideLoading();
                 base.showMsg("非常抱歉，密码找回失败");
-                // $("#registerBtn").removeAttr("disabled").val("注册");
             });
     }
 });

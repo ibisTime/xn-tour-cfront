@@ -11,8 +11,12 @@ define([
     init();
 
     function init() {
+        $("#goLogin").on("click", function () {
+            base.goLogin();
+        });
         if (!base.isLogin()) {
             base.goLogin();
+            doLoginError();
             return;
         }
         getMyCart();
@@ -235,5 +239,10 @@ define([
         $("#cart-bottom").hide();
         $("#cont").addClass("hidden");
         $("#noItem").removeClass("hidden");
+    }
+    function doLoginError() {
+        $("#cart-bottom").hide();
+        $("#cont").addClass("hidden");
+        $("#noLogin").removeClass("hidden");
     }
 });

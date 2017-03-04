@@ -21,8 +21,11 @@ define([
     function init() {
         addListener();
         initIScroll();
-        getAccountList();
         getPageData(true);
+        if(base.isLogin())
+            getAccountList();
+        else
+            $("#amount").html("--");
     }
 
     function getAccountList() {

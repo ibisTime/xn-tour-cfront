@@ -72,6 +72,10 @@ define([
             location.href = "http://kefu.easemob.com/webim/im.html?tenantId=" + TENANTID;
         });
         $("#sbtn").on("click", function(){
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             var ticket = +$("#totalTicket").val();
             if(ticket > remainNum){
                 base.showMsg("购买票数超过余票");

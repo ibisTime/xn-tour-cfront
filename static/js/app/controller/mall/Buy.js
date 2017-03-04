@@ -43,6 +43,10 @@ define([
         	location.href = "./cart.html";
         });
         $("#buyBtn").on("click", function(){
+            if(!base.isLogin()){
+                base.goLogin();
+                return;
+            }
             var quantity = +$("#quantity").val();
             location.href = "./submit-order.html?code=" + code + "&q=" + quantity;
         });

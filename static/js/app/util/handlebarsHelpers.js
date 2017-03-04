@@ -4,15 +4,17 @@ define([
     Handlebars.registerHelper('formatMoney', function(num, options){
         if(!num && num !== 0)
             return "--";
-        num = +num;
-        return (num / 1000).toFixed(2);
+        num = +num / 1000;
+        num = (num+"").replace(/^(\d+\.\d\d)\d*/i, "$1");
+        return (+num).toFixed(2);
     });
     Handlebars.registerHelper('formatZeroMoney', function(num, places, options){
         if (typeof num == 'undefined' || typeof num != 'number') {
-            return 0;
+            return "--";
         }
         num = +(num || 0) / 1000;
-        return num.toFixed(0);
+        num = (num+"").replace(/^(\d+)(\.\d*)?/i, "$1");
+        return (+num).toFixed(0);
     });
 
     Handlebars.registerHelper('compare', function(v1, v2, res1, res2, res3, options){
@@ -45,7 +47,7 @@ define([
             (isAvatar && !isAvatar.name) ? defaultAvatar : "";
     });
     Handlebars.registerHelper('formateDateTime', function(date, options){
-        return date ? new Date(date).format("yyyy-MM-dd hh-mm-ss") : "--";
+        return date ? new Date(date).format("yyyy-MM-dd hh:mm:ss") : "--";
     });
     Handlebars.registerHelper('formateDate', function(date, options){
         return date ? new Date(date).format("yyyy-MM-dd") : "--";
