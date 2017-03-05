@@ -2648,3 +2648,15 @@ label.error{
     top: 50px;
     width: 100%;
 }
+.content .collection-item.item .item-c .item-c-top1{
+    padding-bottom: 0;
+}
+.content .collection-item.item .item-c .collection-food-bottom{
+    position: static;
+}
+.content .collection-item.item .item-c .travel-item-bottom{
+    position: static;
+}
+.content .collection-item.item .item-c .item-c-bottom1{
+    padding-top: 0;
+}

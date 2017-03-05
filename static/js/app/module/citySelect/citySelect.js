@@ -47,11 +47,14 @@ define([
             myGeo.getPoint(PROVINCE+CITY, function(point){
                 loading.hideLoading();
                 if (point) {
-                    sessionStorage.setItem("province", PROVINCE);
-                    sessionStorage.setItem("city", CITY);
-                    sessionStorage.setItem("area", AREA);
-                    sessionStorage.setItem("longitude", point.lng);
-                    sessionStorage.setItem("latitude", point.lat);
+                    myGeo.getLocation(point, function(rs){
+                        sessionStorage.setItem("address", rs.address);
+                        sessionStorage.setItem("province", PROVINCE);
+                        sessionStorage.setItem("city", CITY);
+                        sessionStorage.setItem("area", AREA);
+                        sessionStorage.setItem("longitude", point.lng);
+                        sessionStorage.setItem("latitude", point.lat);
+                    });
                 }else{
                     // alert("您选择地址没有解析到结果!");
                     base.showMsg("地址选择解析失败");

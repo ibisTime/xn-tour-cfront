@@ -70,10 +70,10 @@ define([
     }
 
     function setShowPlace() {
-        $("#J_SearchMapInput").val(myValue);
         map.clearOverlays();
         map.centerAndZoom(point, 18);
         map.addOverlay(new BMap.Marker(point)); //添加标注
+        $("#J_SearchMapInput").val(myValue);
     }
 
     function searchComplete(results) {
@@ -135,7 +135,13 @@ define([
                 mapCont.css("top", $(window).scrollTop() + "px");
                 mapCont.show().animate({
                     left: 0
-                }, 200);
+                }, 200, function () {
+                    if(!option.text && option.showDw){
+                        var address = sessionStorage.getItem("address");
+                        $("#J_SearchMapInput").val(address);
+                        $("#search-map-icon").click();
+                    }
+                });
             }
             return this;
         },

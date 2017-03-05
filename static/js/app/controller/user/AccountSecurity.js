@@ -82,7 +82,7 @@ define([
 							error: function(msg){
 								base.showMsg(msg);
 							}
-						})
+						});
 						$("#identityFlag").text("未绑定");
 					}
 					tradeFlag = res.data.tradePwdStrength && res.data.tradePwdStrength != "0";

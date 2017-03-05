@@ -1,10 +1,10 @@
 {{#each items}}
-	<div class="item bg_fff">
+	<div class="item bg_fff collection-item">
 		<a class="wp100 hp100" href="../travel/travel-detail.html?code={{line.code}}">
 		    <div class="item-c-div item-l">
 		        <img class="center-img" src="{{formatImage line.pathPic}}"/>
 		    </div>
-		    <div class="item-c p-r">
+		    <div class="item-c p-r flex flex-dv flex-jb">
 		        <div class="item-c-top1 twoline-ellipsis">{{line.name}}</div>
 		        <div class="item-c-center item-c-center1 t_norwrap">{{line.joinPlace}}出发</div>
 		        <div class="collection-food-bottom">¥{{formatMoney line.price}}<span class="smf">起</span></div>

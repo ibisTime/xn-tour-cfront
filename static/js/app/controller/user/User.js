@@ -39,7 +39,7 @@ define([
                     $("#telephone")
                         .html(  '<a class="show wp100" href="tel://'+tel+'">'+
                                 '<div class="default-icon-wrap fwrx-icon"></div>'+
-                                '服务热线：<span>400-832-0989</span>'+
+                                '服务热线：<span>' + tel + '</span>'+
                                 '<div class="st-jt"></div></a>');
                 }
             })

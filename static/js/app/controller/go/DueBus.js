@@ -4,8 +4,10 @@ define([
     'app/module/loading/loading',
     'app/module/searchMap/searchMap',
     'app/module/normalTextInput/normalTextInput',
-    'app/module/validate/validate'
-], function(base, Ajax, loading, searchMap, normalTextInput, Validate) {
+    'app/module/validate/validate',
+    'app/module/identity/identity',
+    'app/module/bindMobile/bindMobile'
+], function(base, Ajax, loading, searchMap, normalTextInput, Validate, Identity, BindMobile) {
 	var startSite = {
 		name: "",
 		point: {
@@ -25,16 +27,57 @@ define([
 			lat: ""
 		}
 	};
+    var isBindMobile = false, isIdentity = false;
+
     init();
 
     function init() {
-        setTimeout(function () {
-            addListener();
-        }, 1);
+        if(!base.isLogin()){
+            base.goLogin();
+        }else{
+            loading.createLoading();
+            base.getUser()
+                .then(function (res) {
+                    loading.hideLoading();
+                    if(res.success){
+                        isBindMobile = !!res.data.mobile;
+                        isIdentity = !!res.data.realName;
+                        addListener();
+                    }else{
+                        base.showMsg(res.msg);
+                    }
+                }, function () {
+                    loading.hideLoading();
+                });
+        }
     }
 
     function addListener() {
         searchMap.addMap();
+        if(!isBindMobile){
+            BindMobile.addMobileCont({
+                success: function(res){
+                    isBindMobile = true;
+                    if(!isIdentity)
+                        Identity.showIdentity();
+                },
+                error: function(msg){
+                    base.showMsg(msg);
+                }
+            });
+        }
+        if(!isIdentity){
+            Identity.addIdentity({
+                success: function(){
+                    isIdentity = true;
+                    if(!isBindMobile)
+                        BindMobile.showMobileCont();
+                },
+                error: function(msg){
+                    base.showMsg(msg);
+                }
+            })
+        }
         normalTextInput.addCont({
             type: "Z",
             success: function(result){
@@ -63,6 +106,7 @@ define([
         	searchMap.showMap({
         		point: startSite.point,
         		text: startSite.name,
+                showDw: true,
         		success: function (point, text) {
 	        		startSite.name = text;
 	        		startSite.point.lng = point.lng;
@@ -80,6 +124,7 @@ define([
         	searchMap.showMap({
         		point: endSite.point,
         		text: endSite.name,
+                showDw: true,
         		success: function (point, text) {
 	        		endSite.name = text;
 	        		endSite.point.lng = point.lng;
@@ -147,6 +192,25 @@ define([
         $("#sbtn").on("click", function () {
             if(!base.isLogin()){
                 base.goLogin();
+                return;
+            }
+            if(!isBindMobile || !isIdentity){
+                if(!isBindMobile && !isIdentity){
+                    base.confirm("您还未实名认证，点击确认前往实名认证，并绑定手机号")
+                        .then(function () {
+                            Identity.showIdentity();
+                        }, base.emptyFun);
+                }else if(!isIdentity){
+                    base.confirm("您还未实名认证，点击确认前往实名认证")
+                        .then(function () {
+                            Identity.showIdentity();
+                        }, base.emptyFun);
+                }else if(!isBindMobile){
+                    base.confirm("您还未绑定手机号，点击确认前往绑定手机号")
+                        .then(function () {
+                            BindMobile.showMobileCont();
+                        }, base.emptyFun);
+                }
                 return;
             }
             if($("#deuBusForm").valid()){

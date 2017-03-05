@@ -60,7 +60,7 @@ define([
         return o;
     };
     //获取全国所有城市信息
-    function getRealLocation(initFun, province, city, area, longitude, latitude, errFun) {
+    function getRealLocation(initFun, province, city, area, longitude, latitude, address, errFun) {
         Base.getAddress()
             .then(function(data) {
                 citylist = data.citylist;
@@ -95,6 +95,7 @@ define([
                     sessionStorage.setItem("dw-area", area);
                     sessionStorage.setItem("dw-longitude", longitude);
                     sessionStorage.setItem("dw-latitude", latitude);
+                    sessionStorage.setItem("dw-address", address);
                     //直辖市
                     if(area == ""){
                         area = city;
@@ -106,6 +107,7 @@ define([
                     sessionStorage.setItem("area", area);
                     sessionStorage.setItem("longitude", longitude);
                     sessionStorage.setItem("latitude", latitude);
+                    sessionStorage.setItem("address", address);
 
                     initFun(citylist);
                 }
@@ -267,7 +269,7 @@ define([
                                 area = "";
                             }
                             //百度地图的城市名称可能和oss存的名称不同，需要匹配出相同的名称
-                            getRealLocation(initFun, province, city, area, longitude, latitude, errFun);
+                            getRealLocation(initFun, province, city, area, longitude, latitude, rs.address, errFun);
                         });  
                     } else {
                         loading.hideLoading();

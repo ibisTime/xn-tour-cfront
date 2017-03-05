@@ -1,10 +1,10 @@
 {{#each items}}
-    <div class="item bg_fff">
+    <div class="item bg_fff collection-item">
         <a class="block_wp100" href="../go/food-detail.html?code={{food.code}}">
             <div class="item-c-div item-l">
                 <img class="center-img" src="{{formatImage food.pic}}"/>
             </div>
-            <div class="item-c p-r">
+            <div class="item-c p-r flex flex-dv flex-jb">
                 <div class="item-c-top1 t_norwrap">{{food.name}}</div>
                 <div class="item-c-center item-c-center1 t_norwrap">{{food.detail}}</div>
                 <div class="collection-food-bottom">¥{{formatMoney food.price}}<span class="smf">起</span></div>

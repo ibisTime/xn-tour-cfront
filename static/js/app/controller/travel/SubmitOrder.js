@@ -2,11 +2,15 @@ define([
     'app/controller/base',
     'app/module/validate/validate',
     'app/module/loading/loading',
-    'app/util/ajax'
-], function(base, Validate, loading, Ajax) {
+    'app/util/ajax',
+    'app/module/identity/identity',
+    'app/module/bindMobile/bindMobile'
+], function(base, Validate, loading, Ajax, Identity, BindMobile) {
     var lineCode = base.getUrlParam("lineCode") || "";
     var lineInfo = sessionStorage.getItem("line-info");
     var totalHotelAmount = 0, totalLineAmount = 0, totalOutAmount = 0;
+    var isBindMobile = false, isIdentity = false;
+    
     init();
     function init(){
         if(!lineCode){
@@ -18,7 +22,21 @@ define([
             return;
         }
         loading.createLoading();
-        getLineInfo();
+        $.when(
+            base.getUser(),
+            getLineInfo()
+        ).then(function (res) {
+            loading.hideLoading();
+            if(res.success){
+                isBindMobile = !!res.data.mobile;
+                isIdentity = !!res.data.realName;
+                addListener();
+            }else{
+                base.showMsg(res.msg);
+            }
+        }, function () {
+            loading.hideLoading();
+        });
         if(lineInfo){
             lineInfo = $.parseJSON(lineInfo);
             var lineCodeInfo;
@@ -26,13 +44,11 @@ define([
                 setInfo(lineCodeInfo);
             }
         }
-        addListener();
     }
     function getLineInfo() {
-        Ajax.get("618102", {
+        return Ajax.get("618102", {
             code: lineCode
         }).then(function (res) {
-            loading.hideLoading();
             if(res.success){
                 $("#pathPic").attr("src", base.getImg(res.data.pathPic));
                 $("#lineName").html(res.data.name);
@@ -43,7 +59,6 @@ define([
                 base.showMsg(res.msg);
             }
         }, function () {
-            loading.hideLoading();
             base.showMsg("线路信息获取失败");
         })
     }
@@ -84,6 +99,30 @@ define([
     }
 
     function addListener(){
+        if(!isBindMobile){
+            BindMobile.addMobileCont({
+                success: function(res){
+                    isBindMobile = true;
+                    if(!isIdentity)
+                        Identity.showIdentity();
+                },
+                error: function(msg){
+                    base.showMsg(msg);
+                }
+            });
+        }
+        if(!isIdentity){
+            Identity.addIdentity({
+                success: function(){
+                    isIdentity = true;
+                    if(!isBindMobile)
+                        BindMobile.showMobileCont();
+                },
+                error: function(msg){
+                    base.showMsg(msg);
+                }
+            })
+        }
 		$("#submitForm").validate({
             'rules': {
                 applyNote: {
@@ -94,6 +133,25 @@ define([
             onkeyup: false
         });
         $("#submitBtn").on("click", function(){
+            if(!isBindMobile || !isIdentity){
+                if(!isBindMobile && !isIdentity){
+                    base.confirm("您还未实名认证，点击确认前往实名认证，并绑定手机号")
+                        .then(function () {
+                            Identity.showIdentity();
+                        }, base.emptyFun);
+                }else if(!isIdentity){
+                    base.confirm("您还未实名认证，点击确认前往实名认证")
+                        .then(function () {
+                            Identity.showIdentity();
+                        }, base.emptyFun);
+                }else if(!isBindMobile){
+                    base.confirm("您还未绑定手机号，点击确认前往绑定手机号")
+                        .then(function () {
+                            BindMobile.showMobileCont();
+                        }, base.emptyFun);
+                }
+                return;
+            }
         	if($("#submitForm").valid()){
                 submitOrder();
         	}
@@ -105,23 +163,24 @@ define([
         var data = $("#submitForm").serializeObject();
         data.applyUser = base.getUserId();
         data.lineCode = lineCode;
+        var midObj = {};
         if(lineInfo && !$.isEmptyObject(lineInfo[lineCode])){
+            midObj = $.extend({}, lineInfo[lineCode]);
+            delete midObj.outName;
+            delete midObj.outPic;
+            delete midObj.outStartSite;
+            delete midObj.outDatetime;
+            delete midObj.outNum;
+            delete midObj.totalOutAmount;
 
-            delete lineInfo[lineCode].outName;
-            delete lineInfo[lineCode].outPic;
-            delete lineInfo[lineCode].outStartSite;
-            delete lineInfo[lineCode].outDatetime;
-            delete lineInfo[lineCode].outNum;
-            delete lineInfo[lineCode].totalOutAmount;
-
-            delete lineInfo[lineCode].hotelName;
-            delete lineInfo[lineCode].roomDescription;
-            delete lineInfo[lineCode].roomPic;
-            delete lineInfo[lineCode].roomName;
-            delete lineInfo[lineCode].roomPrice;
-            delete lineInfo[lineCode].hotelAddr;
-            delete lineInfo[lineCode].lineAmount;
-            data = $.extend(data, lineInfo[lineCode]);
+            delete midObj.hotelName;
+            delete midObj.roomDescription;
+            delete midObj.roomPic;
+            delete midObj.roomName;
+            delete midObj.roomPrice;
+            delete midObj.hotelAddr;
+            delete midObj.lineAmount;
+            data = $.extend(data, midObj);
         }
         Ajax.get("618140", data).then(function(res){
             if(res.success){
@@ -134,6 +193,6 @@ define([
                 loading.hideLoading();
                 base.showMsg(res.msg || "订单提交失败");
             }
-        })
+        });
     }
 });
