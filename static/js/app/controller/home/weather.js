@@ -15,78 +15,74 @@ define([
 		var nowUrl ;//实况链接
 		
 		var dKey = "bb8189b9b03c48de8a9f4eebfff110d6";//key;
-		
-		$.getScript('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js',function(){
-			city = remote_ip_info.city;
-			
-		   $(".w-add").text(city);//城市
-		   
-			nowUrl = "https://free-api.heweather.com/v5/now?city="+city+"&key="+dKey;
-			daily_forecast = "https://free-api.heweather.com/v5/forecast?city="+city+"&key="+dKey;
-    		
-    		//实况天气
-			$.ajax({
-				type:"get",
-				url:nowUrl,
-				async:true,
-				success:function(res){
-					var nowData = res.HeWeather5[0].now
-					var nowCond ;//实况天气状况
-					var nowTmp ;//温度
-					var update ;//更新时间
-					var condImg ;//天气图片
-					
-					nowCond = nowData.cond.txt;//实况天气状况
-					nowTmp = nowData.tmp ;//温度
-					update = base.formatDate(res.HeWeather5[0].basic.update.loc,"hh:mm");//更新时间
-					condImg = "http://files.heweather.com/cond_icon/"+nowData.cond.code+".png";
-					
-					$(".w-nowCond").text(nowCond);//实况天气状况
-					$(".w-nowTmp").text(nowTmp+"°");//温度
-					$(".w-condImg").attr("src",condImg);
-					$(".w-update").text(update);//更新时间
-					$(".w-nowWeek").text(getWeek(0));//当前星期
-					
-				}
-			});
-			
-			//7天天气
-			$.ajax({
-				type:"get",
-				url:daily_forecast,
-//				data:{
-//					"date":getDayArr(6)[5]
-//				},
-				async:true,
-				success:function(res){
-					
-					console.log(res.HeWeather5)
-					console.log(getDayArr(6)[5])
-					console.log(res.HeWeather5[0].daily_forecast.date)
-//					var nowData = res.HeWeather5[0].now
-//					var nowCond ;//实况天气状况
-//					var nowTmp ;//温度
-//					var update ;//更新时间
-//					var condImg ;//天气图片
-//					
-//					nowCond = nowData.cond.txt;//实况天气状况
-//					nowTmp = nowData.tmp ;//温度
-//					update = base.formatDate(res.HeWeather5[0].basic.update.loc,"hh:mm");//更新时间
-//					condImg = "http://files.heweather.com/cond_icon/"+nowData.cond.code+".png";
-//					
-//					$(".w-nowCond").text(nowCond);//实况天气状况
-//					$(".w-nowTmp").text(nowTmp+"°");//温度
-//					$(".w-condImg").attr("src",condImg);
-//					$(".w-update").text(update);//更新时间
-//					$(".w-nowWeek").text(getWeek(0));//当前星期
-					
-				}
-			});
-			
-			
-			
+
+		city = sessionStorage.getItem("city");
+
+	   $(".w-add").text(sessionStorage.getItem("city"));//城市
+
+		nowUrl = "https://free-api.heweather.com/v5/now?city="+city+"&key="+dKey;
+		daily_forecast = "https://free-api.heweather.com/v5/forecast?city="+city+"&key="+dKey;
+
+		//实况天气
+		$.ajax({
+			type:"get",
+			url:nowUrl,
+			async:true,
+			success:function(res){
+				var nowData = res.HeWeather5[0].now;
+				var nowCond ;//实况天气状况
+				var nowTmp ;//温度
+				var update ;//更新时间
+				var condImg ;//天气图片
+
+				nowCond = nowData.cond.txt;//实况天气状况
+				nowTmp = nowData.tmp ;//温度
+				update = base.formatDate(res.HeWeather5[0].basic.update.loc,"hh:mm");//更新时间
+				condImg = "http://files.heweather.com/cond_icon/"+nowData.cond.code+".png";
+
+				$(".w-nowCond").text(nowCond);//实况天气状况
+				$(".w-nowTmp").text(nowTmp+"°");//温度
+				$(".w-condImg").attr("src",condImg);
+				$(".w-update").text(update);//更新时间
+				$(".w-nowWeek").text(getWeek(0));//当前星期
+
+			}
 		});
-    	
+
+		//7天天气
+		$.ajax({
+			type:"get",
+			url:daily_forecast,
+			async:true,
+			success:function(res){
+
+				var fData = res.HeWeather5[0].daily_forecast;//未来天气
+				var fTmp ;//温度
+				var fcondImg ;//天气图片
+				var list = "";
+
+                nowDataTmp = fData[0].tmp.min+"°~"+fData[0].tmp.max+"°";//当天最低温度与最高温度
+
+				for(var i = 1; i < fData.length; i ++){
+                	var s = "";
+                    fTmp = fData[i].tmp.min+"°~"+fData[i].tmp.max+"°";
+                    fcondImg = "http://files.heweather.com/cond_icon/"+fData[i].cond.code_d+".png";//白天天气图标
+
+                	s+="<div class='over-hide wp100 p10 fs16 wrap'>";
+                    s+="<p class='fl wp45 inline_block w-date'>"+getWeek(i)+"</p>";
+                    s+="<div class='fl wp10'><img class='wp100' src='"+fcondImg+"' /></div>";
+                    s+=" <p class='fl wp45 inline_block tr w-Tmp'>"+fTmp+"</p></div>";
+
+                    list+= s;
+				}
+
+                $(".w-Tmp").html(nowDataTmp);
+				$(".weatherList").html(list);
+
+			}
+		});
+
+
     	//获取星期
     	function getWeek(dayNum){//dayNum天数，第几天，0是当天
        		var date = getDayArr(6)[dayNum];//获取日期
