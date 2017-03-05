@@ -68,7 +68,7 @@ fis.media("prod")
     .match('/js/module/**', {
         requires: ['/js/require.js']
     })
-    .match('{/js/lib/*.js,/js/app/util/*.js,/js/app/controller/base.js,/js/app/module/loading/loading.js}', {
+    .match('{/js/lib/*.js,/js/app/util/*.js,/js/app/module/loading/loading.js}', {
         requires: ['/js/require.js'],
         packTo: '/pkg/common.js'
     })

@@ -22,14 +22,14 @@ define([
 
     function getOrder(){
         $.when(
-            base.getDictList("hh_type"),
+            // base.getDictList("hh_type"),
             Ajax.get("618052", {code: code})
-        ).then(function(res0, res){
-            if(res0.success && res.success){
+        ).then(function(res){
+            if(res.success){
                 getHotelAndRoom(res.data.hotalOrder.hotalCode, res.data.hotalOrder.hotalRoomCode);
-                $.each(res0.data, function(i, d) {
-                    hhType[d.dkey] = d.dvalue;
-                });
+                // $.each(res0.data, function(i, d) {
+                //     hhType[d.dkey] = d.dvalue;
+                // });
                 var data = res.data.hotalOrder;
                 $("#code").html(code);
                 $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
@@ -41,7 +41,7 @@ define([
                     .html(base.formatDate(data.startDate, 'MM月dd号')+
                         ' - '+base.formatDate(data.endDate, 'MM月dd号')+'<span class="pl4">'+
                         base.calculateDays(data.startDate, data.endDate)+'晚'+data.quantity+'间</span>');
-                $("#type").html(hhType[res.data.roomType]);
+                $("#type").html(res.data.roomType);
                 $("#checkInName").html(data.checkInName);
                 $("#checkInMobile").html(data.checkInMobile);
                 $("#applyNote").html(data.applyNote || "无");

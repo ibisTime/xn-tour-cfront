@@ -9,12 +9,17 @@ define([
         return (+num).toFixed(2);
     });
     Handlebars.registerHelper('formatZeroMoney', function(num, places, options){
-        if (typeof num == 'undefined' || typeof num != 'number') {
+        // if (typeof num == 'undefined' || typeof num != 'number') {
+        //     return "--";
+        // }
+        // num = +(num || 0) / 1000;
+        // num = (num+"").replace(/^(\d+)(\.\d*)?/i, "$1");
+        // return (+num).toFixed(0);
+        if(!num && num !== 0)
             return "--";
-        }
-        num = +(num || 0) / 1000;
-        num = (num+"").replace(/^(\d+)(\.\d*)?/i, "$1");
-        return (+num).toFixed(0);
+        num = +num / 1000;
+        num = (num+"").replace(/^(\d+\.\d\d)\d*/i, "$1");
+        return (+num).toFixed(2);
     });
 
     Handlebars.registerHelper('compare', function(v1, v2, res1, res2, res3, options){

@@ -51,7 +51,7 @@ define([
                 base.showMsg("订单信息获取失败");
             });
     }
-    function cancelOrder(remark){
+    function cancelOrder(){
         loading.createLoading("提交申请中...");
         Ajax.post("618211", {
             json: {

@@ -28,13 +28,12 @@ define([
                     $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
                     $("#status").html(carpoolStatus[data.status]);
                     $("#applyNote").html(data.applyNote);
-
+                    $("#firstAmount").html(base.formatMoney(data.firstAmount));
                     getCarpool(data.carpoolCode);
-
-                    // var price = data.totalPrice || ( +(data.firstPayAmount || data.firstAmount) + +(data.secondPayAmount || data.secondAmount || 0) );
-                    // $("#price").html(base.formatMoney(price));
-                    if(data.status == "0" || data.status == "1" || data.status == "97"){
+                    if(data.status == "0" || data.status == "1" || data.status == "2" || data.status == "97"){
                         if(data.status == "1")
+                            $("#payBtn").hide();
+                        else if(data.status == "2")
                             $("#payBtn").val("支付尾款");
                         $(".order-hotel-detail-btn0").removeClass("hidden");
                     }
@@ -59,7 +58,7 @@ define([
                 $("#outDatetime")
                     .html(base.formatDate(data.outDatetime, 'yyyy-MM-dd hh:mm'));
                 $("#takePartNum").html(data.takePartNum);
-                $("#price").html(base.formatMoney(data.curPrice));
+                $("#curPrice").html(base.formatMoney(data.curPrice));
             }else{
                 base.showMsg(res.msg);
             }

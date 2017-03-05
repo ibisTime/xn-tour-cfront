@@ -193,18 +193,17 @@ define([
     }
     function submit(result){
         var data = $("#carpoolForm").serializeObject();
-        data.distancePrice = result.cg;
+        data.distance = result.cg;
         data.userId = base.getUserId();
         data.outDatetime = data.outDatetime + ":00";
         Ajax.post("618240", {
             json: data
         }).then(function (res) {
             // loading.hideLoading();
-            code = res.data.code;
-            orderCode = res.data.orderCode;
             if(res.success){
+                code = res.data.code;
+                orderCode = res.data.orderCode;
                 getCarpool();
-                // getOrder();
             }else{
                 base.showMsg(res.msg);
             }

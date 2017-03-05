@@ -23,19 +23,20 @@ define([
     function init() {
         Foot.addFoot(0);
         initIScroll();
-        base.initLocation(initConfig, getInitData);
+        // base.initLocation(initConfig, getInitData);
+        getInitData();
         addListener();
     }
-    function initConfig(result) {
-        citylist = result;
-        citySelect.addCont({
-            cityList: citylist,
-            success: function (city) {
-                $("#headDW").text(city);
-            }
-        });
-        getInitData();
-    }
+    // function initConfig(result) {
+    //     citylist = result;
+    //     citySelect.addCont({
+    //         cityList: citylist,
+    //         success: function (city) {
+    //             $("#headDW").text(city);
+    //         }
+    //     });
+    //     getInitData();
+    // }
     function getInitData() {
         loading.createLoading();
         $.when(

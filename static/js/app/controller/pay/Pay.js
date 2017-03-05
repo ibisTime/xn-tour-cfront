@@ -6,7 +6,7 @@ define([
     var code = base.getUrlParam("code");
     // 0:酒店 1:线路 2:专线 3:大巴 4:拼车 5:商品
     var type = base.getUrlParam("type") || 0;
-    var choseIdx = 0,
+    var choseIdx = 1,
         bizType, payBizType;
 
     init();
@@ -127,10 +127,16 @@ define([
                 if (res.success) {
                     // 0:酒店 1:线路 2:专线 3:大巴 4:拼车 5:商品
                     var price = type == 0 ? res.data.hotalOrder.amount :
-                                type == 1 ? res.data.amount :
+                                // type == 1 ? res.data.amount :
                                 type == 2 ? res.data.amount :
                                 type == 3 ? res.data.distancePrice :
                                 type == 5 ? res.data.amount1 : 0;
+                    if(type == 1){
+                        var p1 = +res.data.amount;
+                        var p2 = res.data.hotalOrder && +res.data.hotalOrder.amount || 0;
+                        var p3 = res.data.specialLineOrder && +res.data.specialLineOrder.amount || 0;
+                        price = p1 + p2 + p3;
+                    }
                     if(type == 5){
                         $("#unit").hide();
                         $("#price").html(base.fZeroMoney(price)+"积分");

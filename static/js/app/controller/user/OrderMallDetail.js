@@ -59,18 +59,16 @@ define([
             base.showMsg("订单信息获取失败");
         });
     }
-
-    function cancelOrTkOrder(bizType, remark){
+    function cancelOrder(){
         loading.createLoading("提交申请中...");
-        Ajax.post(bizType, {
+        Ajax.post("618452", {
             json: {
-                code: code,
-                remark: remark,
-                userId: base.getUserId()
+                orderCodeList: [code]
             }
         }).then(function(res){
                 loading.hideLoading();
                 if(res.success){
+                    $("#status").html(commodityStatus['91']);
                     base.showMsg("申请提交成功");
                     $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
                 }else{
@@ -81,12 +79,29 @@ define([
                 base.showMsg("申请失败");
             })
     }
-    function tuikOrder(remark) {
-        cancelOrTkOrder("618461", remark);
+    function tuik(remark) {
+        loading.createLoading("提交申请中...");
+        Ajax.post("618456", {
+            json: {
+                code: code,
+                remark: remark,
+                userId: base.getUserId()
+            }
+        }).then(function(res){
+                loading.hideLoading();
+                if(res.success){
+                    $("#status").html(commodityStatus['2']);
+                    base.showMsg("申请提交成功");
+                    $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
+                }else{
+                    base.showMsg(res.msg || "申请失败");
+                }
+            }, function(){
+                loading.hideLoading();
+                base.showMsg("申请失败");
+            })
     }
-    function cancelOrder(remark) {
-        cancelOrTkOrder("618455", remark);
-    }
+
     function addListeners(){
         //支付
         $("#payBtn").on("click", function(){
@@ -94,42 +109,36 @@ define([
         });
         //取消订单
         $("#cancelBtn").on("click", function(){
-            showCancelOrTKModal(cancelOrder);
+            base.confirm("确定取消订单吗？")
+                .then(cancelOrder, base.emptyFun);
         });
         //退款申请
         $("#tuikBtn").on("click", function(){
-            showCancelOrTKModal(tuikOrder, 1);
+            var d = dialog({
+                title: '退款申请',
+                content: '退款理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
+                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写退款理由</div>'+
+                         '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">退款理由中包含非法字符</div>',
+                ok: function (argument) {
+                    var remark = $(".dialog-textarea").val();
+                    if(!remark || remark.trim() == ""){
+                        $(".dialog-error-tip1").addClass("hidden");
+                        $(".dialog-error-tip0").removeClass("hidden");
+                        return false;
+                    }else if(!base.isNotFace(remark)){
+                        $(".dialog-error-tip0").addClass("hidden");
+                        $(".dialog-error-tip1").removeClass("hidden");
+                        return false;
+                    }
+                    tuik(remark);
+                },
+                okValue: '确定',
+                cancel: function(){
+                    d.close().remove();
+                },
+                cancelValue: '取消'
+            });
+            d.showModal();
         });
-    }
-    function showCancelOrTKModal(success, type) {
-        var str1 = type ? "请填写退款理由" : "请填写取消理由",
-            str2 = type ? "退款理由中包含非法字符" : "取消理由中包含非法字符",
-            title = type ? "退款申请" : "取消订单";
-
-        var d = dialog({
-            title: title,
-            content: '理由：<textarea id="cancelNote" class="dialog-textarea"></textarea>' +
-                '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">' + str1 + '</div>' +
-                '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">' + str2 + '</div>',
-            ok: function(argument) {
-                var remark = $(".dialog-textarea").val();
-                if (!remark || remark.trim() == "") {
-                    $(".dialog-error-tip0").removeClass("hidden");
-                    $(".dialog-error-tip1").addClass("hidden");
-                    return false;
-                } else if (!base.isNotFace(remark)) {
-                    $(".dialog-error-tip0").addClass("hidden");
-                    $(".dialog-error-tip1").removeClass("hidden");
-                    return false;
-                }
-                success(remark);
-            },
-            okValue: '确定',
-            cancel: function() {
-                d.close().remove();
-            },
-            cancelValue: '取消'
-        });
-        d.showModal();
     }
 });

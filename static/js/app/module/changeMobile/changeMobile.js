@@ -19,7 +19,6 @@ define([
             json: {
                 "newMobile": $("#change-mobile").val(),
                 "smsCaptcha": $("#change-smsCaptcha").val(),
-                "tradePwd": $("#change-trade-pwd").val(),
                 "userId": sessionStorage.getItem("user")
             }
         }).then(function(res){
@@ -69,12 +68,6 @@ define([
                         "change-mobile": {
                             required: true,
                             mobile: true
-                        },
-                        "change-trade-pwd": {
-                            required: true,
-                            maxlength: 16,
-                            minlength: 6,
-                            isNotFace: true
                         }
                     },
                     onkeyup: false
@@ -120,7 +113,6 @@ define([
                     func && func($("#change-mobile").val());
                     $("#change-mobile").val("");
                     $("#change-smsCaptcha").val("");
-                    $("#change-trade-pwd").val("");
                     wrap.find("label.error").remove();
                 });
             }

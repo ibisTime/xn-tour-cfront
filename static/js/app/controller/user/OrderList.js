@@ -21,44 +21,52 @@ define([
         pageFirst = true;
     /*全部、待支付、已支付、退款*/
     var statusList = [
-        ["", "0", "1", "2"],
-        ["", "0", "1", "2"],
-        ["", "0", "1", "2"],
-        ["", "0", "1", "2"],
-        ["", "0", "1", "2"],
-        [null, [0, 1, 2, 97],
-            [3]
-        ],
+        // ["", "0", "1", "2"],
+        // ["", "0", "1", "2"],
+        // ["", "0", "1", "2"],
+        // ["", "0", "1", "2"],
+        // ["", "0", "1", "2"],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0, 2, 97], [3]]
     ];
     var config = {
             "0": {
                 start: 1,
                 limit: 10,
-                status: "",
+                // status: "",
+                statusList: null,
                 userId: base.getUserId()
             },
             "1": {
                 start: 1,
                 limit: 10,
-                status: "",
+                // status: "",
+                statusList: null,
                 userId: base.getUserId()
             },
             "2": {
                 start: 1,
                 limit: 10,
-                status: "",
+                // status: "",
+                statusList: null,
                 applyUser: base.getUserId()
             },
             "3": {
                 start: 1,
                 limit: 10,
-                status: "",
+                // status: "",
+                statusList: null,
                 applyUser: base.getUserId()
             },
             "4": {
                 start: 1,
                 limit: 10,
-                status: "",
+                // status: "",
+                statusList: null,
                 booker: base.getUserId()
             },
             "5": {
@@ -91,7 +99,7 @@ define([
         initIScroll();
         addListener();
         // $(".order-list-top-nav2").find(".order-list-top-nav2-item:eq(" + index1 + ")").addClass("active");
-        config[index].status = getStatusByIndex(index1);
+        config[index].statusList = getStatusByIndex(index1);
         $(".order-list-top-nav1").find(".order-list-top-nav1-item:eq(" + index + ")").click();
         $("#content").find(".order-list-content" + index).removeClass("hidden");
     }
@@ -158,11 +166,12 @@ define([
                 .end().find(".order-list-content" + idx).removeClass("hidden");
             index = idx;
             var idx1;
-            if (index != 5) {
-                idx1 = getIndexByStatus(config[idx].status);
-            } else {
-                idx1 = getIndexByStatusList(config["5"])
-            }
+            // if (index != 5) {
+            //     idx1 = getIndexByStatus(config[idx].status);
+            // } else {
+            //     idx1 = getIndexByStatusList(config["5"].statusList)
+            // }
+            idx1 = getIndexByStatusList(config[index].statusList);
             pageFirst = false;
             $(".order-list-top-nav2")
                 .find(".order-list-top-nav2-item.active").removeClass("active")
@@ -172,7 +181,7 @@ define([
             if (idx == 1 && config1.first1)
                 getPageLineOrderList();
             else if (idx == 2 && config1.first2)
-                getHHType().then(getPageHotelOrderList);
+                getPageHotelOrderList();
             else if (idx == 3 && config1.first3)
                 getSDict().then(getPageSpecialLineOrderList);
             else if (idx == 4 && config1.first4)
@@ -193,10 +202,12 @@ define([
             var idx = $(".order-list-top-nav1").find(".order-list-top-nav1-item.active").index();
             index = idx;
             config[idx].start = 1;
-            if (index != 5)
-                config[idx].status = getStatusByIndex(idx1);
-            else
-                config[idx].statusList = getStatusByIndex(idx1);
+            // if (index != 5)
+            //     config[idx].status = getStatusByIndex(idx1);
+            // else
+            //     config[idx].statusList = getStatusByIndex(idx1);
+            config[idx].statusList = getStatusByIndex(idx1);
+
             config1["first" + idx] = true;
             config1["isEnd" + idx] = false;
             index1 = idx1;
@@ -302,20 +313,20 @@ define([
         });
     }
     //酒店数据字典
-    function getHHType() {
-        return base.getDictList("hh_type")
-            .then(function(res) {
-                if (res.success) {
-                    $.each(res.data, function(i, d) {
-                        hhType[d.dkey] = d.dvalue;
-                    });
-                } else {
-                    base.showMsg(res.msg);
-                }
-            }, function() {
-                base.showMsg("数据加载失败");
-            });
-    }
+    // function getHHType() {
+    //     return base.getDictList("hh_type")
+    //         .then(function(res) {
+    //             if (res.success) {
+    //                 $.each(res.data, function(i, d) {
+    //                     hhType[d.dkey] = d.dvalue;
+    //                 });
+    //             } else {
+    //                 base.showMsg(res.msg);
+    //             }
+    //         }, function() {
+    //             base.showMsg("数据加载失败");
+    //         });
+    // }
     //专线数据字典
     function getSDict() {
         return Ajax.get("806052", {
@@ -410,7 +421,7 @@ define([
                                 '</div>' +
                                 '<div class="item-c">' +
                                 '<div class="item-c-top t_norwrap pr50">' + d.name + '</div>' +
-                                '<div class="item-c-center t_bbb t_norwrap">' + hhType[d.roomType] + '</div>' +
+                                '<div class="item-c-center t_bbb t_norwrap">' + d.roomType + '</div>' +
                                 '<div class="item-c-center t_bbb item-c-ctr">' + base.formatDate(d.startDate, 'MM月dd号') +
                                 ' - ' + base.formatDate(d.endDate, 'MM月dd号') + '<span class="pl4">' +
                                 base.calculateDays(d.startDate, d.endDate) + '晚' + d.quantity + '间</span>' +
@@ -628,18 +639,19 @@ define([
                                 '<div class="order-list-item-center item">' +
                                 '<a href="./order-carpool-detail.html?code=' + d.code + '" class="wp100 show">' +
                                 '<div class="item-c pl0_i flex flex-dv flex-jb">' +
-                                '<div class="item-c-top t_norwrap pr64">上车地点：' + d.carpool.startSite + '</div>' +
-                                '<div class="item-c-center t_norwrap pr64">下车地点：' + d.carpool.endSite + '</div>' +
-                                '<div class="item-c-center t_bbb item-c-ctr c_f64444">发车时间：' + base.formatDate(d.carpool.outDatetime, 'yyyy-MM-dd hh:mm') + '</span></div>' +
-                                '<div class="item-c-center t_bbb t_norwrap">拼车人数：' + d.carpool.totalNum + '人</div>' +
-                                '<div class="y-big1 p-a-r-b">¥' + base.formatMoney(d.carpool.curPrice) + '</div>' +
+                                '<div class="item-c-top t_norwrap pr110">上车地点：' + d.carpool.startSite + '</div>' +
+                                '<div class="item-c-center t_norwrap pr110 c_59">下车地点：' + d.carpool.endSite + '</div>' +
+                                '<div class="item-c-center c_59 item-c-ctr pr110">发车时间：' + base.formatDate(d.carpool.outDatetime, 'yyyy-MM-dd hh:mm') + '</span></div>' +
+                                '<div class="item-c-center t_bbb t_norwrap pr110">拼车人数：' + d.carpool.totalNum + '人</div>' +
+                                '<div class="y-big2 p-a-r-c"><span class="fs12">定金：</span>¥' + base.formatMoney(d.firstAmount) + '</div>' +
+                                '<div class="y-big2 p-a-r-b"><span class="fs12">尾款：</span>¥' + base.formatMoney(d.carpool.curPrice) + '</div>' +
                                 '<div class="order-status">' + carpoolStatus[d.status] + '</div>' +
                                 '</div>' +
                                 '</a></div>';
                             if (d.status == "0" || d.status == "1" || d.status == "2" || d.status == "97") {
                                 html += '<div class="order-oper-btns">' +
-                                    '<input type="button" class="fr mlr10 item-order-btn item-pay-btn" value="付款"/>' +
-                                    '<input type="button" class="fr ml10 item-order-btn od-cancel-order" value="取消订单"/>' +
+                                    '<input type="button" class="fr mlr10 item-order-btn item-pay-btn '+(d.status != "1" ? "" : "hidden")+'" value="付款"/>' +
+                                    '<input type="button" class="fr ml10 item-order-btn od-cancel-order '+(d.status != "1" ? "" : "mr10")+'" value="取消订单"/>' +
                                     '</div>';
                             }
                             html += '</div>';
@@ -695,7 +707,7 @@ define([
                                 '<div class="order-list-item-center item">' +
                                 '<a href="./order-mall-detail.html?code=' + d.code + '" class="wp100 show">' +
                                 '<div class="item-c-div item-l">' +
-                                '<img class="cente" src="' + base.getImg(d.productOrderList[0].advPic) + '"/>' +
+                                '<img class="center-img" src="' + base.getImg(d.productOrderList[0].advPic) + '"/>' +
                                 '</div>' +
                                 '<div class="item-c flex flex-dv flex-jb">' +
                                 '<div class="item-c-top1 pb0_i t_norwrap pr50">' + d.productOrderList[0].productName + '</div>' +
@@ -816,10 +828,28 @@ define([
         return statusList[index][idx];
     }
 
-    function getIndexByStatusList(statusList) {
-        if (statusList.length == 3) {
+    function getIndexByStatusList(sList) {
+        /*var statusList = [
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0], [1], [2, 31, 94]],
+        [null, [0, 2, 97], [3]]
+    ];*/
+        if(!sList)
+            return 0;
+        if(index != 5){
+            if(sList.length == 3)
+                return 3;
+            if(sList[0] == 0)
+                return 1;
+            return 2;
+        }
+        if (sList.length == 3) {
             return 1;
-        } else if (statusList[0] == 3) {
+        }
+        if (sList[0] == 3) {
             return 2;
         }
         return 0;

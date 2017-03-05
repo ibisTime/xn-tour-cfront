@@ -14,6 +14,7 @@ define([
         roomDescription = "", roomPic = "", hotelAddr = "",
         roomPrice, totalDays, roomType = 1;
     var returnUrl = base.getUrlParam("return");
+    var category;
 
 	init();
 
@@ -36,14 +37,14 @@ define([
 	function getRoomAndHotel(){
 		loading.createLoading("加载中...");
 		$.when(
-            base.getDictList("hh_type"),
+            // base.getDictList("hh_type"),
             base.getDictList("ss_type"),
             getHotel()
-        ).then(function (res0, res) {
-            if(res0.success && res.success){
-                $.each(res0.data, function(i, d){
-                    hmType2[d.dkey] = d.dvalue;
-                });
+        ).then(function (res) {
+            if(res.success){
+                // $.each(res0.data, function(i, d){
+                //     hmType2[d.dkey] = d.dvalue;
+                // });
                 $.each(res.data, function(i, d){
                     ssType[d.dkey] = d.dvalue;
                 });
@@ -52,6 +53,7 @@ define([
                     .then(function(){
                         loading.hideLoading();
                         addListener();
+                        $("#quantity").trigger("change");
                     });
             }else{
                 loading.hideLoading();
@@ -63,7 +65,8 @@ define([
 		$("#submitForm").validate({
             'rules': {
                 quantity: {
-                    required: true
+                    required: true,
+                    "Z+": true
                 },
                 checkInName: {
                     required: true,
@@ -91,15 +94,19 @@ define([
                 submitOrder();
         	}
         });
-        $("#quantity").on("keyup", function(){
-        	var val = $(this).val();
-            if($("#quantity").valid()){
-                val = +val;
-                $("#price").html(base.formatMoney(+roomPrice * +totalDays * val));
-            }else{
-                $("#price").html("--");
-            }
-        });
+        // $("#quantity").on("keyup", function(){
+        // 	var val = $(this).val();
+        //     if($("#quantity").valid()){
+        //         val = +val;
+        //         $("#price").html(base.formatMoney(+roomPrice * +totalDays * val));
+        //     }else{
+        //         $("#price").html("--");
+        //     }
+        // });
+        $("#quantity").on("change", function () {
+            var _self = $(this);
+            _self.siblings(".over-select-text").html( _self.find("option:selected").text() );
+        })
         $("#addr-wrap").on("click", function(){
         	showInMap.showMap();
         });
@@ -165,6 +172,7 @@ define([
 					lng: data.longitude,
 					lat: data.latitude
 				});
+                category = res.data.hotal.category;
             }else{
                 base.showMsg("酒店信息加载失败");
             }
@@ -178,7 +186,8 @@ define([
             if(res.success){
                 var data = res.data;
                 roomType = data.code;
-                roomName = hmType2[data.name];
+                // roomName = hmType2[data.name];
+                roomName = data.name;
                 $("#hmType").html(roomName);
                 var arr = data.description.split(/,/), str = "";
                 $.each(arr, function(i, a){
@@ -192,6 +201,16 @@ define([
                 roomPrice = price;
                 $("#price").html(base.formatMoney(+roomPrice * +totalDays));
                 // $("#price").html(base.formatMoney(price));
+
+                var remain = +res.data.remain, html = '';
+                if(category == 4){
+                    html = '<option value="1">1间</option>';
+                }else{
+                    for(var i = 0; i < remain; i++){
+                        html += '<option value="' + i + '">' + i + '间</option>';
+                    }
+                }
+                $("#quantity").html(html);
             }else{
                 base.showMsg("房间信息加载失败");
             }

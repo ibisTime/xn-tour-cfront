@@ -13,7 +13,7 @@ define([
 		var city ;//城市
 		var nowUrl ;//实况链接
 		
-		var dKey = "bb8189b9b03c48de8a9f4eebfff110d6";//key;
+		var dKey = WEATHER_KEY;//key;
 
 		city = sessionStorage.getItem("city");
 

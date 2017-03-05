@@ -178,6 +178,7 @@ define([
     }
     function getNormalPageHotel(refresh){
         if( !isLoading && (!isEnd || refresh) ){
+            $("#wrapper").css("bottom", "0");
             isLoading = true;
             start = refresh && 1 || start;
             return Ajax.get("618010", {

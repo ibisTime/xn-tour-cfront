@@ -30,18 +30,10 @@ define([
             return kind == 0 ? accountFlowStatus[text] : integralStatus[text];
         });
         Handlebars.registerHelper('formatAmount', function(num, options){
-            if(kind == 1){
-                if (typeof num == 'undefined' || typeof num != 'number') {
-                    return 0;
-                }
-                num = +(num || 0) / 1000;
-                return num >0 ? "+" + num.toFixed(0) : num.toFixed(0);
-            }else{
-                if(!num && num !== 0)
-                    return "--";
-                num = +num;
-                return num >0 ? "+" + (num / 1000).toFixed(2) : (num / 1000).toFixed(2);
-            }
+            if(!num && num !== 0)
+                return "--";
+            num = +num;
+            return num >0 ? "+" + (num / 1000).toFixed(2) : (num / 1000).toFixed(2);
         });
         getInitData();
     }

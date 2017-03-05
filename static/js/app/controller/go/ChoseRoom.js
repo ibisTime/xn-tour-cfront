@@ -33,20 +33,20 @@ define([
     function getHotelAndRoom(){
         loading.createLoading("加载中...");
         $.when(
-            base.getDictList("hh_type"),
+            // base.getDictList("hh_type"),
             base.getDictList("ss_type"),
             getHotel()
-        ).then(function (res0, res) {
-            if(res0.success && res.success){
-                $.each(res0.data, function(i, d){
-                    hmType2[d.dkey] = d.dvalue;
-                });
+        ).then(function (res) {
+            if(res.success){
+                // $.each(res0.data, function(i, d){
+                //     hmType2[d.dkey] = d.dvalue;
+                // });
                 $.each(res.data, function(i, d){
                     ssType[d.dkey] = d.dvalue;
                 });
-                Handlebars.registerHelper('formatType', function(text, options){
-                    return hmType2[text] || "--";
-                });
+                // Handlebars.registerHelper('formatType', function(text, options){
+                //     return hmType2[text] || "--";
+                // });
                 Handlebars.registerHelper('formatDesc', function(text, options){
                     var str = "";
                     var arr = text.split(/,/);

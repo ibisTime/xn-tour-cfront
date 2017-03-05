@@ -1,10 +1,10 @@
 define([
     'jquery',
     'app/util/ajax',
-    'app/module/validate/validate',
     'app/module/loading/loading',
-    'app/util/dialog'
-], function ($, Ajax, Validate, loading, dialog) {
+    'app/util/dialog',
+    'app/module/validate/validate'
+], function ($, Ajax, loading, dialog, Validate) {
     var tmpl = __inline("login.html");
     var css = __inline("login.css");
     var defaultOpt = {};

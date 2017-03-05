@@ -161,11 +161,12 @@ define([
             return (+num).toFixed(t || 2);
         },
         fZeroMoney: function(s) {
-            if(!$.isNumeric(s))
-                return "--";
-            var num = +s / 1000;
-            num = (num+"").replace(/^(\d+)(\.\d*)?/i, "$1");
-            return (+num).toFixed(0);
+            // if(!$.isNumeric(s))
+            //     return "--";
+            // var num = +s / 1000;
+            // num = (num+"").replace(/^(\d+)(\.\d*)?/i, "$1");
+            // return (+num).toFixed(0);
+            return Base.formatMoney(s);
         },
         getDictList: function(type){
             return Ajax.get("807706", {

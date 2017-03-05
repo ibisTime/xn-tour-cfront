@@ -185,7 +185,7 @@ define([
         Ajax.get("618140", data).then(function(res){
             if(res.success){
                 if(lineInfo && !$.isEmptyObject(lineInfo[lineCode])){
-                    delete lineInfo[lineCode];
+                    // delete lineInfo[lineCode];
                     sessionStorage.setItem("line-info", JSON.stringify(lineInfo));
                 }
                 location.href = "../pay/pay.html?code=" + res.data.code+"&type=1";

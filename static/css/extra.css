@@ -988,13 +988,13 @@
 }
 .search-input-wrap{
     width: 100%;
-    padding-left: 90px;
+    padding-left: 10px;
     padding-right: 10px;
 }
 .search-input-wrap .search-input-cont{
     width: 100%;
     border-radius: 16.5px;
-    padding-left: 10px;
+    padding-left: 11px;
     padding-right: 30px;
     background-color: rgba(255, 255, 255, 0.3);
     height: 33px;
@@ -1474,6 +1474,25 @@ label.error{
 }
 .active.h-detail-icon{
     background: url(../images/dzcg-icon.png?__inline) center no-repeat;
+}
+.travel-gl-collection-wrap{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+.travel-gl-collection-icon{
+    background: url(../images/dzcg-icon.png?__inline) center no-repeat;
+    background-size: 14px;
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.travel-gl-collection-times{
+    padding-left: 4px;
+    vertical-align: middle;
+    display: inline-block;
+    color: #a8a8a8;
 }
 .order-small-item{
     height: 25px;
@@ -2117,6 +2136,9 @@ label.error{
 .lh1_6em{
     line-height: 1.6em !important;
 }
+.lh1_6{
+    line-height: 1.6;
+}
 .c_f64444{
     color: #f64444 !important;
 }
@@ -2124,6 +2146,15 @@ label.error{
     position: absolute;
     right: 0px;
     bottom: 0;
+}
+.p-a-r-c{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
 }
 .spec-all-date{
     position: absolute;
@@ -2659,4 +2690,26 @@ label.error{
 }
 .content .collection-item.item .item-c .item-c-bottom1{
     padding-top: 0;
+}
+.p-a-l0{
+    position: absolute;
+    left: 0;
+}
+.carpool-order-right{
+    display: inline-block;
+    padding-left: 70px;
+}
+.order-carpool-content.content .item .item-c{
+    height: inherit;
+    min-height: 110px;
+}
+.order-carpool-content.content .item{
+    height: inherit;
+}
+.order-carpool-content.content .item .item-c .item-c-center, .c_59{
+    color: #595959 !important;
+}
+.hotel-over-select-text{
+    color: #333;
+    font-size: 14px;
 }

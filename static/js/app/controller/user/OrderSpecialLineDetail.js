@@ -114,7 +114,7 @@ define([
         loading.createLoading("提交申请中...");
         Ajax.post("618185", {
             json: {
-                orderCodeList: [code],
+                code: code,
                 remark: remark,
                 updater: base.getUserId()
             }
