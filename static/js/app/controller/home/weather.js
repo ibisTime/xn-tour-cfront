@@ -3,7 +3,6 @@ define([
     'app/util/ajax'
 ], function(base, Ajax) {
 
-
     init();
 
     function init() {
@@ -78,10 +77,8 @@ define([
 
                 $(".w-Tmp").html(nowDataTmp);
 				$(".weatherList").html(list);
-
 			}
 		});
-
 
     	//获取星期
     	function getWeek(dayNum){//dayNum天数，第几天，0是当天
