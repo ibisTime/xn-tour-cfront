@@ -3,13 +3,9 @@ define([
     'app/util/ajax'
 ], function(base, Ajax) {
 
-    init();
-
+	base.initLocation(init);
+	
     function init() {
-        addListener();
-    }
-
-    function addListener() {
 		var city ;//城市
 		var nowUrl ;//实况链接
 		
@@ -36,7 +32,7 @@ define([
 
 				nowCond = nowData.cond.txt;//实况天气状况
 				nowTmp = nowData.tmp ;//温度
-				update = base.formatDate(res.HeWeather5[0].basic.update.loc,"hh:mm");//更新时间
+				update = res.HeWeather5[0].basic.update.loc.substring(10);//更新时间
 				condImg = "http://files.heweather.com/cond_icon/"+nowData.cond.code+".png";
 
 				$(".w-nowCond").text(nowCond);//实况天气状况
@@ -97,7 +93,7 @@ define([
 	        
 	        for(var i=0;i<dayNum;i++){
 	        	//把未来几天的时间放到数组里
-	            dayArr.push(base.formatDate(new Date(oDate.getFullYear(),oDate.getMonth(),oDate.getDate() + i),"MM/dd/yyyy"));   
+	            dayArr.push(new Date(oDate.getFullYear(),oDate.getMonth(),oDate.getDate() + i).format("MM/dd/yyyy"));   
 	        }
 	        
 	        return dayArr;   //返回一个数组。

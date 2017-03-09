@@ -8,26 +8,25 @@ define([
 ], function(base, Ajax, iScroll, Handlebars, loading, Dict) {
 
 	var userId = base.getUserId();
-    var kind = base.getUrlParam("k") || 0;
-	
+    var kind = base.getUrlParam("k") || 0; //0金额，1积分
+
 	var myScroll, isEnd = false, isLoading = false, innerScroll;
-	
+
 	var integralTmpl = __inline("../../ui/integral.handlebars");
 	var config = {
 		currency:"XNB",
         start: 1,
         limit: 15
     };
-	
-	var integralStatus = Dict.get("integralStatus");
-    var accountFlowStatus = Dict.get("accountFlowStatus");
-	
+
+	var accountFlowStatus = Dict.get("accountFlowStatus");
+
     init();
 
     function init() {
         initIScroll();
         Handlebars.registerHelper('formatintegralStatus', function(text, places, options){
-            return kind == 0 ? accountFlowStatus[text] : integralStatus[text];
+            return accountFlowStatus[text];
         });
         Handlebars.registerHelper('formatAmount', function(num, options){
             if(!num && num !== 0)
@@ -37,9 +36,9 @@ define([
         });
         getInitData();
     }
-   
+
     function getInitData(){
-        
+
         loading.createLoading();
         Ajax.get("802503",{"userId":userId})
             .then(function(res){
@@ -62,24 +61,27 @@ define([
     	            base.showMsg(res.msg);
     	        }
                 loading.hideLoading();
+            }, function () {
+                base.showMsg("账户信息获取失败");
+                loading.hideLoading();
             });
     }
-    
-   
+
+
    function initIScroll(){
         var pullDownEl, $pullDownEl;
    		var pullDownOffset;//设置iScroll已经滚动的基准值
-   	
+
    		function pullDownAction () {
             isEnd = false;
             getPageintegral(true);
         }
-   		
+
    		$pullDownEl = $("#pullDown");
         pullDownEl = $pullDownEl[0];
         pullDownOffset = pullDownEl.offsetHeight;
    		$pullUpEl = $("#pullUp");
-   		
+
 		myScroll = new iScroll('wrapper', {
             useTransition: false,
             topOffset: pullDownOffset,
@@ -124,7 +126,7 @@ define([
         	config.start = refresh && 1 || config.start;
             isLoading = true;
             base.showPullUp();
-            
+
             return Ajax.get("802520", config, !refresh)
                 .then(function(res){
                     if(res.success && res.data.list.length){

@@ -13,9 +13,9 @@ define([
         $("#kfzx").on("click", function(){
             location.href = "http://kefu.easemob.com/webim/im.html?tenantId=" + TENANTID;
         });
-        $("#logout").on("click", function(){
-            base.logout();
-            location.href = "../index.html";
-        });
+        // $("#logout").on("click", function(){
+        //     base.logout();
+        //     location.href = "../index.html";
+        // });
     }
 });

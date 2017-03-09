@@ -22,6 +22,7 @@ define([
 					$("#name").html(name)
 					$("#actDate").html(actDate)
 					$("#description").html(description)
+					$("#site").html("活动地点：" + res.data.site);
 					
 				}else{
 					base.showMsg(res.msg);

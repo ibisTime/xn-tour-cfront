@@ -18,7 +18,7 @@ define([
     	loading.createLoading();
     	var userId = base.getUserId();
 		var mydate = new Date();
-		var nowDate = base.formatDate(mydate,"yyyy-MM-dd");
+		var nowDate = mydate.format("yyyy-MM-dd");
     	$.when(
             Ajax.get("805102",{
             	"userId": userId
@@ -55,19 +55,21 @@ define([
     			return;
 		    }
 		    loading.createLoading("签到中...");
-    		Ajax.get("805100",{
-    			"userId": base.getUserId()
-    		}).then(function(res){
-				loading.hideLoading();
-	            if(res.success){
-	            	var num = $(".signInNum").text();
-	            	num = +num + 1;
-	            	$(".signInNum").text(num);
-	            	$("#btn-signIn").val("明天再来").addClass("a-qiandao");
-	            }else{
-	                base.showMsg(res.msg);
-	            }
-	        });
+    		Ajax.post("618921",{
+                json: {
+        			"userId": base.getUserId()
+        		}
+            }).then(function(res){
+    				loading.hideLoading();
+    	            if(res.success){
+    	            	var num = $(".signInNum").text();
+    	            	num = +num + 1;
+    	            	$(".signInNum").text(num);
+    	            	$("#btn-signIn").val("明天再来").addClass("a-qiandao");
+    	            }else{
+    	                base.showMsg(res.msg);
+    	            }
+    	        });
     	})
 		
 		

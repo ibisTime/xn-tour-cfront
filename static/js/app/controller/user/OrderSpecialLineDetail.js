@@ -8,6 +8,7 @@ define([
     var code = base.getUrlParam("code");
     var orderStatus = Dict.get("specialLineOrderStatus");
     var specialModule = {};
+
     init();
 
     function init() {
@@ -48,14 +49,10 @@ define([
                 $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
                 $("#status").html(orderStatus[data.status]);
                 getSpecialLine(data.specialLineCode);
-                // $("#pic").attr("src", base.getImg(data.specialLine.pic));
-                // $("#sType").html(specialModule[data.specialLine.type]);
-                // $("#address").html(data.specialLine.address);
-                // $("#outDatetime").html(base.formatDate(data.specialLine.outDatetime, 'yyyy-MM-dd hh:mm'));
                 $("#quantity").html(data.quantity);
                 $("#applyNote").html(data.applyNote || "无");
                 $("#amount").html(base.formatMoney(data.amount));
-                $("#orderA").attr("href", "../go/special-line-detail.html?code=" + data.code);
+                $("#orderA").attr("href", "../go/special-line-detail.html?code=" + data.specialLineCode);
                 if(data.remark){
                     $("#remarkWrap").show();
                     $("#remark").html(data.remark);

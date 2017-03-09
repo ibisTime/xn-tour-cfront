@@ -9,10 +9,10 @@ define([
     'app/module/changeMobile/changeMobile',
     'app/module/changeNickName/changeNickName',
     // 'app/module/setTradePwd/setTradePwd',
-    'app/module/changePwd/changePwd'
+    // 'app/module/changePwd/changePwd'
 ], function(base, Ajax, loading, Validate, qiniu, Identity,
-			BindMobile, ChangeMobile, ChangeNickName, ChangePwd) {
-	var token, nickname, mobile, identityFlag, tradeFlag;
+			BindMobile, ChangeMobile, ChangeNickName) {
+	var token, nickname, mobile, identityFlag;
 	init();
 	function init(){
 		loading.createLoading();
@@ -45,14 +45,14 @@ define([
 								base.showMsg(msg);
 							}
 						});
-						$("#changPwdWrap").show();
+						// $("#changPwdWrap").show();
 					}else{
 						BindMobile.addMobileCont({
 							success: function(res){
 								mobile = res;
 								$("#mobileDetail").text(mobile);
 								$("#mobileName").text("修改手机号");
-								$("#changPwdWrap").show();
+								// $("#changPwdWrap").show();
 								ChangeMobile.addMobileCont({
 									success: function(res){
 										mobile = res;
@@ -92,15 +92,15 @@ define([
 					// if(tradeFlag){
 					// 	$("#tradeName").text("修改交易密码");
 					// }
-					ChangePwd.addCont({
-						success: function(){
-							// tradeFlag = true;
-							// $("#tradeName").text("修改交易密码");
-						},
-						error: function(msg){
-							base.showMsg(msg);
-						}
-					});
+					// ChangePwd.addCont({
+					// 	success: function(){
+					// 		// tradeFlag = true;
+					// 		// $("#tradeName").text("修改交易密码");
+					// 	},
+					// 	error: function(msg){
+					// 		base.showMsg(msg);
+					// 	}
+					// });
 					addListener();
 					initUpload();
 				}else{
@@ -124,9 +124,9 @@ define([
         $("#identityWrap").on("click", function(){
 			Identity.showIdentity();
 		});
-		$("#changPwdWrap").on("click", function(){
-			ChangePwd.showCont();
-		});
+		// $("#changPwdWrap").on("click", function(){
+		// 	ChangePwd.showCont();
+		// });
   	}
 
 	function initUpload(){

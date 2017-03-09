@@ -18,7 +18,10 @@ define([
         joinPlace: "",
         start: 1,
         limit: 10,
-        status: "1"
+        status: "1",
+        location: "2",
+        orderDir: "asc",
+        orderColumn: "order_no"
     };
     var firstSX = true;
     init();
@@ -215,8 +218,10 @@ define([
             var _self = $(this), idx = _self.index();
             _self.siblings(".active").removeClass("active");
             _self.addClass("active");
-            $("#dropCont").find(".travel-drop-right.active").removeClass("active")
-                .end().find(".travel-drop-right"+idx).addClass("active");
+            $("#dropCont")
+                .find(".travel-drop-right"+idx)
+                .siblings(".active").removeClass("active")
+                .end().addClass("active");
             innerScroll.refresh();
         });
         $("#dropCont").on("click", ".travel-drop-item-right-item", function(e){

@@ -15,7 +15,7 @@ define([
     }
     function changeMobile(){
         loading.createLoading("修改中...");
-        Ajax.post("805047", {
+        Ajax.post("805061", {
             json: {
                 "newMobile": $("#change-mobile").val(),
                 "smsCaptcha": $("#change-smsCaptcha").val(),

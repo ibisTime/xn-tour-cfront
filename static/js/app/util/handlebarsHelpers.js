@@ -52,16 +52,34 @@ define([
             (isAvatar && !isAvatar.name) ? defaultAvatar : "";
     });
     Handlebars.registerHelper('formateDateTime', function(date, options){
-        return date ? new Date(date).format("yyyy-MM-dd hh:mm:ss") : "--";
+        if(!date)
+            return "--";
+        date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+        return new Date(date).format("yyyy-MM-dd hh:mm:ss");
+    });
+    Handlebars.registerHelper('formateDateTime1', function(date, options){
+        if(!date)
+            return "--";
+        date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+        return new Date(date).format("yyyy-MM-dd hh:mm");
     });
     Handlebars.registerHelper('formateDate', function(date, options){
-        return date ? new Date(date).format("yyyy-MM-dd") : "--";
+        if(!date)
+            return "--";
+        date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+        return new Date(date).format("yyyy-MM-dd");
     });
     Handlebars.registerHelper('formatePointDate', function(date, options){
-        return date ? new Date(date).format("yyyy.MM.dd") : "--";
+        if(!date)
+            return "--";
+        date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+        return new Date(date).format("yyyy.MM.dd");
     });
     Handlebars.registerHelper('formateTime', function(date, options){
-        return date ? new Date(date).format("hh:mm") : "--";
+        if(!date)
+            return "--";
+        date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+        return new Date(date).format("hh:mm");
     });
     Handlebars.registerHelper('clearTag', function(des, options){
         return des && des.replace(/(\<[^\>]+\>)|(\<\/[^\>]+\>)|(\<[^\/\>]+\/\>)/ig, "") || "";

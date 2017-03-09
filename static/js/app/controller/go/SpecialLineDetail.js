@@ -2,12 +2,15 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/module/loading/loading',
-    'app/module/addSub/addSub'
-], function(base, Ajax, loading, addSub) {
+    'app/module/addSub/addSub',
+    'app/module/identity/identity',
+    'app/module/bindMobile/bindMobile'
+], function(base, Ajax, loading, addSub, Identity, BindMobile) {
 
     var code = base.getUrlParam("code"), remainNum = 0;
     var price, startSelectArr, endSelectArr;
     var returnUrl = base.getUrlParam("return");
+    var isBindMobile = false, isIdentity = false;
     var outName, outPic, startSite, outDatetime, outNum = 1;
 
     init();
@@ -34,6 +37,18 @@ define([
             loading.hideLoading();
             base.showMsg("数据加载失败");
         });
+        if(base.isLogin()){
+            base.getUser()
+                .then(function (res) {
+                    // loading.hideLoading();
+                    if(res.success){
+                        isBindMobile = !!res.data.mobile;
+                        isIdentity = !!res.data.realName;
+                    }else{
+                        base.showMsg(res.msg);
+                    }
+                });
+        }
     }
     function getDetail(){
         Ajax.get("618172", {
@@ -68,12 +83,51 @@ define([
     }
 
     function addListener() {
+        Identity.addIdentity({
+            success: function(){
+                isIdentity = true;
+                if(!isBindMobile)
+                    BindMobile.showMobileCont();
+            },
+            error: function(msg){
+                base.showMsg(msg);
+            }
+        });
+        BindMobile.addMobileCont({
+            success: function(res){
+                isBindMobile = true;
+                if(!isIdentity)
+                    Identity.showIdentity();
+            },
+            error: function(msg){
+                base.showMsg(msg);
+            }
+        });
         $("#kefuIcon").on("click", function (e) {
             location.href = "http://kefu.easemob.com/webim/im.html?tenantId=" + TENANTID;
         });
         $("#sbtn").on("click", function(){
             if(!base.isLogin()){
                 base.goLogin();
+                return;
+            }
+            if(!isBindMobile || !isIdentity){
+                if(!isBindMobile && !isIdentity){
+                    base.confirm("您还未实名认证，点击确认前往实名认证，并绑定手机号")
+                        .then(function () {
+                            Identity.showIdentity();
+                        }, base.emptyFun);
+                }else if(!isIdentity){
+                    base.confirm("您还未实名认证，点击确认前往实名认证")
+                        .then(function () {
+                            Identity.showIdentity();
+                        }, base.emptyFun);
+                }else if(!isBindMobile){
+                    base.confirm("您还未绑定手机号，点击确认前往绑定手机号")
+                        .then(function () {
+                            BindMobile.showMobileCont();
+                        }, base.emptyFun);
+                }
                 return;
             }
             var ticket = +$("#totalTicket").val();
@@ -114,7 +168,7 @@ define([
         obj.outStartSite = startSite;
         obj.outDatetime = outDatetime;
         obj.totalOutAmount = price * ticket;
-        obj.outNum = ticket;
+        obj.quantitySpecial = ticket;
         lineInfo[lCode] = obj;
         sessionStorage.setItem("line-info", JSON.stringify(lineInfo));
     }

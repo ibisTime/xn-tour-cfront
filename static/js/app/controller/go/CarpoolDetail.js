@@ -2,9 +2,10 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/module/loading/loading',
-    'app/module/showInMap/showInMap'
-    // 'app/module/searchMap/searchMap'
-], function(base, Ajax, loading, showInMap) {
+    'app/module/showInMap/showInMap',
+    'app/module/identity/identity',
+    'app/module/bindMobile/bindMobile'
+], function(base, Ajax, loading, showInMap, Identity, BindMobile) {
 	var startSite = "",
         endSite = "";
     var code = base.getUrlParam("code");
@@ -15,15 +16,28 @@ define([
             base.showMsg("未传入拼车单号");
             return;
         }
-        getCarpool();
-    	loading.createLoading();
+        loading.createLoading();
+        $.when(
+            base.getUser(),
+            getCarpool()
+        ).then(function (res) {
+            loading.hideLoading();
+            if(res.success){
+                isBindMobile = !!res.data.mobile;
+                isIdentity = !!res.data.realName;
+            }else{
+                base.showMsg(res.msg);
+            }
+        }, function () {
+            loading.hideLoading();
+            base.showMsg("用户信息获取失败");
+        });
     }
 
     function getCarpool() {
-        Ajax.get("618252", {
+        return Ajax.get("618252", {
             code: code
         }).then(function (res) {
-            loading.hideLoading();
             if(res.success){
                 startSite = res.data.startSite;
                 endSite = res.data.endSite;
@@ -46,6 +60,26 @@ define([
 
     function addListener() {
         showInMap.addMap();
+        BindMobile.addMobileCont({
+            success: function(res){
+                isBindMobile = true;
+                if(!isIdentity)
+                    Identity.showIdentity();
+            },
+            error: function(msg){
+                base.showMsg(msg);
+            }
+        });
+        Identity.addIdentity({
+            success: function(){
+                isIdentity = true;
+                if(!isBindMobile)
+                    BindMobile.showMobileCont();
+            },
+            error: function(msg){
+                base.showMsg(msg);
+            }
+        });
         $("#startSiteWrap").on("click", function (e) {
             showInMap.showMapByName(startSite);
         });
@@ -55,6 +89,25 @@ define([
         $("#sbtn").on("click", function () {
             if(!base.isLogin()){
                 base.goLogin();
+                return;
+            }
+            if(!isBindMobile || !isIdentity){
+                if(!isBindMobile && !isIdentity){
+                    base.confirm("您还未实名认证，点击确认前往实名认证，并绑定手机号")
+                        .then(function () {
+                            Identity.showIdentity();
+                        }, base.emptyFun);
+                }else if(!isIdentity){
+                    base.confirm("您还未实名认证，点击确认前往实名认证")
+                        .then(function () {
+                            Identity.showIdentity();
+                        }, base.emptyFun);
+                }else if(!isBindMobile){
+                    base.confirm("您还未绑定手机号，点击确认前往绑定手机号")
+                        .then(function () {
+                            BindMobile.showMobileCont();
+                        }, base.emptyFun);
+                }
                 return;
             }
             submit();
@@ -70,7 +123,12 @@ define([
         }).then(function (res) {
             loading.hideLoading();
             if(res.success){
-                location.href = "../pay/pay.html?code=" + res.data.code + "&type=4";
+                base.confirm("申请提交成功，点击确认前往支付")
+                    .then(function () {
+                        location.href = "../pay/pay.html?code=" + res.data.code + "&type=4";
+                    }, function () {
+                        location.href = "./go.html";
+                    })
             }else{
                 base.showMsg(res.msg);
             }

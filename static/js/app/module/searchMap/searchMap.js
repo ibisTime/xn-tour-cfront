@@ -5,8 +5,8 @@ define([
     var tmpl = __inline("searchMap.html");
     var defaultOpt = {
         title: "选择地点",
-        lng: '120.21937542',
-        lat: '30.25924446'
+        lng: '',
+        lat: ''
     };
     var css = __inline("searchMap.css");
     var myValue, point, map, transit;
@@ -70,10 +70,12 @@ define([
     }
 
     function setShowPlace() {
-        map.clearOverlays();
-        map.centerAndZoom(point, 18);
-        map.addOverlay(new BMap.Marker(point)); //添加标注
-        $("#J_SearchMapInput").val(myValue);
+        if(point){
+            map.clearOverlays();
+            map.centerAndZoom(point, 18);
+            map.addOverlay(new BMap.Marker(point)); //添加标注
+            $("#J_SearchMapInput").val(myValue);
+        }
     }
 
     function searchComplete(results) {
@@ -97,11 +99,11 @@ define([
                 addListener.call(this);
 
                 map = new BMap.Map("J_SearchMapCont");
-                var po = new BMap.Point(defaultOpt.lng, defaultOpt.lat);
-                map.centerAndZoom(po, 12);
-                var marker = new BMap.Marker(po); // 创建标注
-                map.addOverlay(marker); // 将标注添加到地图中
-                //marker.disableDragging();           // 不可拖拽
+                // var po = new BMap.Point(defaultOpt.lng, defaultOpt.lat);
+                // map.centerAndZoom(po, 12);
+                // var marker = new BMap.Marker(po); // 创建标注
+                // map.addOverlay(marker); // 将标注添加到地图中
+
                 map.enableScrollWheelZoom(true);
 
 
@@ -130,17 +132,21 @@ define([
                     point = new BMap.Point(option.point.lng, option.point.lat);
                     myValue = option.text;
                     setShowPlace();
+                }else{
+                    point = null;
+                    map.clearOverlays();
+                    $("#J_SearchMapInput").val("");
                 }
                 var mapCont = $("#J_SearchMapWrapper");
                 mapCont.css("top", $(window).scrollTop() + "px");
                 mapCont.show().animate({
                     left: 0
                 }, 200, function () {
-                    if(!option.text && option.showDw){
-                        var address = sessionStorage.getItem("address");
-                        $("#J_SearchMapInput").val(address);
-                        $("#search-map-icon").click();
-                    }
+                    // if(!option.text && option.showDw){
+                    //     var address = sessionStorage.getItem("address");
+                    //     $("#J_SearchMapInput").val(address);
+                    //     $("#search-map-icon").click();
+                    // }
                 });
             }
             return this;

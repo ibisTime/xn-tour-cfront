@@ -12,6 +12,7 @@ define([
     var hotelTmpl = __inline("../../ui/travel-hotel-list.handlebars");
     var lineInfo = sessionStorage.getItem("line-info");
     var myScroll, hotelCode, module;
+    var first = true;
 
     init();
 
@@ -48,7 +49,9 @@ define([
                     loading.hideLoading();
                 })
             }else{
+                first = false;
                 $("#wrapper, #fix-b").show();
+                initIScroll();
                 getModuleNav()
                     .then(function(res){
                         if(res.success){
@@ -161,6 +164,9 @@ define([
             isLoading = false;
             isEnd = false;
             start = 1;
+            if(first)
+                initIScroll();
+            first = false;
             getPageHotel(true);
         });
         $("#scBtn").on("click", function(){
@@ -183,7 +189,10 @@ define([
             start = refresh && 1 || start;
             return Ajax.get("618010", {
                 start: start,
-                limit: limit
+                limit: limit,
+                status: "1",
+                orderDir: "asc",
+                orderColumn: "order_no"
             }, !refresh)
                 .then(function (res) {
                     if(res.success && res.data.list.length){

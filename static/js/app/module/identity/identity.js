@@ -14,7 +14,7 @@ define([
     }
     function _identity(){
         loading.createLoading("认证中...");
-        Ajax.post("805044", {
+        Ajax.post("805193", {
             json: {
                 realName: $("#identityRealName").val(),
                 idNo: $("#identityIdNo").val(),
@@ -100,7 +100,7 @@ define([
                 }, 200, function(){
                     defaultOpt.showFun && defaultOpt.showFun();
                 });
-                
+
             }
             return this;
         },

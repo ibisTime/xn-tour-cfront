@@ -7,7 +7,11 @@
 		    <div class="item-c flex flex-dv flex-jb">
 		        <div class="item-c-top1 c_00 t_norwrap">{{guide.title}}</div>
 		        <div class="item-c-center twoline-ellipsis f12_80">{{clearTag guide.description}}</div>
-		        <div class="travel-item-bottom">{{formatePointDate guide.updateDatetime}}</div>
+		        <div class="travel-item-bottom">{{formateDateTime1 guide.updateDatetime}}</div>
+		        <div class="travel-gl-collection-wrap">
+		        	<div class="travel-gl-collection-icon"></div>
+		        	<span class="travel-gl-collection-times">{{guide.collectionTimes}}</span>
+		        </div>
 		    </div>
 		</a>
 	</div>

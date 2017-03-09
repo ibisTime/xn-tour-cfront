@@ -1,22 +1,40 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'app/module/loading/loading'
-], function(base, Ajax, loading) {
+    'app/module/loading/loading',
+    'app/module/bindMobile/bindMobile'
+], function(base, Ajax, loading, BindMobile) {
     init();
 
     function init() {
         var code = base.getUrlParam("code");
+        BindMobile.addMobileCont({
+            success: function(res){
+                base.goBackUrl("../user/user.html", true);
+            },
+            hideFn: function () {
+                base.goBackUrl("../user/user.html", true);
+            },
+            error: function(msg){
+                base.showMsg(msg);
+            }
+        });
         if(!code){
             loading.createLoading();
             getAppID();
             return;
         }
-        loading.createLoading("登录中...");
-        wxLogin({
-            code: code,
-            companyCode: SYSTEM_CODE
-        });
+        if(!base.isLogin()){
+            loading.createLoading("登录中...");
+            wxLogin({
+                code: code,
+                companyCode: SYSTEM_CODE
+            });
+        }else{
+            setTimeout(function () {
+                base.goBackUrl("../user/user.html", true);
+            }, 1000);
+        }
     }
     function getAppID(){
         Ajax.get("806031", {
@@ -43,15 +61,29 @@ define([
         });
     }
     function wxLogin(param) {
-        Ajax.post("805152", { json: param })
+        Ajax.post("618920", { json: param })    //805152
             .then(function(res) {
                 if (res.success) {
                     base.setSessionUser(res);
-                    base.goBackUrl("../user/user.html", true);
+                    base.getUser()
+                        .then(function (res) {
+                            loading.hideLoading();
+                            if(res.success){
+                                if(!res.data.mobile){
+                                    BindMobile.showMobileCont();
+                                }else{
+                                    base.goBackUrl("../user/user.html", true);
+                                }
+                            }else{
+                                base.goBackUrl("../user/user.html", true);
+                            }
+                        });
                 } else {
+                    loading.hideLoading();
                     base.showMsg(res.msg);
                 }
             }, function() {
+                loading.hideLoading();
                 base.showMsg("非常抱歉，微信授权失败!");
             });
     }

@@ -44,10 +44,14 @@ define([
             getPageYJ(),
             getPageComment()
         ).then(function(){
-            myScroll.refresh();
+            setTimeout(function(){
+                myScroll.refresh();
+            }, 400);
             loading.hideLoading();
         }, function(){
-            myScroll.refresh();
+            setTimeout(function(){
+                myScroll.refresh();
+            }, 400);
             loading.hideLoading();
         });
     }
@@ -78,7 +82,7 @@ define([
                 initSwiper();
                 lineAmount = data.price;
                 $("#joinPlace").html(data.joinPlace);
-                $("#outDate").html(base.formatDate(data.outDate, "yyyy.MM.dd"));
+                $("#outDate").html(base.formatDate(data.outDate, "yyyy.MM.dd hh:mm"));
                 $("#price").html(base.formatMoney(data.price));
                 $("#name").html(data.name);
                 var tabList = data.lineTabList;
@@ -87,6 +91,7 @@ define([
                     $("#content" + (+tabList[i].type - 1)).html(tabList[i].description);
                 }
                 data.isCollect == "1" ? $("#scjdIcon").addClass("active") : "";
+                myScroll.refresh();
             }else{
                 base.showMsg("加载失败");
             }
@@ -119,8 +124,10 @@ define([
             }else{
                 $("#glContent").html( '<div class="item-error">暂无相关攻略</div>' );
             }
+            myScroll.refresh();
         }, function(){
-            base.showMsg("攻略获取失败");
+            $("#glContent").html( '<div class="item-error">暂无相关攻略</div>' );
+            myScroll.refresh();
         });
     }
     function getPageYJ(){
@@ -131,14 +138,18 @@ define([
             status: 1
         }).then(function(res){
             if(res.success && res.data.list.length){
-                $("#yjContent").html( yjTmpl({items: res.data.list}) );
+                var list = base.bubbleSort(res.data.list, "location", true);
+                $("#yjContent").html( yjTmpl({items: list}) );
             }else{
                 $("#yjContent").html( '<div class="item-error">暂无相关游记</div>' );
             }
+            myScroll.refresh();
         }, function(){
-            base.showMsg("游记获取失败");
+            myScroll.refresh();
+            $("#yjContent").html( '<div class="item-error">暂无相关游记</div>' );
         });
     }
+
     function getPageComment(){
         if( !isEnd && !isLoading ){
             isLoading = true;
@@ -165,7 +176,7 @@ define([
                             '</div>'+
                             '<div class="plun-right">'+
                                 '<div class="plun-right-title">'+l.res.nickname+'</div>'+
-                                '<div class="plun-right-cont twoline-ellipsis">'+l.content+'</div>'+
+                                '<div class="plun-right-cont">'+l.content+'</div>'+
                                 '<div class="plun-right-datetime">'+base.formatDate(l.commDatetime, 'yyyy-MM-dd hh:mm')+'</div>'+
                             '</div>'+
                         '</div>';
@@ -176,18 +187,19 @@ define([
                 }else{
                     if(start == 1){
                         $("#content").html( '<div class="item-error">暂无相关评论</div>' );
-                        myScroll.refresh();
+                        // myScroll.refresh();
                         isEnd = true;
                     }
                     base.hidePullUp();
                 }
+                myScroll.refresh();
                 isLoading = false;
             }, function(){
                 if(start == 1){
                     $("#content").html( '<div class="item-error">暂无相关评论</div>' );
-                    myScroll.refresh();
                     isEnd = true;
                 }
+                myScroll.refresh();
                 base.hidePullUp();
             });
         }
@@ -232,7 +244,7 @@ define([
                         '</div>'+
                         '<div class="plun-right">'+
                             '<div class="plun-right-title">'+userInfo.nickname+'</div>'+
-                            '<div class="plun-right-cont twoline-ellipsis">'+res.content+'</div>'+
+                            '<div class="plun-right-cont">'+res.content+'</div>'+
                             '<div class="plun-right-datetime">'+(base.formatDate(new Date(), 'yyyy-MM-dd hh:mm'))+'</div>'+
                         '</div>'+
                     '</div>';

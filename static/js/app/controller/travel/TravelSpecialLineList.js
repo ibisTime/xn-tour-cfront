@@ -12,6 +12,7 @@ define([
     var sLineTmpl = __inline("../../ui/travel-special-line-list.handlebars");
     var lineInfo = sessionStorage.getItem("line-info");
     var myScroll, speLineCode, module;
+    var first = true;
 
     init();
 
@@ -44,7 +45,9 @@ define([
                     loading.hideLoading();
                 })
             }else{
+                first = false;
                 $("#wrapper, #fix-b").show();
+                initIScroll();
                 getDictList()
                     .then(function(res){
                         if(res.success){
@@ -59,7 +62,6 @@ define([
                         loading.hideLoading();
                     })
             }
-            initIScroll();
             addListener();
         }else{
             base.showMsg("未传入线路编号");
@@ -175,6 +177,9 @@ define([
             isLoading = false;
             isEnd = false;
             start = 1;
+            if(first)
+                initIScroll();
+            first = false;
             getPageSpeLine(true);
         });
         $("#scBtn").on("click", function(){
@@ -197,7 +202,8 @@ define([
             $("#wrapper").css("bottom", "0");
             return Ajax.get("618170", {
                 start: start,
-                limit: limit
+                limit: limit,
+                status: "1"
             }, !refresh)
                 .then(function (res) {
                     if(res.success && res.data.list.length){

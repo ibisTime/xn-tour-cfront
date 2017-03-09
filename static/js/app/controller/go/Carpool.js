@@ -26,9 +26,10 @@ define([
     init();
 
     function init() {
-        if(!base.isLogin()){
-            base.goLogin();
-        }else{
+        // if(!base.isLogin()){
+        //     base.goLogin();
+        // }else{
+        if(base.isLogin()){
             loading.createLoading();
             base.getUser()
                 .then(function (res) {
@@ -36,7 +37,6 @@ define([
                     if(res.success){
                         isBindMobile = !!res.data.mobile;
                         isIdentity = !!res.data.realName;
-                        addListener();
                     }else{
                         base.showMsg(res.msg);
                     }
@@ -44,34 +44,33 @@ define([
                     loading.hideLoading();
                 });
         }
+        setTimeout(function () {
+            addListener();
+        }, 1);
     }
 
     function addListener() {
         searchMap.addMap();
-        if(!isBindMobile){
-            BindMobile.addMobileCont({
-                success: function(res){
-                    isBindMobile = true;
-                    if(!isIdentity)
-                        Identity.showIdentity();
-                },
-                error: function(msg){
-                    base.showMsg(msg);
-                }
-            });
-        }
-        if(!isIdentity){
-            Identity.addIdentity({
-                success: function(){
-                    isIdentity = true;
-                    if(!isBindMobile)
-                        BindMobile.showMobileCont();
-                },
-                error: function(msg){
-                    base.showMsg(msg);
-                }
-            })
-        }
+        BindMobile.addMobileCont({
+            success: function(res){
+                isBindMobile = true;
+                if(!isIdentity)
+                    Identity.showIdentity();
+            },
+            error: function(msg){
+                base.showMsg(msg);
+            }
+        });
+        Identity.addIdentity({
+            success: function(){
+                isIdentity = true;
+                if(!isBindMobile)
+                    BindMobile.showMobileCont();
+            },
+            error: function(msg){
+                base.showMsg(msg);
+            }
+        });
         normalTextInput.addCont({
             type: "Z",
             success: function(result){

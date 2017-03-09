@@ -69,7 +69,7 @@ define([
             $("#hotelAddr").html(lineCodeInfo.hotelAddr);
             var startDate = lineCodeInfo.startDate;
             var endDate = lineCodeInfo.endDate;
-            var quantity = +lineCodeInfo.quantity;
+            var quantity = +lineCodeInfo.quantityHotal;
             var days = +base.calculateDays(startDate, endDate);
             totalHotelAmount = days * quantity * +lineCodeInfo.roomPrice;
             $("#hotelDatetime").html(
@@ -88,7 +88,7 @@ define([
             $("#outDatetime").html(lineCodeInfo.outDatetime);
             totalOutAmount = +lineCodeInfo.totalOutAmount;
             $("#totalOutAmount").html(base.formatMoney(lineCodeInfo.totalOutAmount));
-            $("#outNum").html(lineCodeInfo.outNum);
+            $("#outNum").html(lineCodeInfo.quantitySpecial);
         }else{
             $("#cxxx-t, #cxxx").hide();
         }
@@ -170,7 +170,6 @@ define([
             delete midObj.outPic;
             delete midObj.outStartSite;
             delete midObj.outDatetime;
-            delete midObj.outNum;
             delete midObj.totalOutAmount;
 
             delete midObj.hotelName;

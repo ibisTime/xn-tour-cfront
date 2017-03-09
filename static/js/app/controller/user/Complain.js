@@ -37,13 +37,40 @@ define([
                 }
             }
         });
+        $("#type").on("change", function () {
+            var _self = $(this),
+                val = _self.val();
+
+            _self.siblings(".hotel-over-select-text").html( _self.find("option:selected").text() );
+            if (val == 1) {
+                $("#cont1").show();
+                $("#cont2").hide();
+            } else {
+                $("#cont2").show();
+                $("#cont1").hide();
+            }
+        });
         $("#submit").on("click", function(){
             if($("#compForm").valid()){
-                var data = $("#compForm").serializeObject();
-                if(isEmpty(data.tsContent) && isEmpty(data.fkContent)){
-                    base.showMsg("投诉或反馈意见不能为空");
+                // var data = $("#compForm").serializeObject();
+                var data = {
+                    contact: $("#contact").val()
+                };
+                var tsContent = $("#tsContent").val();
+                var fkContent = $("#fkContent").val();
+
+                if(type == 1 && isEmpty(tsContent)){
+                    base.showMsg("投诉信息不能为空");
                     return;
                 }
+                if(type == 2 && isEmpty(fkContent)){
+                    base.showMsg("反馈建议不能为空");
+                    return;
+                }
+                if(type == 1)
+                    data.tsContent = tsContent;
+                else
+                    data.fkContent = fkContent;
                 data.commiter = base.getUserId();
                 Ajax.post("618200", {
                     json: data

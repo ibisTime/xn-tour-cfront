@@ -27,16 +27,22 @@ define([
                     $("#code").html(code);
                     $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
                     $("#status").html(carpoolStatus[data.status]);
-                    $("#applyNote").html(data.applyNote);
+
                     $("#firstAmount").html(base.formatMoney(data.firstAmount));
+                    $("#curPrice").html(base.formatMoney(data.secondAmount));
                     getCarpool(data.carpoolCode);
                     if(data.status == "0" || data.status == "1" || data.status == "2" || data.status == "97"){
-                        if(data.status == "1")
+                        if(data.status == "1"){
                             $("#payBtn").hide();
+                            $("#cancelBtn").css("width", "100%");
+                        }
                         else if(data.status == "2")
                             $("#payBtn").val("支付尾款");
                         $(".order-hotel-detail-btn0").removeClass("hidden");
                     }
+                    $("#item").on("click", function () {
+                        location.href = "/go/carpool-detail.html?code=" + data.carpoolCode;
+                    })
                 }else{
                     loading.hideLoading();
                     base.showMsg("订单信息获取失败");
@@ -58,7 +64,6 @@ define([
                 $("#outDatetime")
                     .html(base.formatDate(data.outDatetime, 'yyyy-MM-dd hh:mm'));
                 $("#takePartNum").html(data.takePartNum);
-                $("#curPrice").html(base.formatMoney(data.curPrice));
             }else{
                 base.showMsg(res.msg);
             }

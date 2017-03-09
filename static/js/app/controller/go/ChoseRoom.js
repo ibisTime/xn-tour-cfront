@@ -5,14 +5,15 @@ define([
     'app/module/loading/loading',
     'swiper',
     'app/module/showImg/showImg',
-    'app/util/handlebarsHelpers'
-], function(base, Ajax, iScroll, loading, Swiper, showImg, Handlebars) {
+    'app/util/handlebarsHelpers',
+    'app/module/scroll/scroll'
+], function(base, Ajax, iScroll, loading, Swiper, showImg, Handlebars, scroll) {
 
     var myScroll,
         start = 1,
         limit = 10,
         first = true,
-        isEnd = false,
+        isEnd = true,
         isLoading = false,
         watchDateTimer = "",
         hotelCode = base.getUrlParam("code"),
@@ -25,6 +26,7 @@ define([
 
     init();
     var hmType2 = {}, ssType = {};
+    var remain = 0;     //剩余房间数
 
     function init() {
         initIScroll();
@@ -32,21 +34,15 @@ define([
     }
     function getHotelAndRoom(){
         loading.createLoading("加载中...");
+        base.hidePullUp();
         $.when(
-            // base.getDictList("hh_type"),
             base.getDictList("ss_type"),
             getHotel()
         ).then(function (res) {
             if(res.success){
-                // $.each(res0.data, function(i, d){
-                //     hmType2[d.dkey] = d.dvalue;
-                // });
                 $.each(res.data, function(i, d){
                     ssType[d.dkey] = d.dvalue;
                 });
-                // Handlebars.registerHelper('formatType', function(text, options){
-                //     return hmType2[text] || "--";
-                // });
                 Handlebars.registerHelper('formatDesc', function(text, options){
                     var str = "";
                     var arr = text.split(/,/);
@@ -55,14 +51,11 @@ define([
                     })
                     return str && str.substr(0, str.length - 2) || "--";
                 });
-                getPageRoom()
-                    .then(function(){
-                        loading.hideLoading();
-                        addListener();
-                    });
+                addListener();
+                loading.hideLoading();
             }else{
                 loading.hideLoading();
-            }            
+            }
         });
     }
 
@@ -90,20 +83,22 @@ define([
 
     function getPageRoom(){
         if(!isLoading && !isEnd){
-            showPullUp();
+            base.showPullUp();
             isLoading = true;
-            return Ajax.get("618030", {
+            return Ajax.get("618033", {
                 hotalCode: hotelCode,
                 start: start,
-                limit: limit
+                limit: limit,
+                startDate: start_date,
+                endDate: end_date
             }).then(function(res){
                 if(res.success && res.data.list.length){
                     var data = res.data.list;
                     if(data.length < limit){
                         isEnd = true;
-                        hidePullUp();
+                        base.hidePullUp();
                     }else{
-                        showPullUp();
+                        base.showPullUp();
                     }
                     $("#content").append(roomTmpl({items: data}));
                     start++;
@@ -111,7 +106,7 @@ define([
                     if(first){
                         $("#content").html('<div class="item-error">该酒店暂无房间</div>');
                     }
-                    hidePullUp();
+                    base.hidePullUp();
                     base.showMsg(res.msg);
                 }
                 first = false;
@@ -133,28 +128,26 @@ define([
     }
 
     function initIScroll(){
-        myScroll = new iScroll('wrapper', {
-            useTransition: false,
-            onScrollMove: function () {
-                console.log(this.y, this.maxScrollY);
-                if (this.y - 20 < this.maxScrollY) {
-                    console.log("上拉加载更多");
-                }
+        myScroll = scroll.getInstance().getOnlyDownScroll({
+            loadMore: function () {
+                getPageRoom();
             }
         });
     }
 
     function addListener() {
         $("#buyBtn").on("click", function(){
-            if(start_date && end_date && roomCode){
-                location.href = './submit-order.html?hotelcode=' + hotelCode + 
-                    '&roomcode=' + roomCode + '&start=' + start_date + '&end=' + end_date + '&return=' + returnUrl;
+            if(start_date && end_date && roomCode && remain){
+                location.href = './submit-order.html?hotelcode=' + hotelCode +
+                    '&roomcode=' + roomCode + '&start=' + start_date + '&end=' + end_date + "&remain=" + remain + '&return=' + returnUrl;
             }else if(!start_date){
                 base.showMsg("未选择入住时间");
             }else if(!end_date){
                 base.showMsg("未选择离开时间");
-            }else{
-                base.showMsg("未选择房间");
+            }else if(!roomCode){
+                base.showMsg("未选择房型");
+            }else if(!remain){
+                base.showMsg("您选择的房型没有剩余房间");
             }
         });
         $("#swiper").on("click", ".swiper-slide .center-img", function(){
@@ -205,49 +198,26 @@ define([
             if(_self.hasClass("active")){
                 _self.removeClass("active");
                 roomCode = "";
+                remain = 0;
             }else{
                 _self.addClass("active");
                 roomCode = _self.attr("data-code");
+                remain = +_self.attr("data-remain");
             }
         });
-        // $("#startDate").on("change", function(){
-        //     var date = $(this).val();
-        //     var startDate = date && new Date(date) || new Date(); 
-        //     start_date = date;
-        //     $("#choseEndDate").scroller('destroy').scroller($.extend(opt["date"], {
-        //         mode: "scroller",
-        //         lang: "zh",
-        //         display: "bottom",  //modal
-        //         minDate: startDate
-        //     }));
-        //     var endDate = $("#endDate").val() || "";
-        //     $("#totalDays").html( base.calculateDays(date, endDate) );
-        // });
-        // $("#endDate").on("change", function(){
-        //     var date = $(this).val();
-        //     var endDate = date && new Date(date) || new Date();
-        //     end_date = date;
-        //     $("#choseStartDate").scroller('destroy').scroller($.extend(opt["date"], {
-        //         mode: "scroller",
-        //         lang: "zh",
-        //         display: "bottom",  //modal
-        //         maxDate: endDate
-        //     }));
-        //     var startDate = $("#startDate").val() || "";
-        //     $("#totalDays").html( base.calculateDays(startDate, date) );
-        // });
         $("#startDate, #endDate").on("change", function(){
             var startDate = $("#startDate").val();
             var endDate = $("#endDate").val();
             $("#totalDays").html( base.calculateDays(startDate, endDate) );
+            updateRoom();
         });
     }
-
-    function hidePullUp(){
-        $("#pullUp").css("visibility", "hidden");
-    }
-
-    function showPullUp(){
-        $("#pullUp").css("visibility", "visible");
+    function updateRoom(){
+        if(start_date && end_date){
+            roomCode = "";
+            remain = 0;
+            isEnd = false;
+            getPageRoom();
+        }
     }
 });

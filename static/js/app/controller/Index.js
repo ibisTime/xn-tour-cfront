@@ -15,7 +15,10 @@ define([
     var config = {
         start: 1,
         limit: 10,
-        status: "1"
+        status: "1",
+        location: "2",
+        orderDir: "asc",
+        orderColumn: "order_no"
     }, citylist;
 
     init();

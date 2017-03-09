@@ -7,6 +7,8 @@ define([
 ], function(base, Ajax, dialog, loading, Dict) {
     var code = base.getUrlParam("code");
     var lineOrderStatus = Dict.get("lineOrderStatus");
+    var specialModule = {};
+    
     init();
 
     function init() {
@@ -18,7 +20,10 @@ define([
         getOrder();
         addListeners();
     }
-
+    //专线数据字典
+    function getSDict(){
+        return Ajax.get("806052", {type: 3, location: 'goout'});
+    }
     function getOrder(){
         Ajax.get("618152", {code: code})
             .then(function(res){
@@ -28,12 +33,52 @@ define([
                     $("#code").html(code);
                     $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
                     $("#status").html(lineOrderStatus[data.status]);
-                    // $("#hotelPic").attr("src", base.getImg(data.hotal.pic1));
-                    // $("#name").html(data.hotal.name);
-                    // $("#addr").html(getAddr(data.hotal));
                     $("#applyNote").html(data.applyNote || "无");
-                    $("#amount").html(base.formatMoney(data.amount));
-                    $("#orderA").attr("href", "../go/line-detail.html?code=" + data.lineCode);
+                    $("#lineAmount").html(base.formatMoney(data.amount));
+                    $("#lineOrderA").attr("href", "../travel/travel-detail.html?code=" + data.lineCode);
+
+                    if(data.hotalOrder){
+                        getHotelAndRoom(data.hotalOrder.hotalCode, data.hotalOrder.hotalRoomCode);
+                        $("#hotelWrap").removeClass("hidden");
+                        var data1 = data.hotalOrder;
+                        $("#hotelName").html(data1.name);
+
+                        $("#datetime")
+                            .html(base.formatDate(data1.startDate, 'MM月dd号')+
+                                ' - '+base.formatDate(data1.endDate, 'MM月dd号')+'<span class="pl4">'+
+                                base.calculateDays(data1.startDate, data1.endDate)+'晚'+data1.quantity+'间</span>');
+                        $("#checkInName").html(data1.checkInName);
+                        $("#checkInMobile").html(data1.checkInMobile);
+                        $("#hotelAmount").html(base.formatMoney(data1.amount));
+                        $("#hotelOrderA").attr("href", "../go/hotel-detail.html?code=" + data1.hotalCode);
+                    }
+                    if(data.specialLineOrder){
+                        var data2 = data.specialLineOrder;
+                        $.when(
+                            getSDict(),
+                            getSpecialLine(data.specialLineOrder.specialLineCode)
+                        ).then(function (res, res1) {
+                            if(res.success && res1.success){
+                                $.each(res.data, function(i, d){
+                                    specialModule[d.code] = d.name;
+                                });
+                                var data = res1.data;
+                                $("#pic").attr("src", base.getImg(data.pic));
+                                $("#sType").html(specialModule[data.type]);
+                                $("#address").html(data.address);
+                                $("#outDatetime").html(base.formatDate(data.outDatetime, 'yyyy-MM-dd hh:mm'));
+                            }else{
+                                base.showMsg(res.msg || res1.msg);
+                            }
+                        }, function () {
+                            base.showMsg("专线加载失败");
+                        })
+                        $("#specLineWrap").removeClass("hidden");
+                        $("#quantity").html(data2.quantity);
+                        $("#applyNote").html(data2.applyNote || "无");
+                        $("#specAmount").html(base.formatMoney(data2.amount));
+                        $("#specOrderA").attr("href", "../go/special-line-detail.html?code=" + data2.specialLineCode);
+                    }
                     if(data.status == "0")
                         $(".order-hotel-detail-btn0").removeClass("hidden");
                     else if(data.status == "1")
@@ -46,6 +91,24 @@ define([
                 base.showMsg("订单信息获取失败");
                 loading.hideLoading();
             });
+    }
+    function getHotelAndRoom(hotelCode, roomCode) {
+        $.when(
+            Ajax.get("618012", {code: hotelCode}),
+            Ajax.get("618032", {code: roomCode})
+        ).then(function (res0, res1) {
+            if(res0.success && res1.success){
+                $("#type").html(res1.data.name);
+                $("#addr").html(getAddr(res0.data.hotal));
+                $("#hotelPic").attr("src", base.getImg(res1.data.picture));
+            }
+        })
+    }
+    function getAddr(data){
+        return data.province + (data.city || "") + (data.area || "") + (data.detail || "");
+    }
+    function getSpecialLine(code) {
+        return Ajax.get("618172", {code: code});
     }
 
     function getLineInfo(lineCode){

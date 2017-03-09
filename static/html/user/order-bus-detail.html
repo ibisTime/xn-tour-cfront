@@ -15,13 +15,19 @@
     </div>
     <div class="order-small-item">出行信息</div>
     <!-- order-detail-content -->
-    <div class="content mt0 order-bus-content">
+    <div class="content mt0 order-bus-content order-carpool-content">
         <div class="order-list-content3">
             <div class="order-list-item-center item">
-                <div class="item-c pl0_i flex flex-dv flex-jb">
-                    <div class="item-c-top t_norwrap pr50">上车地点：<span id="startSite"></span></div>
-                    <div class="item-c-center t_norwrap pr50">下车地点：<span id="endSite"></span></div>
-                    <div class="item-c-center t_norwrap pr50">途经地点：<span id="midSite"></span></div>
+                <div class="item-c pl0_i flex flex-dv flex-jb lh1_6">
+                    <div class="item-c-top pr70">
+                        <div class="p-a-l0">上车地点：</div><span class="carpool-order-right" id="startSite"></span>
+                    </div>
+                    <div class="item-c-center">
+                        <div class="p-a-l0">下车地点：</div><span class="carpool-order-right" id="endSite"></span>
+                    </div>
+                    <div class="item-c-center">
+                        <div class="p-a-l0">途经地点：</div><span class="carpool-order-right" id="midSite"></span>
+                    </div>
                     <div class="item-c-center t_bbb item-c-ctr c_f64444">发车时间：<span id="outDatetime"></span></div>
                     <div class="item-c-center t_bbb t_norwrap">人数：<span id="totalNum"></span>人</div>
                     <div class="y-big1 p-a-r-t">¥<span id="price"></span></div>

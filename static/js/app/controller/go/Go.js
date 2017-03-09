@@ -38,7 +38,9 @@ define([
             longitude: "",
             latitude: "",
             status: "1",
-            location: "2"
+            location: "2",
+            orderDir: "asc",
+            orderColumn: "order_no"
         },
         food: {
             start: 1,
@@ -50,7 +52,9 @@ define([
             longitude: "",
             latitude: "",
             status: "1",
-            location: "2"
+            location: "2",
+            orderDir: "asc",
+            orderColumn: "order_no"
         }
     };
     var config1 = {
@@ -74,6 +78,7 @@ define([
         }
     };
     var carpoolStatus = Dict.get("carpoolStatus");
+    var pcStatus = Dict.get("pcStatus");
 
     init();
     
@@ -156,7 +161,10 @@ define([
         config.outting.area = config.hotel.area = config.food.area = sessionStorage.getItem("area") || "";
         config.outting.longitude = config.hotel.longitude = config.food.longitude = sessionStorage.getItem("longitude") || "";
         config.outting.latitude = config.hotel.latitude = config.food.latitude = sessionStorage.getItem("latitude") || "";
-
+        
+        Handlebars.registerHelper('formatCarpoolStatus', function(text, options){
+            return pcStatus[text];
+        });
         getModuleNav();
     }
 

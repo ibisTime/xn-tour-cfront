@@ -18,15 +18,27 @@
         <div class="inline_block wid p-a fs15">联系方式</div>
         <input type="text" placeholder="请输入您的电话／邮箱" class="fs14 pl80" id ="contact" name="contact">
     </div>
-
-    <div class="p-r fs14 ba text-h plr10 pt8 mt8">
-        <div class="fs15">投诉信息</div>
+    <div class="submit-item bg_fff">
+        类型
+        <div class="submit-item-cont">
+            <div class="p_r hp100">
+                <div class="hotel-over-select-text inline_block">投诉信息</div>
+                <select class="over-select" id="type" name="type">
+                    <option value="1" selected>投诉信息</option>
+                    <option value="2">反馈建议</option>
+                </select>
+                <img src="../../images/xyjt.png?__inline" class="more r0_i">
+            </div>
+        </div>
+    </div>
+    <div class="p-r fs14 ba text-h plr10 pt8 mt8" id="cont1">
+        <!-- <div class="fs15">投诉信息</div> -->
         <div class="p-r mt10 hp80p pb10">
             <textarea class="wp100 p-a a-rea left0 fs15 hp100" id="tsContent" name="tsContent" placeholder="请输入您的投诉信息"></textarea>
         </div>
     </div>
-    <div class="p-r fs14 ba text-h plr10 pt8 mt8">
-        <div class="fs15">反馈建议</div>
+    <div class="p-r fs14 ba text-h plr10 pt8 mt8 hidden" id="cont2">
+        <!-- <div class="fs15">反馈建议</div> -->
         <div class="p-r mt10 hp80p pb10">
             <textarea class="wp100 p-a a-rea left0 fs15 hp100" id="fkContent" name="fkContent" placeholder="请输入您的反馈建议"></textarea>
         </div>

@@ -47,15 +47,18 @@ define([
                     html += '<div class="wp33 pt10 plr6 p-r fl">'+
                                 '<div class="write-travel-img-wrap" style="height: '+width+'px">'+
                                     '<img src="'+base.getPic(p, suffix)+'" class="center-img">'+
-                                '</div>'
+                                '</div>'+
                             '</div>';
                 });
                 $("#showImgContainer").html(html);
                 $("#name").html(data.name);
                 $("#description").html(data.description);
+                $("#publishDatetime").html(base.formatDate(data.publishDatetime, "yyyy-MM-dd hh:mm"))
                 data.isCollect == "1" ? $("#scIcon").addClass("active") : "";
                 data.isLike == "1" ? $("#dzIcon").addClass("active") : "";
-                data.isReport == "1" ? $("#jbIcon").addClass("active") : "";
+                if(data.publisher == base.getUserId())
+                    $("#delIcon").show();
+                // data.isReport == "1" ? $("#jbIcon").addClass("active") : "";
                 myScroll.refresh();
             }else{
                 base.showMsg(res.msg);
@@ -93,7 +96,7 @@ define([
                             '</div>'+
                             '<div class="plun-right">'+
                                 '<div class="plun-right-title">'+l.res.nickname+'</div>'+
-                                '<div class="plun-right-cont twoline-ellipsis">'+l.content+'</div>'+
+                                '<div class="plun-right-cont">'+l.content+'</div>'+
                                 '<div class="plun-right-datetime">'+base.formatDate(l.commDatetime, 'yyyy-MM-dd hh:mm')+'</div>'+
                             '</div>'+
                         '</div>';
@@ -142,40 +145,15 @@ define([
             loading.createLoading();
             collectNote(true);
         });
-        $("#jbIcon").on("click", function(){
+        $("#delIcon").on("click", function () {
             if(!base.isLogin()){
                 base.goLogin();
                 return;
             }
-
-            var d = dialog({
-                title: '举报内容',
-                content: '举报内容：<textarea id="cancelNote" class="dialog-textarea"></textarea>'+
-                    '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip0">请填写举报内容</div>'+
-                    '<div class="tr t_fa5555 hidden dialog-error-tip dialog-error-tip1">举报内容中包含特殊字符</div>',
-                ok: function (argument) {
-                    var remark = $(".dialog-textarea").val();
-                    if(!remark || remark.trim() == ""){
-                        $(".dialog-error-tip0").removeClass("hidden");
-                        $(".dialog-error-tip1").addClass("hidden");
-                        return false;
-                    } else if(!base.isNotFace(remark)){
-                        $(".dialog-error-tip0").addClass("hidden");
-                        $(".dialog-error-tip1").removeClass("hidden");
-                        return false;
-                    }
-                    loading.createLoading();
-                    JBNote(remark);
-                },
-                okValue: '确定',
-                cancel: function(){
-                    d.close().remove();
-                },
-                cancelValue: '取消'
-            });
-            d.showModal();
-
+            base.confirm("确认删除吗？")
+                .then(deleteTravel, base.emptyFun);
         });
+        
         $("#showImgContainer").on("click", ".center-img", function(){
             showImg.createImg($(this).attr("src")).showImg();
         });
@@ -200,7 +178,7 @@ define([
                         '</div>'+
                         '<div class="plun-right">'+
                             '<div class="plun-right-title">'+userInfo.nickname+'</div>'+
-                            '<div class="plun-right-cont twoline-ellipsis">'+res.content+'</div>'+
+                            '<div class="plun-right-cont">'+res.content+'</div>'+
                             '<div class="plun-right-datetime">'+(base.formatDate(new Date(), 'yyyy-MM-dd hh:mm'))+'</div>'+
                         '</div>'+
                     '</div>';
@@ -215,6 +193,28 @@ define([
                     base.showMsg(msg || "评论发布失败");
                 }
             });
+        });
+    }
+    function deleteTravel() {
+        loading.createLoading();
+        Ajax.post("618121", {
+            json: {
+                code: noteCode,
+                userId: base.getUserId()
+            }
+        }).then(function (res) {
+            loading.hideLoading();
+            if(res.success){
+                base.showMsg("删除成功");
+                setTimeout(function () {
+                    history.back();
+                }, 500);
+            }else{
+                base.showMsg(res.msg);
+            }
+        }, function () {
+            loading.hideLoading();
+            base.showMsg("删除失败");
         });
     }
     //点赞、收藏

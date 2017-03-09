@@ -13,6 +13,7 @@ define([
 	var hmType2 = {}, ssType = {}, price = 0, roomName = 1,
         roomDescription = "", roomPic = "", hotelAddr = "",
         roomPrice, totalDays, roomType = 1;
+    var remain = base.getUrlParam("remain") || 0;
     var returnUrl = base.getUrlParam("return");
     var category;
 
@@ -57,7 +58,7 @@ define([
                     });
             }else{
                 loading.hideLoading();
-            }            
+            }
         })
 	}
 
@@ -104,9 +105,16 @@ define([
         //     }
         // });
         $("#quantity").on("change", function () {
-            var _self = $(this);
-            _self.siblings(".over-select-text").html( _self.find("option:selected").text() );
-        })
+            var _self = $(this),
+                val = _self.val();
+            _self.siblings(".hotel-over-select-text").html( _self.find("option:selected").text() );
+            if($("#quantity").valid()){
+                val = +val;
+                $("#price").html(base.formatMoney(+roomPrice * +totalDays * val));
+            }else{
+                $("#price").html("--");
+            }
+        });
         $("#addr-wrap").on("click", function(){
         	showInMap.showMap();
         });
@@ -143,7 +151,7 @@ define([
         obj.roomType = roomType;
         obj.startDate = startDate;
         obj.endDate = endDate;
-        obj.quantity = $("#quantity").val();
+        obj.quantityHotal = $("#quantity").val();
         obj.hotelName = $("#name").html();
         obj.checkInMobile = $("#checkInMobile").val();
         obj.checkInName = $("#checkInName").val();
@@ -202,11 +210,11 @@ define([
                 $("#price").html(base.formatMoney(+roomPrice * +totalDays));
                 // $("#price").html(base.formatMoney(price));
 
-                var remain = +res.data.remain, html = '';
+                var html = '';
                 if(category == 4){
                     html = '<option value="1">1间</option>';
                 }else{
-                    for(var i = 0; i < remain; i++){
+                    for(var i = 1; i <= remain; i++){
                         html += '<option value="' + i + '">' + i + '间</option>';
                     }
                 }

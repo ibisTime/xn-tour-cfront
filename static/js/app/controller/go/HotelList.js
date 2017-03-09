@@ -18,7 +18,9 @@ define([
         area: "",
         longitude: "",
         latitude: "",
-        status: "1"
+        status: "1",
+        orderDir: "asc",
+        orderColumn: "order_no"
     }, isLoading = false, isEnd = false, first = true, module,
     hotelTmpl = __inline("../../ui/go-hotel.handlebars");
 
@@ -36,7 +38,7 @@ define([
         config.longitude = sessionStorage.getItem("longitude");
         config.latitude = sessionStorage.getItem("latitude");
 
-        
+
         $.when(
             base.getDictList("ss_type"),
             Ajax.get("806052", {
@@ -72,7 +74,7 @@ define([
         $pullDownEl = $("#pullDown");
         pullDownEl = $pullDownEl[0];
         pullDownOffset = pullDownEl.offsetHeight;
-        
+
         myScroll = new iScroll('wrapper', {
             useTransition: false,
             topOffset: pullDownOffset,
@@ -89,13 +91,12 @@ define([
                     $pullDownEl.removeClass("flip");
                     this.minScrollY = -pullDownOffset;
                 } else if (this.y - 120 < this.maxScrollY) {
-                    // console.log("上拉加载更多");
                     getPageHotel();
                 }
             },
             onScrollEnd: function () {
                 if ($pullDownEl.hasClass("flip")) {
-                    $pullDownEl.addClass("scroll-loading");           
+                    $pullDownEl.addClass("scroll-loading");
                     pullDownAction();
                 }
             }

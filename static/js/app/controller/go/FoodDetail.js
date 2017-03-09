@@ -114,7 +114,7 @@ define([
                             '</div>'+
                             '<div class="plun-right">'+
                                 '<div class="plun-right-title">'+l.res.nickname+'</div>'+
-                                '<div class="plun-right-cont twoline-ellipsis">'+l.content+'</div>'+
+                                '<div class="plun-right-cont">'+l.content+'</div>'+
                                 '<div class="plun-right-datetime">'+base.formatDate(l.commDatetime, 'yyyy-MM-dd hh:mm')+'</div>'+
                             '</div>'+
                         '</div>';
@@ -196,7 +196,7 @@ define([
                         '</div>'+
                         '<div class="plun-right">'+
                             '<div class="plun-right-title">'+userInfo.nickname+'</div>'+
-                            '<div class="plun-right-cont twoline-ellipsis">'+res.content+'</div>'+
+                            '<div class="plun-right-cont">'+res.content+'</div>'+
                             '<div class="plun-right-datetime">'+(base.formatDate(new Date(), 'yyyy-MM-dd hh:mm'))+'</div>'+
                         '</div>'+
                     '</div>';

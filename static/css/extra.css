@@ -648,10 +648,10 @@
     max-height: none !important;
 }
 .plun-cont-item{
-    height: 102px;
     border-bottom: 1px solid #ededed;
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 6px;
 }
 .plun-cont-item .plun-left{
     width: 51px;
@@ -2086,6 +2086,9 @@ label.error{
 .travel-note-detail-3.active .travel-note-detail-3-jubao{
     background-image: url(../images/jubao-a.png?__inline);
 }
+.travel-note-detail-3-del{
+    background-image: url(../images/del.png?__inline);
+}
 .pb2_i{
     padding-bottom: 2px !important;
 }
@@ -2712,4 +2715,44 @@ label.error{
 .hotel-over-select-text{
     color: #333;
     font-size: 14px;
+}
+.travel-note-item-del{
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    width: 34px;
+    height: 18px;
+    background: url(../images/del1.png) no-repeat center;
+    background-size: 16px;
+}
+.carpool-item-status{
+    font-size: 11px;
+    color: #adadad;
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+.carpool-item-datetime{
+    font-size: 13px;
+    color: #adadad;
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+}
+.pr90_i{
+    padding-right: 90px !important;
+}
+.b0_i{
+    bottom: 0 !important;
+}
+.r0_i{
+    right: 0 !important;
+}
+.pr70{
+    padding-right: 70px !important;
+}
+.line-item-bottom-price{
+    right: 0;
+    left: 107.5px;
+    width: initial !important;
 }

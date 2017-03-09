@@ -32,9 +32,7 @@ define([
     init();
 
     function init() {
-        if(!base.isLogin()){
-            base.goLogin();
-        }else{
+        if(base.isLogin()){
             loading.createLoading();
             base.getUser()
                 .then(function (res) {
@@ -42,7 +40,6 @@ define([
                     if(res.success){
                         isBindMobile = !!res.data.mobile;
                         isIdentity = !!res.data.realName;
-                        addListener();
                     }else{
                         base.showMsg(res.msg);
                     }
@@ -50,6 +47,9 @@ define([
                     loading.hideLoading();
                 });
         }
+        setTimeout(function () {
+            addListener();
+        }, 1);
     }
 
     function addListener() {

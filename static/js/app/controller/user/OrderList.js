@@ -21,11 +21,6 @@ define([
         pageFirst = true;
     /*全部、待支付、已支付、退款*/
     var statusList = [
-        // ["", "0", "1", "2"],
-        // ["", "0", "1", "2"],
-        // ["", "0", "1", "2"],
-        // ["", "0", "1", "2"],
-        // ["", "0", "1", "2"],
         [null, [0], [1], [2, 31, 94]],
         [null, [0], [1], [2, 31, 94]],
         [null, [0], [1], [2, 31, 94]],
@@ -92,13 +87,11 @@ define([
             isLoading: false
         };
 
-
     init();
 
     function init() {
         initIScroll();
         addListener();
-        // $(".order-list-top-nav2").find(".order-list-top-nav2-item:eq(" + index1 + ")").addClass("active");
         config[index].statusList = getStatusByIndex(index1);
         $(".order-list-top-nav1").find(".order-list-top-nav1-item:eq(" + index + ")").click();
         $("#content").find(".order-list-content" + index).removeClass("hidden");
@@ -166,11 +159,6 @@ define([
                 .end().find(".order-list-content" + idx).removeClass("hidden");
             index = idx;
             var idx1;
-            // if (index != 5) {
-            //     idx1 = getIndexByStatus(config[idx].status);
-            // } else {
-            //     idx1 = getIndexByStatusList(config["5"].statusList)
-            // }
             idx1 = getIndexByStatusList(config[index].statusList);
             pageFirst = false;
             $(".order-list-top-nav2")
@@ -202,10 +190,6 @@ define([
             var idx = $(".order-list-top-nav1").find(".order-list-top-nav1-item.active").index();
             index = idx;
             config[idx].start = 1;
-            // if (index != 5)
-            //     config[idx].status = getStatusByIndex(idx1);
-            // else
-            //     config[idx].statusList = getStatusByIndex(idx1);
             config[idx].statusList = getStatusByIndex(idx1);
 
             config1["first" + idx] = true;
@@ -312,21 +296,6 @@ define([
             showTKModal.call(this, tuikMallOrder);
         });
     }
-    //酒店数据字典
-    // function getHHType() {
-    //     return base.getDictList("hh_type")
-    //         .then(function(res) {
-    //             if (res.success) {
-    //                 $.each(res.data, function(i, d) {
-    //                     hhType[d.dkey] = d.dvalue;
-    //                 });
-    //             } else {
-    //                 base.showMsg(res.msg);
-    //             }
-    //         }, function() {
-    //             base.showMsg("数据加载失败");
-    //         });
-    // }
     //专线数据字典
     function getSDict() {
         return Ajax.get("806052", {
@@ -644,7 +613,7 @@ define([
                                 '<div class="item-c-center c_59 item-c-ctr pr110">发车时间：' + base.formatDate(d.carpool.outDatetime, 'yyyy-MM-dd hh:mm') + '</span></div>' +
                                 '<div class="item-c-center t_bbb t_norwrap pr110">拼车人数：' + d.carpool.totalNum + '人</div>' +
                                 '<div class="y-big2 p-a-r-c"><span class="fs12">定金：</span>¥' + base.formatMoney(d.firstAmount) + '</div>' +
-                                '<div class="y-big2 p-a-r-b"><span class="fs12">尾款：</span>¥' + base.formatMoney(d.carpool.curPrice) + '</div>' +
+                                '<div class="y-big2 p-a-r-b"><span class="fs12">尾款：</span>¥' + base.formatMoney(d.secondAmount) + '</div>' +
                                 '<div class="order-status">' + carpoolStatus[d.status] + '</div>' +
                                 '</div>' +
                                 '</a></div>';

@@ -13,7 +13,8 @@ define([
     //0 待审核 1 审核通过 2 审核不通过
     var config = {
         start: 1,
-        limit: 10
+        limit: 10,
+        userId: base.getUserId()
     };
 
     init();
@@ -30,6 +31,46 @@ define([
             }, function(){
                 loading.hideLoading();
             });
+        addListeners();
+    }
+
+    function addListeners() {
+        $("#content").on("click", ".travel-note-item-del", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var _self = this;
+            base.confirm("确认删除吗？")
+                .then(deleteTravel.bind(_self), base.emptyFun);
+        });
+    }
+
+    function deleteTravel() {
+        loading.createLoading();
+        Ajax.post("618121", {
+            json: {
+                code: $(this).attr("data-code"),
+                userId: base.getUserId()
+            }
+        }).then(function (res) {
+            loading.hideLoading();
+            if(res.success){
+                base.showMsg("删除成功", 100);
+                setTimeout(function () {
+                    loading.createLoading();
+                    getPageTravelNote(true)
+                        .then(function(){
+                            loading.hideLoading();
+                        }, function(){
+                            loading.hideLoading();
+                        });;
+                }, 100);
+            }else{
+                base.showMsg(res.msg);
+            }
+        }, function () {
+            loading.hideLoading();
+            base.showMsg("删除失败");
+        });
     }
     
     function getPageTravelNote(refresh){

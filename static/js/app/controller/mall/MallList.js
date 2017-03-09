@@ -10,7 +10,7 @@ define([
 
     var myScroll, isLoading = false, isEnd = false,
         config = {
-            status: "1",
+            status: "3",
             start: 1,
             limit: 10
         };

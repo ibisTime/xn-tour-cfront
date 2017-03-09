@@ -130,10 +130,23 @@ define([
             return maskLen > 0 ? (header + mask.substring(0, maskLen + (space ? maskLen / 4 : 0)) + (space ? ' ' : '') + tailer) : info;
         },
         formatDate: function(date, format){
-            return date ? new Date(date).format(format) : "--";
+            if(!date)
+                return "--";
+            if(typeof date == "string")
+                date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+            return new Date(date).format(format);
         },
         getImg: function(pic){
-            return pic ? (PIC_PREFIX + pic + THUMBNAIL_SUFFIX) : "";
+            if(!pic){
+                return "";
+            }
+            if(pic){
+                pic = pic.split(/\|\|/)[0];
+            }
+            if(!/^http/i.test(pic)){
+                pic = PIC_PREFIX + pic + THUMBNAIL_SUFFIX;
+            }
+            return pic
         },
         getUrlParam: function(name, locat) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -224,6 +237,9 @@ define([
             return name1 == name2 || name2.indexOf(name1) != -1 || name1.indexOf(name2) != -1 || false
         },
         getPic: function(pic, suffix){
+            if(!pic){
+                return "";
+            }
             if(pic){
                 pic = pic.split(/\|\|/)[0];
             }
@@ -234,15 +250,27 @@ define([
         },
         getAvatar: function(pic){
             var defaultAvatar = __inline("../images/default-avatar.png");
-            return pic ? (PIC_PREFIX + pic + THUMBNAIL_SUFFIX) : defaultAvatar;
+            if(!pic){
+                return defaultAvatar;
+            }
+            if(pic){
+                pic = pic.split(/\|\|/)[0];
+            }
+            if(!/^http/i.test(pic)){
+                pic = PIC_PREFIX + pic + THUMBNAIL_SUFFIX;
+            }
+            return pic;
         },
         getWXAvatar: function(pic){
             var defaultAvatar = __inline("../images/default-avatar.png");
             var suffix = '?imageMogr2/auto-orient/thumbnail/!65x65r';
             if(!pic){
                 pic = defaultAvatar;
-            }else if(!/^http/i.test(pic)){
-                pic = PIC_PREFIX + pic + suffix;
+            }else{
+                pic = pic.split(/\|\|/)[0];
+                if(!/^http/i.test(pic)){
+                    pic = PIC_PREFIX + pic + suffix;
+                }
             }
             return pic;
         },
@@ -271,7 +299,7 @@ define([
                             }
                             //百度地图的城市名称可能和oss存的名称不同，需要匹配出相同的名称
                             getRealLocation(initFun, province, city, area, longitude, latitude, rs.address, errFun);
-                        });  
+                        });
                     } else {
                         loading.hideLoading();
                         Base.showMsg("定位失败");
@@ -322,7 +350,7 @@ define([
         },
         isNotFace: function(value) {
             var pattern = /^[\s0-9a-zA-Z\u4e00-\u9fa5\u00d7\u300a\u2014\u2018\u2019\u201c\u201d\u2026\u3001\u3002\u300b\u300e\u300f\u3010\u3011\uff01\uff08\uff09\uff0c\uff1a\uff1b\uff1f\uff0d\uff03\uffe5\x21-\x7e]*$/;
-            return pattern.test(value)
+            return pattern.test(value);
         },
         showMsg: function(msg, time) {
             var d = dialog({
@@ -360,7 +388,7 @@ define([
             var rUrl = Base.getUrlParam("return");
             if(isLoginBack){
                 var returnUrl = sessionStorage.getItem("l-return");
-                sessionStorage.removeItem("l-return");
+                // sessionStorage.removeItem("l-return");
                 location.href = returnUrl || url || "../user/user.html";
             }else{
                 if (rUrl) {
@@ -369,7 +397,7 @@ define([
                     location.href = url || "../index.html";
                 }
             }
-            
+
         },
         addIcon: function() {
             var icon = sessionStorage.getItem("icon");
@@ -424,11 +452,10 @@ define([
             $("#pullUp").css("visibility", "visible");
         },
         goLogin: function(){
-            // location.href = "../user/wx-login.html?return=" + Base.makeReturnUrl();
             loading.hideLoading();
-            // sessionStorage.setItem("l-return", location.pathname + location.search);
-            login.addCont().showCont();
-            // location.href = "../user/wx-login.html";
+            sessionStorage.setItem("l-return", location.pathname + location.search);
+            // login.addCont().showCont();
+            location.href = "../user/redirect.html";
         },
         confirm: function(msg) {
             return (new Promise(function (resolve, reject) {
@@ -463,9 +490,40 @@ define([
             }).appendTo($('body'));
         },
         emptyFun: function () {
-            
+
+        },
+        /*
+         * 冒泡排序，默认升序
+         * @param list 排序数组
+         * @param key 按数组的哪个key排序
+         * @param isDesc 是否降序，默认升序,
+         */
+        bubbleSort: function (list, key, isDesc) {
+            for(var i = 0; i < list.length - 1; i++){
+                for(var j = i + 1; j < list.length; j++){
+                    if(!isDesc){
+                        if(list[i][key] > list[j][key]){
+                            var temp = list[i];
+                            list[i] = list[j];
+                            list[j] = temp;
+                        }
+                    }else{
+                        if(list[i][key] < list[j][key]){
+                            var temp = list[i];
+                            list[i] = list[j];
+                            list[j] = temp;
+                        }
+                    }
+                }
+            }
+            return list;
         }
     };
-    Base.addIcon();
+    if(!/\/redirect\.html/.test(location.href)){
+        if(!Base.isLogin()){
+            Base.goLogin();
+        }
+    }
+    // Base.addIcon();
     return Base;
 });
