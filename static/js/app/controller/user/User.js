@@ -23,12 +23,30 @@ define([
         }
         $.when(
             getAccountList(),
-            getUser()
+            getUser(),
+            getTotalCartItem()
         ).then(function () {
             loading.hideLoading();
         }, function () {
             loading.hideLoading();
         })
+    }
+    /*
+     * 获取购物车商品总数
+     * @param refresh 是否重新从服务器获取
+     */
+    function getTotalCartItem(refresh) {
+        return Ajax.get("618441", {
+            userId: base.getUserId()
+        }, !refresh).then(function(res) {
+            if (res.success) {
+                var len = +res.data.length;
+                if (len > 99) {
+                    len = "99+";
+                }
+                $("#count").removeClass("hidden").html(len);
+            }
+        });
     }
 
     function getTel() {

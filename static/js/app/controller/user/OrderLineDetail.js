@@ -8,7 +8,7 @@ define([
     var code = base.getUrlParam("code");
     var lineOrderStatus = Dict.get("lineOrderStatus");
     var specialModule = {};
-    
+
     init();
 
     function init() {
@@ -27,15 +27,20 @@ define([
     function getOrder(){
         Ajax.get("618152", {code: code})
             .then(function(res){
+                loading.hideLoading();
                 if(res.success){
                     var data = res.data;
-                    getLineInfo(data.lineCode);
                     $("#code").html(code);
                     $("#createDatetime").html(base.formatDate(data.applyDatetime, 'yyyy-MM-dd hh:mm'));
                     $("#status").html(lineOrderStatus[data.status]);
                     $("#applyNote").html(data.applyNote || "无");
                     $("#lineAmount").html(base.formatMoney(data.amount));
                     $("#lineOrderA").attr("href", "../travel/travel-detail.html?code=" + data.lineCode);
+                    var pic = data.line.pathPic.split(/\|\|/);
+                    $("#linePic").attr("src", base.getImg(pic[0]));
+                    $("#name").html(data.line.name);
+                    $("#joinPlace").html(data.line.joinPlace);
+                    $("#outDate").html(base.formatDate(data.line.outDate, "yyyy-MM-dd"));
 
                     if(data.hotalOrder){
                         getHotelAndRoom(data.hotalOrder.hotalCode, data.hotalOrder.hotalRoomCode);
@@ -111,25 +116,25 @@ define([
         return Ajax.get("618172", {code: code});
     }
 
-    function getLineInfo(lineCode){
-        return Ajax.get("618102", {
-            code: lineCode
-        }).then(function(res){
-            loading.hideLoading();
-            if(res.success){
-                var data = res.data;
-                var pic = data.pathPic.split(/\|\|/), html = "";
-                $("#linePic").attr("src", base.getImg(pic[0]));
-                $("#name").html(data.name);
-                $("#joinPlace").html(data.joinPlace);
-            }else{
-                base.showMsg(res.msg);
-            }
-        }, function(){
-            base.showMsg("线路信息加载失败");
-            loading.hideLoading();
-        })
-    }
+    // function getLineInfo(lineCode){
+    //     return Ajax.get("618102", {
+    //         code: lineCode
+    //     }).then(function(res){
+    //         loading.hideLoading();
+    //         if(res.success){
+    //             var data = res.data;
+    //             var pic = data.pathPic.split(/\|\|/), html = "";
+    //             $("#linePic").attr("src", base.getImg(pic[0]));
+    //             $("#name").html(data.name);
+    //             $("#joinPlace").html(data.joinPlace);
+    //         }else{
+    //             base.showMsg(res.msg);
+    //         }
+    //     }, function(){
+    //         base.showMsg("线路信息加载失败");
+    //         loading.hideLoading();
+    //     })
+    // }
 
     function cancelOrder(remark){
         loading.createLoading("提交申请中...");

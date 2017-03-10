@@ -7,82 +7,91 @@ define([
     'app/util/dict'
 ], function(base, Ajax, iScroll, Handlebars, loading, Dict) {
 
-	var userId = base.getUserId();
+    var userId = base.getUserId();
     var kind = base.getUrlParam("k") || 0; //0金额，1积分
 
-	var myScroll, isEnd = false, isLoading = false, innerScroll;
+    var myScroll,
+        isEnd = false,
+        isLoading = false,
+        innerScroll;
 
-	var integralTmpl = __inline("../../ui/integral.handlebars");
-	var config = {
-		currency:"XNB",
+    var integralTmpl = __inline("../../ui/integral.handlebars");
+    var config = {
+        currency: (kind == "1"
+            ? "XNB"
+            : "CNY"),
         start: 1,
         limit: 15
     };
 
-	var accountFlowStatus = Dict.get("accountFlowStatus");
+    var accountFlowStatus = {};
+    // var accountFlowStatus = Dict.get("accountFlowStatus");
 
     init();
 
     function init() {
         initIScroll();
-        Handlebars.registerHelper('formatintegralStatus', function(text, places, options){
-            return accountFlowStatus[text];
-        });
-        Handlebars.registerHelper('formatAmount', function(num, options){
-            if(!num && num !== 0)
+        Handlebars.registerHelper('formatAmount', function(num, options) {
+            if (!num && num !== 0)
                 return "--";
             num = +num;
-            return num >0 ? "+" + (num / 1000).toFixed(2) : (num / 1000).toFixed(2);
+            return num > 0
+                ? "+" + (num / 1000).toFixed(2)
+                : (num / 1000).toFixed(2);
         });
         getInitData();
     }
 
-    function getInitData(){
+    function getInitData() {
 
         loading.createLoading();
-        Ajax.get("802503",{"userId":userId})
-            .then(function(res){
-            	if(res.success){
-    	        	config.accountNumber = res.data[1].accountNumber;
-                    var format = "fZeroMoney";
-    	        	if(kind == 0){
-                        config.currency = "CNY";
-                        format = "formatMoney";
+        $.when(base.getDictList("biz_type"), Ajax.get("802503", {"userId": userId})).then(function(res0, res) {
+            loading.hideLoading();
+            if (res0.success && res.success) {
+                $.each(res0.data, function(i, d) {
+                    accountFlowStatus[d.dkey] = d.dvalue;
+                });
+                Handlebars.registerHelper('formatintegralStatus', function(text, places, options) {
+                    return accountFlowStatus[text];
+                });
+                var amount = "--";
+                $.each(res.data, function(i, d) {
+                    if (d.currency == config.currency) {
+                        amount = base.formatMoney(d.amount);
+                        config.accountNumber = d.accountNumber;
+                        if (kind == 1) {
+                            $("#balance").html("积分余额：" + amount);
+                        } else {
+                            $("#balance").html("账户余额：¥" + amount);
+                        }
                     }
-                    getPageintegral(true);
-                    var amount = "--";
-                    $.each(res.data, function (i, d) {
-                        if(d.currency == config.currency)
-                            amount = base[format](d.amount);
-                    })
-                    kind == 1 ? $("#balance").html("积分余额：" + amount):
-    	        	            $("#balance").html("账户余额：¥" + amount);
-    	        }else{
-    	            base.showMsg(res.msg);
-    	        }
-                loading.hideLoading();
-            }, function () {
-                base.showMsg("账户信息获取失败");
-                loading.hideLoading();
-            });
+                });
+                getPageintegral(true);
+            } else {
+                base.showMsg(res0.msg || res.msg);
+            }
+        }, function() {
+            base.showMsg("账户信息获取失败");
+            loading.hideLoading();
+        });
     }
 
+    function initIScroll() {
+        var pullDownEl,
+            $pullDownEl;
+        var pullDownOffset; //设置iScroll已经滚动的基准值
 
-   function initIScroll(){
-        var pullDownEl, $pullDownEl;
-   		var pullDownOffset;//设置iScroll已经滚动的基准值
-
-   		function pullDownAction () {
+        function pullDownAction() {
             isEnd = false;
             getPageintegral(true);
         }
 
-   		$pullDownEl = $("#pullDown");
+        $pullDownEl = $("#pullDown");
         pullDownEl = $pullDownEl[0];
         pullDownOffset = pullDownEl.offsetHeight;
-   		$pullUpEl = $("#pullUp");
+        $pullUpEl = $("#pullUp");
 
-		myScroll = new iScroll('wrapper', {
+        myScroll = new iScroll('wrapper', {
             useTransition: false,
             topOffset: pullDownOffset,
             onRefresh: function() {
@@ -112,45 +121,46 @@ define([
                 if ($pullDownEl.hasClass("flip")) {
                     $pullDownEl.addClass("scroll-loading");
                     pullDownAction();
-                }else if ($pullUpEl.hasClass('flip')) {
+                } else if ($pullUpEl.hasClass('flip')) {
                     $pullUpEl.addClass('scroll-loading');
                     getPageintegral();
                 }
             }
         });
 
-	}
+    }
 
-	function getPageintegral(refresh){
-        if(!isLoading && (!isEnd || refresh) ){
-        	config.start = refresh && 1 || config.start;
+    function getPageintegral(refresh) {
+        if (!isLoading && (!isEnd || refresh)) {
+            config.start = refresh && 1 || config.start;
             isLoading = true;
             base.showPullUp();
 
-            return Ajax.get("802520", config, !refresh)
-                .then(function(res){
-                    if(res.success && res.data.list.length){
-                        var list = res.data.list;
-                        if(list.length < config.limit){
-                            isEnd = true;
-                        }
-                        $("#integralWrap")[refresh ? "html" : "append"](integralTmpl({items: list}));
-                        config.start++;
-                    }else{
-                        if(refresh){
-                            $("#integralWrap").html('<div class="item-error">暂无相关数据</div>');
-                        }
+            return Ajax.get("802520", config, !refresh).then(function(res) {
+                if (res.success && res.data.list.length) {
+                    var list = res.data.list;
+                    if (list.length < config.limit) {
                         isEnd = true;
-                        res.msg && base.showMsg(res.msg);
                     }
-                    base.hidePullUp();
-                    myScroll.refresh();
-                    isLoading = false;
-                }, function(){
-                    isLoading = false;
+                    $("#integralWrap")[refresh
+                            ? "html"
+                            : "append"](integralTmpl({items: list}));
+                    config.start++;
+                } else {
+                    if (refresh) {
+                        $("#integralWrap").html('<div class="item-error">暂无相关数据</div>');
+                    }
                     isEnd = true;
-                    base.hidePullUp();
-                });
+                    res.msg && base.showMsg(res.msg);
+                }
+                base.hidePullUp();
+                myScroll.refresh();
+                isLoading = false;
+            }, function() {
+                isLoading = false;
+                isEnd = true;
+                base.hidePullUp();
+            });
         }
     }
 

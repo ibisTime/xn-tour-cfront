@@ -127,7 +127,6 @@ define([
                 if (res.success) {
                     // 0:酒店 1:线路 2:专线 3:大巴 4:拼车 5:商品
                     var price = type == 0 ? res.data.hotalOrder.amount :
-                                // type == 1 ? res.data.amount :
                                 type == 2 ? res.data.amount :
                                 type == 3 ? res.data.distancePrice :
                                 type == 5 ? res.data.amount1 : 0;
@@ -143,17 +142,23 @@ define([
                     }else{
                         $("#price").html(base.formatMoney(price));
                     }
-                    
                     if(type == 4){
                         if(res.data.status == "0" || res.data.status == "97"){
                             $("#payBtn").val("支付定金");
-                            $("#price").html(base.formatMoney(res.data.firstAmount));
+                            price = res.data.firstAmount;
                         }
                         else if(res.data.status == "1" || res.data.status == "2"){
-                            $("#price").html(base.formatMoney(res.data.secondAmount));
                             $("#payBtn").val("支付尾款");
+                            price = res.data.firstAmount;
                             payBizType = "618246";
                         }
+                        $("#price").html(base.formatMoney(price));
+                    }
+                    price = +price;
+                    if(price === 0){
+                        choseIdx = 0;
+                        $("#wxCont").removeClass("active").addClass("hidden");
+                        $("#yeCont").addClass("active");
                     }
                     addListener();
                 } else {
@@ -181,12 +186,12 @@ define([
     function onBridgeReady() {
         WeixinJSBridge.invoke(
             'getBrandWCPayRequest', {
-                "appId": response.data.appId, //公众号名称，由商户传入     
-                "timeStamp": response.data.timeStamp, //时间戳，自1970年以来的秒数     
-                "nonceStr": response.data.nonceStr, //随机串     
+                "appId": response.data.appId, //公众号名称，由商户传入
+                "timeStamp": response.data.timeStamp, //时间戳，自1970年以来的秒数
+                "nonceStr": response.data.nonceStr, //随机串
                 "package": response.data.wechatPackage,
-                "signType": response.data.signType, //微信签名方式：     
-                "paySign": response.data.paySign //微信签名 
+                "signType": response.data.signType, //微信签名方式：
+                "paySign": response.data.paySign //微信签名
             },
             function(res) {
                 loading.hideLoading();

@@ -28,7 +28,7 @@ define([
                 var data = res.data;
                 $("#title").html(data.title);
                 $("#description").html(data.description);
-                $("#date").html(base.formatDate(data.updateDatetime, "yyyy-MM-dd hh:mm"));
+                $("#date").html(base.formatDate(data.updateDatetime, "yyyy-MM-dd"));
                 data.isCollect == "1" ? $("#scjdIcon").addClass("active") : "";
             }else{
                 base.showMsg(res.msg);

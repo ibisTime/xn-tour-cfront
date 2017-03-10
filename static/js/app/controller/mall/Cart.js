@@ -21,6 +21,7 @@ define([
         }
         getMyCart();
         addListeners();
+        $("#totalAmount").data("amount", 0);
     }
     //获取购物车商品
     function getMyCart() {
@@ -97,7 +98,8 @@ define([
                                 //当前商品老的人民币总价
                                 ori_cnyAmount = info,
                                 //已经勾选的商品老的人民币总价
-                                ori_cnyTotal = +$("#totalAmount").text() * 1000,
+                                // ori_cnyTotal = +$("#totalAmount").text() * 1000,
+                                ori_cnyTotal = $("#totalAmount").data("amount"),
                                 //已经勾选的商品最新的人民币总价
                                 new_cnyTotal = new_cnyAmount - ori_cnyAmount + ori_cnyTotal;
                             //更新当前商品的总价
@@ -106,7 +108,7 @@ define([
                             $prev.val(count);
                             //如果当前商品处于被勾选的状态，则更新页面底部的总价
                             if (flag) {
-                                $("#totalAmount").text(base.fZeroMoney(new_cnyTotal));
+                                $("#totalAmount").data("amount", new_cnyTotal).text(base.fZeroMoney(new_cnyTotal));
                             }
                         } else {
                             me.value = $(me).prev().val();
@@ -143,10 +145,10 @@ define([
                 for (var i = 0; i < infos.length; i++) {
                     t += infos[i];
                 }
-                $("#totalAmount").text(base.fZeroMoney(t));
+                $("#totalAmount").data("amount", t).text(base.fZeroMoney(t));
                 //否则把页面底部总价置为0
             } else {
-                $("#totalAmount").text("0");
+                $("#totalAmount").data("amount", "0").text("0");
             }
         });
         $("#od-ul").on("click", "li", function () {
@@ -171,12 +173,16 @@ define([
                 if ($("#od-ul>ul>li").length == $("#od-ul>ul>li .c-img-l div.active").length) {
                     $("#allChecked").addClass("active");
                 }
-                var ori_cnyTotal = (+$("#totalAmount").text()) * 1000;
-                $("#totalAmount").text(base.fZeroMoney(ori_cnyTotal + infos[$li.index()]));
+                // var ori_cnyTotal = (+$("#totalAmount").text()) * 1000;
+                var ori_cnyTotal = +$("#totalAmount").data("amount");
+                var new_amount = ori_cnyTotal + infos[$li.index()];
+                $("#totalAmount").data("amount", new_amount).text(base.fZeroMoney(new_amount));
             } else {
                 $("#allChecked").removeClass("active");
-                var ori_cnyTotal = (+$("#totalAmount").text()) * 1000;
-                $("#totalAmount").text(base.fZeroMoney(ori_cnyTotal - infos[$li.index()]));
+                // var ori_cnyTotal = (+$("#totalAmount").text()) * 1000;
+                var ori_cnyTotal = +$("#totalAmount").data("amount");
+                var new_amount = ori_cnyTotal - infos[$li.index()];
+                $("#totalAmount").data("amount", new_amount).text(base.fZeroMoney(new_amount));
             }
         });
         //左滑显示删除按钮事件

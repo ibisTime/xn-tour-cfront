@@ -82,7 +82,7 @@ define([
                 initSwiper();
                 lineAmount = data.price;
                 $("#joinPlace").html(data.joinPlace);
-                $("#outDate").html(base.formatDate(data.outDate, "yyyy.MM.dd hh:mm"));
+                $("#outDate").html(data.outDate.substr(0, 10));
                 $("#price").html(base.formatMoney(data.price));
                 $("#name").html(data.name);
                 var tabList = data.lineTabList;
@@ -251,7 +251,7 @@ define([
                     if( $("#content").find(".item-error").length ){
                         $("#content").html(html);
                     }else{
-                        $("#content").prepend(html); 
+                        $("#content").prepend(html);
                     }
                     myScroll.refresh();
                 },

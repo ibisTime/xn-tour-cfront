@@ -59,7 +59,7 @@ define([
                 initSwiper();
 
                 $("#name").html(data.name);
-                $("#price").html('¥' + base.formatMoney(data.price) + '<span class="sm-f">起</span>');
+                $("#price").html(data.price);
                 $("#addrInfo").html(getAddr(data));
                 showInMap.addMap({
                     lng: data.longitude,
@@ -203,7 +203,7 @@ define([
                     if( $("#content").find(".item-error").length ){
                         $("#content").html(html);
                     }else{
-                        $("#content").prepend(html); 
+                        $("#content").prepend(html);
                     }
                     myScroll.refresh();
                 },

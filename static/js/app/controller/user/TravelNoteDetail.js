@@ -53,7 +53,7 @@ define([
                 $("#showImgContainer").html(html);
                 $("#name").html(data.name);
                 $("#description").html(data.description);
-                $("#publishDatetime").html(base.formatDate(data.publishDatetime, "yyyy-MM-dd hh:mm"))
+                $("#publishDatetime").html(base.formatDate(data.publishDatetime, "yyyy-MM-dd"))
                 data.isCollect == "1" ? $("#scIcon").addClass("active") : "";
                 data.isLike == "1" ? $("#dzIcon").addClass("active") : "";
                 if(data.publisher == base.getUserId())
@@ -153,7 +153,7 @@ define([
             base.confirm("确认删除吗？")
                 .then(deleteTravel, base.emptyFun);
         });
-        
+
         $("#showImgContainer").on("click", ".center-img", function(){
             showImg.createImg($(this).attr("src")).showImg();
         });
@@ -185,7 +185,7 @@ define([
                     if( $("#content").find(".item-error").length ){
                         $("#content").html(html);
                     }else{
-                        $("#content").prepend(html); 
+                        $("#content").prepend(html);
                     }
                     myScroll.refresh();
                 },

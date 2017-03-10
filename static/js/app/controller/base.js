@@ -457,6 +457,10 @@ define([
             // login.addCont().showCont();
             location.href = "../user/redirect.html";
         },
+        /*
+         * 冒泡排序，默认升序
+         * @param msg  提示信息
+         */
         confirm: function(msg) {
             return (new Promise(function (resolve, reject) {
                 var d = dialog({
@@ -497,6 +501,7 @@ define([
          * @param list 排序数组
          * @param key 按数组的哪个key排序
          * @param isDesc 是否降序，默认升序,
+         * @return {array}  排序好到数组
          */
         bubbleSort: function (list, key, isDesc) {
             for(var i = 0; i < list.length - 1; i++){
@@ -519,11 +524,12 @@ define([
             return list;
         }
     };
+    // 判断是否登录
     if(!/\/redirect\.html/.test(location.href)){
         if(!Base.isLogin()){
             Base.goLogin();
         }
     }
-    // Base.addIcon();
+
     return Base;
 });

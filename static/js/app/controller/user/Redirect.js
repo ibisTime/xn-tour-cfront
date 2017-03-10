@@ -9,72 +9,84 @@ define([
     function init() {
         var code = base.getUrlParam("code");
         BindMobile.addMobileCont({
-            success: function(res){
+            success: function(res) {
                 base.goBackUrl("../user/user.html", true);
             },
-            hideFn: function () {
+            hideFn: function() {
                 base.goBackUrl("../user/user.html", true);
             },
-            error: function(msg){
+            error: function(msg) {
                 base.showMsg(msg);
             }
         });
-        if(!code){
+        // 第一次没登录进入的页面
+        if (!code) {
             loading.createLoading();
             getAppID();
             return;
         }
-        if(!base.isLogin()){
+        if (!base.isLogin()) {  // 未登录
             loading.createLoading("登录中...");
             wxLogin({
                 code: code,
                 companyCode: SYSTEM_CODE
             });
-        }else{
-            setTimeout(function () {
+        } else {    // 已登陆
+            setTimeout(function() {
                 base.goBackUrl("../user/user.html", true);
             }, 1000);
         }
     }
-    function getAppID(){
+    // 获取appId并跳转到微信登录页面
+    function getAppID() {
         Ajax.get("806031", {
-            companyCode: SYSTEM_CODE,
-            account: "ACCESS_KEY",
-            type: "3"
-        })
-        .then(function(res) {
-            loading.hideLoading();
-            if (res.success && res.data.length) {
-                var appid = res.data[0].password;
-                var redirect_uri = base.getDomain() + "/user/redirect.html";
-                $("#iframe").attr("src", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid +
-                    "&redirect_uri=" + redirect_uri + "&response_type=code&scope=snsapi_userinfo#wechat_redirect");
-            } else {
-                base.showMsg(res.msg || "非常抱歉，微信登录失败");
-            }
-        }, function() {
-            loading.hideLoading();
-            base.showMsg("非常抱歉，微信登录失败");
-            setTimeout(function(){
-                history.back();
-            }, 1000);
-        });
+                companyCode: SYSTEM_CODE,
+                account: "ACCESS_KEY",
+                type: "3"
+            })
+            .then(function(res) {
+                if (res.success && res.data.length) {
+                    var appid = res.data[0].password;
+                    var redirect_uri = base.getDomain() + "/user/redirect.html";
+                    // var iframe = $("#iframe");
+                    // iframe[0].onload = function() {
+                    //     loading.hideLoading();
+                    // };
+                    location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid +
+                        "&redirect_uri=" + redirect_uri + "&response_type=code&scope=snsapi_userinfo#wechat_redirect";
+                    // iframe.attr("src", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid +
+                    //     "&redirect_uri=" + redirect_uri + "&response_type=code&scope=snsapi_userinfo#wechat_redirect");
+                } else {
+                    loading.hideLoading();
+                    base.showMsg(res.msg || "非常抱歉，微信登录失败");
+                }
+            }, function() {
+                loading.hideLoading();
+                base.showMsg("非常抱歉，微信登录失败");
+                setTimeout(function() {
+                    history.back();
+                }, 1000);
+            });
     }
+    // 微信登录
     function wxLogin(param) {
-        Ajax.post("618920", { json: param })    //805152
+        Ajax.post("618920", {
+                json: param
+            })
             .then(function(res) {
                 if (res.success) {
                     base.setSessionUser(res);
                     base.getUser()
-                        .then(function (res) {
+                        .then(function(res) {
                             loading.hideLoading();
-                            if(res.success){
-                                if(!res.data.mobile){
+                            if (res.success) {
+                                // 如果未绑定手机号，则绑定
+                                if (!res.data.mobile) {
                                     BindMobile.showMobileCont();
-                                }else{
+                                } else {
                                     base.goBackUrl("../user/user.html", true);
                                 }
-                            }else{
+                            } else {
                                 base.goBackUrl("../user/user.html", true);
                             }
                         });

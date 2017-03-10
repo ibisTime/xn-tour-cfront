@@ -26,9 +26,6 @@ define([
     init();
 
     function init() {
-        // if(!base.isLogin()){
-        //     base.goLogin();
-        // }else{
         if(base.isLogin()){
             loading.createLoading();
             base.getUser()
@@ -84,7 +81,7 @@ define([
             format: 'YYYY-MM-DD hh:mm',
             choose: function(datas){ //选择日期完毕的回调
                 $("#showDate").text(datas);
-                $("#outDatetime").val(datas);
+                $("#outDatetime").val(datas).valid();
             },
             isclear: false, //是否显示清空
             min: laydate.now(),
@@ -105,7 +102,7 @@ define([
 	        		startSite.point.lng = point.lng;
 	        		startSite.point.lat = point.lat;
                     $("#showStartSite").text(text);
-	        		$("#startSite").val(text);
+	        		$("#startSite").val(text).valid();
 	        	}
         	});
         });
@@ -123,7 +120,7 @@ define([
 	        		endSite.point.lng = point.lng;
 	        		endSite.point.lat = point.lat;
                     $("#showEndSite").text(text);
-	        		$("#endSite").val(text);
+	        		$("#endSite").val(text).valid();
 	        	}
         	});
         });
@@ -215,6 +212,7 @@ define([
         Ajax.get("618252", {
             code: code
         }).then(function (res) {
+            loading.hideLoading();
             if(res.success){
                 base.confirm("拼车申请提交成功，总价为 " + base.formatMoney(res.data.distancePrice) + "元。<br/>点击确认前往支付定金")
                     .then(function () {

@@ -32,9 +32,14 @@ define(["jquery"], function($) {
                     data: param
                 });
                 cache[cache_url].then(function(res) {
-                    if(!res.success && res.timeout){
-                        sessionStorage.setItem("user", "0");
-                        location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
+                    if(res.errorCode == "4"){
+                        clearSessionUser();
+                        loading.hideLoading();
+                        sessionStorage.setItem("l-return", location.pathname + location.search);
+                        // login.addCont().showCont();
+                        location.href = "../user/redirect.html";
+                        // sessionStorage.setItem("user", "0");
+                        // location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
                     }
                 }, function(res) {
                     var d = dialog({
@@ -99,7 +104,11 @@ define(["jquery"], function($) {
             return cache[cache_url].then(function(res) {
                 if (res.errorCode == "4") {
                     clearSessionUser();
-                    location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
+                    loading.hideLoading();
+                    sessionStorage.setItem("l-return", location.pathname + location.search);
+                    // login.addCont().showCont();
+                    location.href = "../user/redirect.html";
+                    // location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
                 }
                 var result = {};
                 res.errorCode == "0" ? (result.success = true, result.data = res.data) :

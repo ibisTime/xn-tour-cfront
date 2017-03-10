@@ -10,7 +10,7 @@ define([
     var lineInfo = sessionStorage.getItem("line-info");
     var totalHotelAmount = 0, totalLineAmount = 0, totalOutAmount = 0;
     var isBindMobile = false, isIdentity = false;
-    
+
     init();
     function init(){
         if(!lineCode){
@@ -52,7 +52,7 @@ define([
             if(res.success){
                 $("#pathPic").attr("src", base.getImg(res.data.pathPic));
                 $("#lineName").html(res.data.name);
-                $("#lineDatetime").html(base.formatDate(res.data.outDate, "yyyy-MM-dd hh:mm"));
+                $("#lineDatetime").html(res.data.outDate.substr(0, 10));
                 $("#linePlace").html(res.data.joinPlace);
                 $("#xlA").attr("href", "../travel/travel-detail.html?code=" + lineCode);
             }else{
@@ -73,7 +73,7 @@ define([
             var days = +base.calculateDays(startDate, endDate);
             totalHotelAmount = days * quantity * +lineCodeInfo.roomPrice;
             $("#hotelDatetime").html(
-                base.formatDate(startDate, "M月d号") + " - " + base.formatDate(endDate, "M月d号") + 
+                base.formatDate(startDate, "M月d号") + " - " + base.formatDate(endDate, "M月d号") +
                 '<span class="plr4">'+days+'晚'+quantity+'间</span>');
             $("#roomType").html(lineCodeInfo.roomName);
             $("#totalHotelAmount").html(base.formatMoney(totalHotelAmount));

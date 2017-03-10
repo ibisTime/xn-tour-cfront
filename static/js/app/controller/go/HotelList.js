@@ -40,7 +40,7 @@ define([
 
 
         $.when(
-            base.getDictList("ss_type"),
+            base.getDictList("hotel_ss"),
             Ajax.get("806052", {
                 type: 3,
                 location: 'depart_hotel'

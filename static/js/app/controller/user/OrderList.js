@@ -34,14 +34,14 @@ define([
                 limit: 10,
                 // status: "",
                 statusList: null,
-                userId: base.getUserId()
+                applyUser: base.getUserId()
             },
             "1": {
                 start: 1,
                 limit: 10,
                 // status: "",
                 statusList: null,
-                userId: base.getUserId()
+                applyUser: base.getUserId()
             },
             "2": {
                 start: 1,
