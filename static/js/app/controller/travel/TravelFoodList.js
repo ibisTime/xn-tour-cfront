@@ -48,7 +48,8 @@ define([
                         }
                         var arr = [];
                         $.each(data, function(i, d){
-                            arr.push(d.food);
+                            if(d.isOnline == "1")
+                                arr.push(d.food);
                         });
                         $("#content")[refresh ? "html" : "append"](foodTmpl({items: arr}));
                         start++;

@@ -152,7 +152,7 @@ define([
             }
         });
         $("#od-ul").on("click", "li", function () {
-            location.href = "../index.html";
+            location.href = "../mall/buy.html?code=" + $.attr("code");
         }).on("click", ".cart-li-bottom", function (e) {
             e.stopPropagation();
         })

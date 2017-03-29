@@ -157,7 +157,7 @@ define([
             })
     }
     function tuik(remark){
-        loading.createLoading("提交申请中...");
+        loading.createLoading("退款中...");
         Ajax.post("618145", {
             json: {
                 code: code,
@@ -168,14 +168,14 @@ define([
                 loading.hideLoading();
                 if(res.success){
                     $("#status").html(lineOrderStatus['2']);
-                    base.showMsg("申请提交成功");
+                    base.showMsg("退款成功");
                     $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
                 }else{
-                    base.showMsg(res.msg || "申请失败");
+                    base.showMsg(res.msg || "退款失败");
                 }
             }, function(){
                 loading.hideLoading();
-                base.showMsg("申请失败");
+                base.showMsg("退款失败");
             })
     }
     function addListeners(){

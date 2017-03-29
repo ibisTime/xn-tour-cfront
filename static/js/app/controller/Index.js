@@ -56,7 +56,8 @@ define([
             'direction': 'horizontal',
             'autoplay': 4000,
             'autoplayDisableOnInteraction': false,
-            'pagination': '.swiper-pagination'
+            'pagination': '.swiper-pagination',
+            'preventClicksPropagation': true
         });
     }
     function initIScroll(){
@@ -66,7 +67,7 @@ define([
                 getPageLine();
             },
             refresh: function () {
-                isEnd = false;          
+                isEnd = false;
                 getPageLine(true);
             }
         });
@@ -96,7 +97,11 @@ define([
                                 '</li>';
                         }else if(d.type == 2 && d.location == "index_banner"){
                             var pic = d.pic.split(/\|\|/)[0];
-                            bannerHtml += '<div class="swiper-slide"><img class="wp100 hp100" src="' + base.getPic(pic) +'"></div>';
+                            if(d.url){
+                                bannerHtml += '<div class="swiper-slide"><img data-url="'+d.url+'" class="wp100 hp100" src="' + base.getPic(pic, "?") +'"></div>';
+                            }else{
+                                bannerHtml += '<div class="swiper-slide"><img class="wp100 hp100" src="' + base.getPic(pic, "?") +'"></div>';
+                            }
                         }
                     });
                     $("#module").html(html);
@@ -159,6 +164,22 @@ define([
         });
         $("#searchIcon").on("click", function () {
             location.href = "../home/search.html?name=" + $("#searchInput").val();
+        });
+        $("#swiperInner").on("touchstart", ".swiper-slide img", function (e) {
+            var touches = e.originalEvent.targetTouches[0],
+                me = $(this);
+            me.data("x", touches.clientX);
+        });
+        $("#swiperInner").on("touchend", ".swiper-slide img", function (e) {
+            var me = $(this),
+                touches = e.originalEvent.changedTouches[0],
+                ex = touches.clientX,
+                xx = parseInt(me.data("x")) - ex;
+            if(Math.abs(xx) < 6){
+                var url = me.attr('data-url');
+                if(url)
+                    location.href = url;
+            }
         });
     }
 });

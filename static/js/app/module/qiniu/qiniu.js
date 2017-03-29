@@ -1,7 +1,7 @@
 define([
     'app/util/ajax'
 ], function (Ajax) {
-    
+
     var swfUrl = __uri("../../lib/qiniu/Moxie.swf");
 
     return {
@@ -16,7 +16,7 @@ define([
 
             // 触发选择文件的按钮的父容器的id
             var containerId = option.containerId;
-            
+
             // var dropId = editor.id || (editor.attr && editor.attr('id')) || 'jsForm';
 
             var multi_selection = option.multi_selection || true;
@@ -115,7 +115,7 @@ define([
                         var sourceLink = file.name;
                         var suffix = sourceLink.slice(0, sourceLink.lastIndexOf('.'));
                         var suffix1 = sourceLink.slice(sourceLink.lastIndexOf('.') + 1);
-                        suffix = suffix + "_" + (new Date().getTime());
+                        suffix = suffix + "_c_" + (new Date().getTime());
                         return suffix + "." + suffix1;
                     }
                 }

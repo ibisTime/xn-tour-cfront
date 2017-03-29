@@ -98,12 +98,14 @@ define([
         }).then(function(response) {
                 if (response.success && response.data.length) {
                     var data = response.data,
-                    totalCount = 0;
-                    $.each(data, function (i, d) {
+                        totalCount = 0, items = [];
+                    for (var i = 0, len = code.length; i < len; i++) {
+                        var d = data[code[i]];
                         var eachCount = (+d.price1) * (+d.quantity);
                         totalCount += eachCount;
-                    });
-                    var html = contentTmpl({ items: data });
+                        items.push(d);
+                    };
+                    var html = contentTmpl({ items: items });
                     $("#items-cont").html(html);
                     $("#amount").html(base.fZeroMoney(totalCount));
                 } else {

@@ -129,8 +129,7 @@ define([
                 start: start,
                 limit: limit,
                 type: '1',
-                lineCode: lineCode,
-                status: "1"
+                lineCode: lineCode
             }, !refresh)
                 .then(function (res) {
                     if(res.success && res.data.list.length){
@@ -143,7 +142,8 @@ define([
                         }
                         var arr = [];
                         $.each(data, function(i, d){
-                            arr.push(d.specialLine);
+                            if(d.isOnline == "1")
+                                arr.push(d.specialLine);
                         });
                         $("#content")[refresh ? "html" : "append"](sLineTmpl({items: arr}));
                         start++;

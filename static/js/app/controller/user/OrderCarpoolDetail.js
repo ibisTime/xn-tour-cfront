@@ -73,7 +73,7 @@ define([
         });
     }
     function cancelOrder(){
-        loading.createLoading("提交申请中...");
+        loading.createLoading("取消中...");
         Ajax.post("618243", {
             json: {
                 orderCodeList: [code]
@@ -81,16 +81,16 @@ define([
         }).then(function(res){
                 loading.hideLoading();
                 if(res.success){
-                    base.showMsg("申请提交成功");
+                    base.showMsg("取消成功");
                     loading.createLoading();
                     getOrder(true);
                     $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
                 }else{
-                    base.showMsg(res.msg || "申请失败");
+                    base.showMsg(res.msg || "取消失败");
                 }
             }, function(){
                 loading.hideLoading();
-                base.showMsg("申请失败");
+                base.showMsg("取消失败");
             })
     }
     function addListeners(){

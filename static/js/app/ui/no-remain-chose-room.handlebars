@@ -1,0 +1,14 @@
+{{#each items}}
+    <div class="croom-item" data-remain="{{remain}}" style="height: 65px;" data-code="{{code}}">
+        <div class="croom-left">
+            <div class="chose-icon circle-icon"></div>
+        </div>
+        <div class="croom-middle">
+            <div class="croom-middle-top t_norwrap">{{name}}</div>
+            <div class="croom-middle-center t_norwrap">
+                {{formatDesc description}}
+            </div>
+        </div>
+        <div class="croom-right">¥{{formatMoney price}}</div>
+    </div>
+{{/each}}

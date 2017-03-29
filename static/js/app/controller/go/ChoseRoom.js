@@ -22,6 +22,7 @@ define([
         roomCode = "",
         pic_suffix = '?imageMogr2/auto-orient/thumbnail/!375x180r';
     var roomTmpl = __inline("../../ui/chose-room.handlebars");
+    var noReaminTmpl = __inline("../../ui/no-remain-chose-room.handlebars");
     var returnUrl = base.getReturnParam();
 
     init();
@@ -104,7 +105,8 @@ define([
                     } else {
                         base.showPullUp();
                     }
-                    $("#content")[refresh ? "html" : "append"](roomTmpl({
+                    var tmp = first ? noReaminTmpl : roomTmpl;
+                    $("#content")[refresh ? "html" : "append"](tmp({
                         items: data
                     }));
                     !first && start++;

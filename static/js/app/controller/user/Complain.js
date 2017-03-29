@@ -52,13 +52,12 @@ define([
         });
         $("#submit").on("click", function(){
             if($("#compForm").valid()){
-                // var data = $("#compForm").serializeObject();
                 var data = {
                     contact: $("#contact").val()
                 };
                 var tsContent = $("#tsContent").val();
                 var fkContent = $("#fkContent").val();
-
+                var type = $("#type").val();
                 if(type == 1 && isEmpty(tsContent)){
                     base.showMsg("投诉信息不能为空");
                     return;
@@ -95,5 +94,5 @@ define([
             return true;
         return false;
     }
-	 
+
 });

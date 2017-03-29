@@ -130,7 +130,8 @@ define([
                         }
                         var arr = [];
                         $.each(data, function(i, d){
-                            arr.push(d.hotal);
+                            if(d.isOnline == "1")
+                                arr.push(d.hotal);
                         });
                         $("#content")[refresh ? "html" : "append"](hotelTmpl({items: arr}));
                         start++;

@@ -41,7 +41,7 @@ define([
                 limit: 10,
                 // status: "",
                 statusList: null,
-                applyUser: base.getUserId()
+                userId: base.getUserId()
             },
             "2": {
                 start: 1,
@@ -872,29 +872,29 @@ define([
     function cancelOrder(bizType, code, success) {
         base.confirm("确定取消订单吗？")
             .then(function() {
-                loading.createLoading("提交申请中...");
+                loading.createLoading("取消中...");
                 Ajax.post(bizType, {
                     json: {
                         orderCodeList: [code]
                     }
                 }).then(function(res) {
                     if (res.success) {
-                        base.showMsg("申请提交成功");
+                        base.showMsg("取消成功");
                         loading.createLoading();
                         success(true);
                     } else {
                         loading.hideLoading();
-                        base.showMsg(res.msg || "申请失败");
+                        base.showMsg(res.msg || "取消失败");
                     }
                 }, function() {
                     loading.hideLoading();
-                    base.showMsg("申请失败");
+                    base.showMsg("取消失败");
                 });
             }, base.emptyFun);
     }
     //退款
     function TKOrder(bizType, code, remark, success) {
-        loading.createLoading("提交申请中...");
+        loading.createLoading("退款中...");
         Ajax.post(bizType, {
             json: {
                 code: code,
@@ -904,16 +904,16 @@ define([
             }
         }).then(function(res) {
             if (res.success) {
-                base.showMsg("申请提交成功");
+                base.showMsg("退款成功");
                 loading.createLoading();
                 success(true);
             } else {
                 loading.hideLoading();
-                base.showMsg(res.msg || "申请失败");
+                base.showMsg(res.msg || "退款失败");
             }
         }, function() {
             loading.hideLoading();
-            base.showMsg("申请失败");
+            base.showMsg("退款失败");
         });
     }
 });

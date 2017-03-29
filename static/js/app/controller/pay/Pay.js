@@ -147,9 +147,9 @@ define([
                             $("#payBtn").val("支付定金");
                             price = res.data.firstAmount;
                         }
-                        else if(res.data.status == "1" || res.data.status == "2"){
+                        else if(res.data.status == "2"){
                             $("#payBtn").val("支付尾款");
-                            price = res.data.firstAmount;
+                            price = res.data.secondAmount;
                             payBizType = "618246";
                         }
                         $("#price").html(base.formatMoney(price));

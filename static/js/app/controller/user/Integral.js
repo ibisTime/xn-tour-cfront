@@ -21,7 +21,8 @@ define([
             ? "XNB"
             : "CNY"),
         start: 1,
-        limit: 15
+        limit: 15,
+        status: "effect_all"
     };
 
     var accountFlowStatus = {};
@@ -34,10 +35,10 @@ define([
         Handlebars.registerHelper('formatAmount', function(num, options) {
             if (!num && num !== 0)
                 return "--";
+            num = +num / 1000;
+            num = (num+"").replace(/^(-?\d+\.\d\d)\d*/i, "$1");
             num = +num;
-            return num > 0
-                ? "+" + (num / 1000).toFixed(2)
-                : (num / 1000).toFixed(2);
+            return num > 0 ? "+" + (num.toFixed(2)) : num.toFixed(2);
         });
         getInitData();
     }
