@@ -30,12 +30,12 @@ define([
                 loading.hideLoading();
                 if (res.success) {
                     var data = res.data;
-                    $("#accept_name").val(data.addressee);
+                    $("#addressee").val(data.addressee);
                     $("#mobile").val(data.mobile);
-                    $("#provinceCode").val(data.province);
-                    $("#cityCode").val(data.city);
-                    $("#districtCode").val(data.district);
-                    $("#street").val(data.detailAddress);
+                    $("#province").val(data.province + " " + data.city + " " + data.district);
+                    // $("#cityCode").val(data.city);
+                    // $("#districtCode").val(data.district);
+                    $("#detailAddress").val(data.detailAddress);
                     addListeners();
                 } else {
                     base.showMsg(res.msg);
@@ -47,9 +47,12 @@ define([
     }
 
     function addListeners() {
+        $("#province").cityPicker({
+            title: "选择省市县"
+        });
         $("#addForm").validate({
             'rules': {
-                accept_name: {
+                addressee: {
                     required: true,
                     maxlength: 20,
                     isNotFace: true
@@ -58,19 +61,9 @@ define([
                     required: true,
                     mobile: true
                 },
-                provinceCode: {
+                province: {
                     required: true,
-                    maxlength: 20,
-                    isNotFace: true
-                },
-                city: {
-                    required: true,
-                    maxlength: 20,
-                    isNotFace: true
-                },
-                district: {
-                    required: true,
-                    maxlength: 20,
+                    maxlength: 30,
                     isNotFace: true
                 },
                 detailAddress: {
@@ -87,6 +80,10 @@ define([
                 config = form.serializeObject();
                 config.isDefault = "1";
                 config.userId = base.getUserId();
+                var addr = config.province.split(/\s/);
+                config.province = addr[0];
+                config.city = addr[1];
+                config.district = addr[2];
                 if (code) {
                     config.code = code;
                     editNewAddr(config)

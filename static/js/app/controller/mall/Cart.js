@@ -152,7 +152,7 @@ define([
             }
         });
         $("#od-ul").on("click", "li", function () {
-            location.href = "../mall/buy.html?code=" + $.attr("code");
+            location.href = "../mall/buy.html?code=" + $(this).attr("pcode");
         }).on("click", ".cart-li-bottom", function (e) {
             e.stopPropagation();
         })
@@ -173,13 +173,11 @@ define([
                 if ($("#od-ul>ul>li").length == $("#od-ul>ul>li .c-img-l div.active").length) {
                     $("#allChecked").addClass("active");
                 }
-                // var ori_cnyTotal = (+$("#totalAmount").text()) * 1000;
                 var ori_cnyTotal = +$("#totalAmount").data("amount");
                 var new_amount = ori_cnyTotal + infos[$li.index()];
                 $("#totalAmount").data("amount", new_amount).text(base.fZeroMoney(new_amount));
             } else {
                 $("#allChecked").removeClass("active");
-                // var ori_cnyTotal = (+$("#totalAmount").text()) * 1000;
                 var ori_cnyTotal = +$("#totalAmount").data("amount");
                 var new_amount = ori_cnyTotal - infos[$li.index()];
                 $("#totalAmount").data("amount", new_amount).text(base.fZeroMoney(new_amount));
@@ -209,8 +207,8 @@ define([
         var $li = $(me).closest("li[code]"),
             code = $li.attr('code');
         loading.createLoading("删除中...");
-        Ajax.post("618431", {
-                json: { "code": code }
+        Ajax.post("618432", {
+                json: { "cartCodeList": [code] }
             })
             .then(function(response) {
                 loading.hideLoading();

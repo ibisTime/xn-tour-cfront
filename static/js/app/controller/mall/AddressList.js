@@ -61,7 +61,6 @@ define([
             e.stopPropagation();
             e.preventDefault();
             currentElem = $(this);
-            // $("#od-mask, #od-tipbox").removeClass("hidden");
             base.confirm('确定要删除该地址吗？')
                 .then(deleteAddress);
         });
@@ -69,14 +68,6 @@ define([
         $("#sbtn").on("click", function() {
             location.href = "./add-address.html?return=" + base.getReturnParam() + "&t=" + type;
         });
-
-        // $("#odOk").on("click", function() {
-        //     deleteAddress();
-        //     $("#od-mask, #od-tipbox").addClass("hidden");
-        // });
-        // $("#odCel").on("click", function() {
-        //     $("#od-mask, #od-tipbox").addClass("hidden");
-        // });
     }
 
     function setDefaultAddress(me) {

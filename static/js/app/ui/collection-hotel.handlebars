@@ -1,6 +1,6 @@
 {{#each items}}
-    <div class="item bg_fff collection-item">
-        <a class="block_wp100" href="../go/hotel-detail.html?code={{hotal.code}}">
+    <div class="item p0 bg_fff collection-item z_index0">
+        <a class="block_wp100 collection-item-a" href="../go/hotel-detail.html?code={{hotal.code}}">
             <div class="item-c-div item-l">
                 <img class="center-img" src="{{formatImage hotal.pic1}}"/>
             </div>
@@ -13,5 +13,6 @@
             </div>
             <div class="item-c-div item-r item-r1">¥{{formatMoney hotal.lowPrice}}<span class="smf">起</span></div>
         </a>
+        <div class="al_addr_del" code={{hotal.code}} type="3">删除</div>
     </div>
 {{/each}}

@@ -65,6 +65,11 @@ define([
                     lng: data.longitude,
                     lat: data.latitude
                 });
+                if(data.recommend){
+                    $("#tjlyWrap").removeClass("hidden");
+                    $("#tjlyCont").html(data.recommend);
+                }
+
                 $("#telephone")
                     .html('<a class="show c_78" href="tel://'+data.telephone+'">'+data.telephone+'<div class="st-jt"></div></a>');
             }else{

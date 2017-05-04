@@ -50,17 +50,36 @@ define([
             code: lineCode
         }).then(function (res) {
             if(res.success){
+                var outDateStart = base.formatDate(res.data.outDateStart, "yyyy-MM-dd"),
+                    outDateEnd = base.formatDate(res.data.outDateEnd, "yyyy-MM-dd");
                 $("#pathPic").attr("src", base.getImg(res.data.pathPic));
                 $("#lineName").html(res.data.name);
-                $("#lineDatetime").html(res.data.outDate.substr(0, 10));
+                $("#lineDatetime").html(outDateStart + " ~ " + outDateEnd);
                 $("#linePlace").html(res.data.joinPlace);
                 $("#xlA").attr("href", "../travel/travel-detail.html?code=" + lineCode);
+                initOutDate(outDateStart, outDateEnd);
             }else{
                 base.showMsg(res.msg);
             }
         }, function () {
             base.showMsg("线路信息获取失败");
         })
+    }
+    function initOutDate(min, max){
+        var start = {
+            elem: '#choseStartDate',
+            format: 'YYYY-MM-DD',
+            min: min, //设定最小日期为当前日期
+            max: max,
+            start: min,
+            isclear: false, //是否显示清空
+            istoday: false,
+            choose: function(datas) {
+                $("#outDate").val(datas).trigger("change");
+                $("#startSpan").text(datas);
+            }
+        };
+        laydate(start);
     }
     function setInfo(lineCodeInfo){
         if(lineCodeInfo.hotelName){

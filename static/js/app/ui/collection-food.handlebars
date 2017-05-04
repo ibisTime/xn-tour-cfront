@@ -1,6 +1,6 @@
 {{#each items}}
-    <div class="item bg_fff collection-item">
-        <a class="block_wp100" href="../go/food-detail.html?code={{food.code}}">
+    <div class="item bg_fff collection-item p0 z_index0">
+        <a class="block_wp100 collection-item-a" href="../go/food-detail.html?code={{food.code}}">
             <div class="item-c-div item-l">
                 <img class="center-img" src="{{formatImage food.pic}}"/>
             </div>
@@ -10,5 +10,6 @@
                 <div class="collection-food-bottom">{{food.price}}</div>
             </div>
         </a>
+        <div class="al_addr_del" code={{food.code}} type="4">删除</div>
     </div>
 {{/each}}

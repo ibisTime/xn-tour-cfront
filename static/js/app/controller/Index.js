@@ -181,5 +181,8 @@ define([
                     location.href = url;
             }
         });
+        $("#kefuIcon").on("click", function (e) {
+            location.href = "http://kefu.easemob.com/webim/im.html?tenantId=" + TENANTID;
+        });
     }
 });

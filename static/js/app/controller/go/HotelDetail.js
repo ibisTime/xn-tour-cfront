@@ -57,7 +57,11 @@ define([
                 $("#swiper").find(".swiper-wrapper").html(html);
 
                 initSwiper();
-
+                // 名宿
+                if(data.category == "4"){
+                    $("#nav-li-0").text("民宿特色");
+                    $("#nav-li-1").text("民宿美食");
+                }
                 $("#name").html(data.name);
                 $("#lowPrice").html('¥' + base.formatMoney(data.lowPrice) + '<span class="sm-f">起</span>');
                 $("#addrInfo").html(getAddr(data));
@@ -203,7 +207,7 @@ define([
                     if( $("#content").find(".item-error").length ){
                         $("#content").html(html);
                     }else{
-                        $("#content").prepend(html); 
+                        $("#content").prepend(html);
                     }
                     myScroll.refresh();
                 },
@@ -212,7 +216,7 @@ define([
                 }
             });
         });
-        
+
         $("#nav").on("click", ".hd-c-item", function(){
             var _self = $(this), idx = _self.index();
             _self.siblings(".active").removeClass("active")

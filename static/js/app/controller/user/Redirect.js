@@ -2,23 +2,12 @@ define([
     'app/controller/base',
     'app/util/ajax',
     'app/module/loading/loading',
-    'app/module/bindMobile/bindMobile'
-], function(base, Ajax, loading, BindMobile) {
+    'app/module/judgeBindMobile'
+], function(base, Ajax, loading, JudgeBindMobile) {
     init();
 
     function init() {
         var code = base.getUrlParam("code");
-        BindMobile.addMobileCont({
-            success: function(res) {
-                base.goBackUrl("../user/user.html", true);
-            },
-            hideFn: function() {
-                base.goBackUrl("../user/user.html", true);
-            },
-            error: function(msg) {
-                base.showMsg(msg);
-            }
-        });
         // 第一次没登录进入的页面
         if (!code) {
             loading.createLoading();
@@ -48,14 +37,8 @@ define([
                 if (res.success && res.data.length) {
                     var appid = res.data[0].password;
                     var redirect_uri = base.getDomain() + "/user/redirect.html";
-                    // var iframe = $("#iframe");
-                    // iframe[0].onload = function() {
-                    //     loading.hideLoading();
-                    // };
                     location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid +
                         "&redirect_uri=" + redirect_uri + "&response_type=code&scope=snsapi_userinfo#wechat_redirect";
-                    // iframe.attr("src", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid +
-                    //     "&redirect_uri=" + redirect_uri + "&response_type=code&scope=snsapi_userinfo#wechat_redirect");
                 } else {
                     loading.hideLoading();
                     base.showMsg(res.msg || "非常抱歉，微信登录失败");
@@ -82,13 +65,18 @@ define([
                             if (res.success) {
                                 // 如果未绑定手机号，则绑定
                                 if (!res.data.mobile) {
-                                    BindMobile.showMobileCont();
+                                    JudgeBindMobile.addCont({
+                                        avatar: res.data.userExt.photo,
+                                        nickname: res.data.nickname
+                                    }).showCont();
                                 } else {
                                     base.goBackUrl("../user/user.html", true);
                                 }
                             } else {
                                 base.goBackUrl("../user/user.html", true);
                             }
+                        }, function(){
+                            base.goBackUrl("../user/user.html", true);
                         });
                 } else {
                     loading.hideLoading();

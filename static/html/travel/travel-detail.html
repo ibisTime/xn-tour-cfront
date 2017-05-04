@@ -14,18 +14,21 @@
                     <div class="swiper-wrapper"></div>
                     <div class="swiper-pagination"></div>
                 </div>
-                <div class="h-detail-icon" id="scjdIcon"></div>
+
             </div>
             <div class="travel-detail-head-info">
-            	<div class="travel-head-name" id="name"></div>
+            	<div class="travel-head-name p-r">
+                    <div id="name" class="pr40"></div>
+                    <div class="h-detail-icon1" id="scjdIcon"></div>
+                </div>
             	<div class="mt10">
             		<span class="y-big1">¥</span>
             		<span id="price" class="y-big"></span>
             		<span class="sm-f">起</span>
             	</div>
             	<div class="clearfix mt14">
-            		<div class="fl bg-addr-icon travel-head-bg-icon"><span id="joinPlace"></span>出发</div>
-            		<div class="fl bg-date-icon travel-head-bg-icon">出行日期：<span id="outDate"></span></div>
+            		<div class="fl bg-addr-icon travel-head-bg-icon"><span class="pr4" id="joinPlace"></span>出发</div>
+            		<div class="fl bg-date-icon travel-head-bg-icon">出行日期：<span id="outDateStart"></span> ~ <span id="outDateEnd"></span></div>
             	</div>
             </div>
 
@@ -44,6 +47,29 @@
         		推荐酒店<span id="tjjdCont" class="travel-list-item-r-text"></span>
         		<div class="st-jt"></div>
         	</div>
+
+            <div class="t-detail-cont am-flexbox am-flexbox-justify-between" id="groupWrap">
+                <img class="t-detail-img1" src="../../images/zts.png" />
+                <div class="t-detail-inblock">
+                    <div id="groupName"></div>
+                    <div class="t_bbb fs12" id="groupPlace"></div>
+                </div>
+
+            </div>
+            <div class="travel-list-item1 am-flexbox am-flexbox-justify-between">
+                <div class="wp40p">地址:</div>
+                <div class="t-detail-inblock">
+                    <div id="address" class="fs13"></div>
+                    <div class="t_ffa200 fs13 pt4 hidden" id="distanceWrap">距离您所在位置<span id="distance"></span></div>
+                </div>
+                <a class="t-detail-nor-btn" href="javascript:void(0)" id="dwIcon">
+                    <div class="dw-loading-icon-wrap hidden" id="dwIconLoading">
+                        <div class="dw-loading-icon"></div>
+                    </div>
+                    <div class="t-detail-addr">定位</div>
+                </a>
+            </div>
+            <div id="allmap" class="hidden" style="height: 300px;"></div>
         	<div class="mt10">
                 <div id="nav" class="hd-center-top travel-center-top clearfix">
                     <div class="tr-c-item active">亮点</div>
@@ -71,7 +97,7 @@
             <div class="hotel-pl-title mt10">
                 <div class="hpt-l">游客评论</div><div class="hpt-r" id="writePlIcon">写评论</div>
             </div>
-    
+
             <div id="content" class="bg_fff"></div>
             <div id="pullUp" class="idle">
                 <div class="pullUpLabel">
@@ -90,6 +116,7 @@
         <div class="croom-buy"><input type="button" class="croom-buy-btn" id="buyBtn" value="立即购买"></div>
     </div>
 	<link rel="import" href="../footer.html?__inline">
+    <script src="//api.map.baidu.com/api?v=2.0&ak=GtNrG008U04GONzKSDHiW70GxurUUhlU&s=1"></script>
     <script data-loader>
         require(['app/controller/travel/TravelDetail']);
     </script>

@@ -15,7 +15,7 @@ define([
     var yjTmpl = __inline("../../ui/travel-yj.handlebars"),
         glTmpl = __inline("../../ui/travel-gl.handlebars");
     var lineInfo = sessionStorage.getItem("line-info");
-    var myScroll, lineAmount;
+    var myScroll, lineAmount, travelPoint;
 
     init();
 
@@ -82,9 +82,21 @@ define([
                 initSwiper();
                 lineAmount = data.price;
                 $("#joinPlace").html(data.joinPlace);
-                $("#outDate").html(data.outDate.substr(0, 10));
+                $("#outDateStart").html(base.formatDate(data.outDateStart, "yyyy-MM-dd"));
+                $("#outDateEnd").html(base.formatDate(data.outDateEnd, "yyyy-MM-dd"));
                 $("#price").html(base.formatMoney(data.price));
                 $("#name").html(data.name);
+                $("#groupName").html(data.groupName);
+                $("#groupPlace").html(data.groupPlace);
+
+                $("#groupWrap").append('<a class="t-detail-nor-btn" href="tel://'+data.groupMobile+'"><div class="t-detail-tel-icon">拨打</div></a>');
+
+                $("#address").html(data.province + data.city + data.area + data.detail);
+                travelPoint = {
+                    lng: data.longitude,
+                    lat: data.latitude
+                };
+
                 var tabList = data.lineTabList;
                 // 1 亮点 2行程 3费用 4 须知
                 for(var i = 0; i < tabList.length; i++){
@@ -187,7 +199,6 @@ define([
                 }else{
                     if(start == 1){
                         $("#content").html( '<div class="item-error">暂无相关评论</div>' );
-                        // myScroll.refresh();
                         isEnd = true;
                     }
                     base.hidePullUp();
@@ -308,6 +319,58 @@ define([
             loading.createLoading();
             collectTravel();
         });
+        $("#dwIcon").on("click", function(){
+            dwPosition();
+        });
+    }
+    var myMap = $("#allmap");
+    var distanceWrap = $("#distanceWrap");
+    var loadingWrap = $("#dwIconLoading");
+    var _distance = $("#distance");
+
+    function setPosition(point){
+        myMap.removeClass("hidden");
+        distanceWrap.removeClass("hidden");
+
+        var map = new BMap.Map("allmap");
+        map.centerAndZoom(point, 12);  //初始化地图,设置城市和地图级别。
+        map.enableScrollWheelZoom(true);
+        var top_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL});
+        map.addControl(top_right_navigation);
+
+    	var pointA = new BMap.Point(travelPoint.lng, travelPoint.lat);  // 创建点坐标A--大渡口区
+        var pointB = point;
+
+        var polyline = new BMap.Polyline([pointA,pointB], {strokeColor:"#ffa200", strokeWeight:6, strokeOpacity:0.5});  //定义折线
+    	map.addOverlay(polyline);     //添加折线到地图上
+
+        var markerA = new BMap.Marker(pointA);  // 创建标注
+        map.addOverlay(markerA);              // 将标注添加到地图中
+        var markerB = new BMap.Marker(pointB);  // 创建标注
+        map.addOverlay(markerB);              // 将标注添加到地图中
+        map.panTo(pointB);
+
+        var dis = +map.getDistance(pointA,pointB);
+        if(dis > 1000){
+            dis = (dis / 1000).toFixed(2) + ' km';
+        }else{
+            dis = dis.toFixed(2) + ' m';
+        }
+        _distance.text(dis);
+        myScroll.refresh();
+    }
+    function dwPosition(){
+        loadingWrap.removeClass("hidden");
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r) {
+            loadingWrap.addClass("hidden");
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                setPosition(r.point);
+            } else {
+                loading.hideLoading();
+                base.showMsg("定位失败");
+            }
+        }, { enableHighAccuracy: true });
     }
     function collectTravel(){
         Ajax.post("618320", {

@@ -29,7 +29,25 @@ define([
             loading.hideLoading();
         }, function () {
             loading.hideLoading();
-        })
+        });
+        getSignInfo();
+    }
+    function getSignInfo(){
+        Ajax.get("805102", {
+            "userId": base.getUserId()
+        }).then(function(res){
+            if (res.success) {
+                for (i = 0; i < res.data.length; i++) {
+                    var tempDate = base.formatDate(res.data[i].signDatetime, "yyyy-MM-dd")
+                    var nowDate = new Date().format("yyyy-MM-dd");
+                    if (nowDate == tempDate) {
+                        $("#signIn").val("已签到");
+                    }
+                }
+            } else {
+                base.showMsg(res.msg);
+            }
+        });
     }
     /*
      * 获取购物车商品总数
@@ -93,6 +111,9 @@ define([
     }
 
     function addListener() {
+        $("#signIn").on("click", function(){
+            location.href = "../home/signIn.html";
+        });
         $("#avatar").on("click", function(){
             showImg.createImg($(this).attr("src")).showImg();
         });

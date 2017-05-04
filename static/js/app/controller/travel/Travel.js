@@ -4,116 +4,322 @@ define([
     'app/util/handlebarsHelpers',
     'app/module/loading/loading',
     'app/module/foot/foot',
-    'app/module/scroll/scroll'
-], function(base, Ajax, Handlebars, loading, Foot, scroll) {
+    'app/module/scroll/scroll',
+    'app/util/dict',
+], function(base, Ajax, Handlebars, loading, Foot, scroll, Dict) {
 
-    var myScroll, isEnd = false, isLoading = false, innerScroll;
-    var travelTmpl = __inline("../../ui/travel.handlebars");
-    var config = {
-        category: "",
-        name: "",
-        type: "",
-        style: "",
-        travelTime: "",
-        joinPlace: "",
-        start: 1,
-        limit: 10,
-        status: "1",
-        location: "2",
-        orderDir: "asc",
-        orderColumn: "order_no"
-    };
     var firstSX = true;
+
+    var hotelTmpl = __inline("../../ui/go-hotel.handlebars"),
+        travelTmpl = __inline("../../ui/travel.handlebars");
+        foodTmpl = __inline("../../ui/go-food.handlebars");
+
+    var index = base.getUrlParam("idx") || 0;
+
+    var myScroll, innerScroll;
+
+    var config = {
+        travel: {
+            category: "",
+            name: "",
+            type: "",
+            style: "",
+            travelTime: "",
+            joinPlace: "",
+            start: 1,
+            limit: 10,
+            status: "1",
+            location: "2",
+            orderDir: "asc",
+            orderColumn: "order_no"
+        },
+        hotel: {
+            start: 1,
+            limit: 10,
+            category: "",
+            province: "",
+            city: "",
+            area: "",
+            longitude: "",
+            latitude: "",
+            status: "1",
+            location: "2",
+            orderDir: "asc",
+            orderColumn: "order_no"
+        },
+        food: {
+            start: 1,
+            limit: 10,
+            category: "",
+            province: "",
+            city: "",
+            area: "",
+            longitude: "",
+            latitude: "",
+            status: "1",
+            location: "2",
+            orderDir: "asc",
+            orderColumn: "order_no"
+        }
+    };
+    var config1 = {
+        travel: {
+            isEnd: false,
+            isLoading: false,
+            first: true,
+            module: []
+        },
+        hotel: {
+            isEnd: false,
+            isLoading: false,
+            first: true,
+            module: []
+        },
+        food: {
+            isEnd: false,
+            isLoading: false,
+            first: true,
+            module: []
+        }
+    };
+    var carpoolStatus = Dict.get("carpoolStatus");
+    // var pcStatus = Dict.get("pcStatus");
+
     init();
 
     function init() {
         Foot.addFoot(1);
         addListener();
         initIScroll();
-        getInitData();
+        base.initLocation(initConfig);
     }
-    function getInitData(){
+    function initConfig(){
+
+        config.hotel.province = config.food.province = sessionStorage.getItem("province") || "";
+        config.hotel.city = config.food.city = sessionStorage.getItem("city") || "";
+        config.hotel.area = config.food.area = sessionStorage.getItem("area") || "";
+        config.hotel.longitude = config.food.longitude = sessionStorage.getItem("longitude") || "";
+        config.hotel.latitude = config.food.latitude = sessionStorage.getItem("latitude") || "";
+
         loading.createLoading();
-        $.when(
-            getModuleNav(),
-            getPageTravel(true)
-        ).then(function(res){
+        getModuleNav();
+        $("#top-nav").find(".go-top-li").eq(index).click();
+    }
+    function getModuleNav(){
+        return Ajax.get("806052", {
+            type: 3
+        }).then(function(res){
+            loading.hideLoading();
             if(res.success){
                 var data = res.data;
-                var html = "";
+                var html0 = "", html1 = "", html2 = "";
                 $.each(data, function(i, d){
-                    var url = d.url;
-                    if(/^page:/.test(url)){
-                        url = url.replace(/^page:/, "../")
-                                 .replace(/\?/, ".html?");
-                        if(!/\?/.test(url)){
-                            url = url + ".html";
+                    if(d.location == "depart_hotel" || d.location == "depart_deli" || d.location == "travel"){
+                        var url = d.url;
+                        if(/^page:/.test(url)){
+                            url = url.replace(/^page:/, "../")
+                                     .replace(/\?/, ".html?");
+                            if(!/\?/.test(url)){
+                                url = url + ".html";
+                            }
+                        }
+                        //酒店
+                        if(d.location == "depart_hotel"){
+                            config1.hotel.module.push(d);
+                            html1 +='<li class="nav-li nav-li-4">'+
+                                    '<a class="wp100 show" href="'+url+'">'+
+                                        '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
+                                        '<div class="nav-li-text">'+d.name+'</div>'+
+                                    '</a>'+
+                                '</li>';
+                        //美食
+                        }else if(d.location == "depart_deli"){
+                            config1.food.module.push(d);
+                            html2 +='<li class="nav-li nav-li-4">'+
+                                    '<a class="wp100 show" href="'+url+'">'+
+                                        '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
+                                        '<div class="nav-li-text">'+d.name+'</div>'+
+                                    '</a>'+
+                                '</li>';
+                        //出行
+                        }else if(d.location == "travel"){
+                            config1.travel.module.push(d);
+                            html0 +='<li class="nav-li nav-li-4">'+
+                                    '<a class="wp100 show" href="'+url+'">'+
+                                        '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
+                                        '<div class="nav-li-text">'+d.name+'</div>'+
+                                    '</a>'+
+                                '</li>';
                         }
                     }
-                    html +='<li class="nav-li nav-li-4">'+
-                                '<a class="wp100 show" href="'+url+'">'+
-                                    '<div class="nav-li-img"><img src="'+base.getImg(d.pic)+'"/></div>'+
-                                    '<div class="nav-li-text">'+d.name+'</div>'+
-                                '</a>'+
-                            '</li>';
                 });
-                $("#topNav").html(html);
-                myScroll.refresh();
+                $("#top-content").find(".J_Content0").html(html0);
+                $("#top-content").find(".J_Content1").html(html1);
+                $("#top-content").find(".J_Content2").html(html2);
+                Handlebars.registerHelper('formatCategory', function(category, options){
+                    return base.findObj(config1.hotel.module, "code", category)["name"];
+                });
             }else{
-                base.showMsg(res.msg || "模块加载失败");
+                base.showMsg(res.msg || "加载失败");
             }
-            loading.hideLoading();
         }, function(){
             loading.hideLoading();
             base.showMsg("加载失败");
         });
     }
-    function getModuleNav(){
-        return Ajax.get("806052", {
-            type: 3,
-            location: 'travel'
-        });
-    }
     function getPageTravel(refresh){
-        if(!isLoading && (!isEnd || refresh) ){
-            isLoading = true;
+        if(!config1.travel.isLoading || refresh){
+            config1.travel.isLoading = true;
             base.showPullUp();
-            config.start = refresh && 1 || config.start;
-            return Ajax.get("618100", config, !refresh)
+            config.travel.start = refresh && 1 || config.travel.start;
+            return Ajax.get("618100", config.travel, !refresh)
                 .then(function(res){
                     if(res.success && res.data.list.length){
                         var list = res.data.list;
-                        if(list.length < config.limit){
-                            isEnd = true;
+                        if(list.length < config.travel.limit){
+                            isEnd = true;base.hidePullUp();
+                        }else{
+                            base.showPullUp();
                         }
-                        $("#content")[refresh ? "html" : "append"](travelTmpl({items: list}));
-                        config.start++;
+                        $("#content").find(".J_Content0")
+                            [refresh ? "html" : "append"](travelTmpl({items: list}));
+                        config.travel.start++;
                     }else{
-                        if(refresh){
-                            $("#content").html('<div class="item-error">暂无相关数据</div>');
+                        if(config1.travel.first){
+                            $("#content").find(".J_Content0").html('<div class="item-error">附近暂无线路</div>');
                         }
-                        isEnd = true;
+                        base.hidePullUp();
                         res.msg && base.showMsg(res.msg);
                     }
-                    base.hidePullUp();
+                    config1.travel.first = false;
+                    config1.travel.isLoading = false;
+                    config1.travel.isEnd = true;
                     myScroll.refresh();
-                    isLoading = false;
+                    loading.hideLoading();
                 }, function(){
-                    isLoading = false;
-                    isEnd = true;
-                    base.hidePullUp();
+                    config1.travel.first = false;
+                    config1.travel.isEnd = true;
+                    config1.travel.isLoading = false;
+                    $("#content").find(".J_Content0").html('<div class="item-error">附近暂无线路</div>');
+                    myScroll.refresh();
+                    loading.hideLoading();
                 });
+        }
+    }
+    function getHotelData(refresh){
+        if(!config1.hotel.isLoading || refresh){
+            config1.hotel.isLoading = true;
+            base.showPullUp();
+            config.hotel.start = refresh && 1 || config.hotel.start;
+            Ajax.get("618010", config.hotel, !refresh)
+                .then(function (res) {
+                    if(res.success && res.data.list.length){
+                        var data = res.data.list;
+                        if(data.length < config.hotel.limit){
+                            config1.hotel.isEnd = true;
+                            base.hidePullUp();
+                        }else{
+                            base.showPullUp();
+                        }
+                        $("#content").find(".J_Content1")
+                            [refresh ? "html" : "append"](hotelTmpl({items: data}));
+                        config.hotel.start++;
+                    }else{
+                        if(config1.hotel.first){
+                            $("#content").find(".J_Content1").html('<div class="item-error">附近暂无酒店</div>');
+                        }
+                        base.hidePullUp();
+                        res.msg && base.showMsg(res.msg);
+                    }
+                    config1.hotel.first = false;
+                    config1.hotel.isLoading = false;
+                    config1.hotel.isEnd = true;
+                    myScroll.refresh();
+                    loading.hideLoading();
+                }, function(){
+                    config1.hotel.first = false;
+                    config1.hotel.isEnd = true;
+                    config1.hotel.isLoading = false;
+                    $("#content").find(".J_Content1").html('<div class="item-error">附近暂无酒店</div>');
+                    myScroll.refresh();
+                    loading.hideLoading();
+                });
+        }
+    }
+
+    function getFoodData(refresh) {
+
+        if(!config1.food.isLoading || refresh){
+            config1.food.isLoading = true;
+            base.showPullUp();
+            config.food.start = refresh && 1 || config.food.start;
+            Ajax.get("618070", config.food, !refresh)
+                .then(function (res) {
+                    if(res.success && res.data.list.length){
+                        var data = res.data.list;
+                        if(data.length < config.food.limit){
+                            config1.food.isEnd = true;
+                            base.hidePullUp();
+                        }else{
+                            base.showPullUp();
+                        }
+                        $("#content").find(".J_Content2")
+                            [refresh ? "html" : "append"](foodTmpl({items: data}));
+                        config.food.start++;
+                    }else{
+                        if(config1.food.first){
+                            $("#content").find(".J_Content2").html('<div class="item-error">附近暂无美食</div>');
+                        }
+                        base.hidePullUp();
+                        res.msg && base.showMsg(res.msg);
+                    }
+                    config1.food.first = false;
+                    config1.food.isLoading = false;
+                    config1.food.isEnd = true;
+                    myScroll.refresh();
+                    loading.hideLoading();
+                }, function(){
+                    config1.food.first = false;
+                    config1.food.isEnd = true;
+                    config1.food.isLoading = false;
+                    $("#content").find(".J_Content2").html('<div class="item-error">附近暂无美食</div>');
+                    myScroll.refresh();
+                    loading.hideLoading();
+                });
+        }
+    }
+    function getMoreData(){
+        var idx = $("#top-nav").find(".go-top-li.active").index();
+        if(idx == 0){
+            !config1.travel.isEnd && getPageTravel();
+        }else if(idx == 1){
+            !config1.hotel.isEnd && getHotelData();
+        }else if(idx == 2){
+            !config1.food.isEnd && getFoodData();
+        }
+    }
+    //刷新
+    function pullDownAction () {
+        var idx = $("#top-nav").find(".go-top-li.active").index();
+        if(idx == 0){
+            config1.travel.isEnd = false;
+            getPageTravel(true);
+        }else if(idx == 1){
+            config1.hotel.isEnd = false;
+            getHotelData(true);
+        }else if(idx == 2){
+            config1.food.isEnd = false;
+            getFoodData(true);
         }
     }
 
     function initIScroll(){
         myScroll = scroll.getInstance().getNormalScroll({
             loadMore: function () {
-                getPageTravel();
+                getMoreData();
             },
             refresh: function () {
-                isEnd = false;
-                getPageTravel(true);
+                pullDownAction();
             }
         });
     }
@@ -163,12 +369,12 @@ define([
         $.each(citylist, function(i, prov) {
             if (prov.c[0].a) {
                 $.each(prov.c, function(j, city) {
-                    html += '<div class="travel-drop-item-right-item" data-router="'+city.n+'">'+ city.n + 
+                    html += '<div class="travel-drop-item-right-item" data-router="'+city.n+'">'+ city.n +
                                 '<div class="chose-icon circle-icon"></div>'+
                             '</div>';
                 });
             } else {
-                html += '<div class="travel-drop-item-right-item" data-router="'+prov.p+'">'+ prov.p + 
+                html += '<div class="travel-drop-item-right-item" data-router="'+prov.p+'">'+ prov.p +
                             '<div class="chose-icon circle-icon"></div>'+
                         '</div>';
             }
@@ -193,6 +399,47 @@ define([
     }
 
     function addListener() {
+        $("#top-nav").on("click", ".go-top-li", function (e) {
+            var _self = $(this), idx = _self.index();
+            $("#content").find(".jcont").removeClass("active");
+            $("#top-content").find(".top-nav").removeClass("active");
+            $("#top-nav").find(".active").removeClass("active");
+            $(".J_Content" + idx).addClass("active");
+
+            myScroll.refresh();
+            if(idx == 0){
+                $("#sxIcon").show();
+                if(config1.travel.first){
+                    getPageTravel();
+                }
+                if(config1.travel.isEnd){
+                    base.hidePullUp();
+                }else{
+                    base.showPullUp();
+                }
+            }else if(idx == 1){
+                $("#sxIcon").hide();
+                if(config1.hotel.first){
+                    getHotelData();
+                }
+                if(config1.hotel.isEnd){
+                    base.hidePullUp();
+                }else{
+                    base.showPullUp();
+                }
+            }else if(idx == 2){
+                $("#sxIcon").hide();
+                if(config1.food.first){
+                    getFoodData();
+                }
+                if(config1.food.isEnd){
+                    base.hidePullUp();
+                }else{
+                    base.showPullUp();
+                }
+            }
+
+        });
         $("#sxIcon").on("click", function(){
             if(firstSX){
                 getDropData()
@@ -234,25 +481,25 @@ define([
                 if(_self.hasClass("active")){
                     config.name = _self.attr("data-router");
                 }else{
-                    config.name = "";   
+                    config.name = "";
                 }
             }else if(parent.hasClass("travel-drop-right1")){
                 if(_self.hasClass("active")){
                     config.type = _self.attr("data-router");
                 }else{
-                    config.type = "";   
+                    config.type = "";
                 }
             }else if(parent.hasClass("travel-drop-right2")){
                 if(_self.hasClass("active")){
                     config.travelTime = _self.attr("data-router");
                 }else{
-                    config.travelTime = "";   
+                    config.travelTime = "";
                 }
             }else if(parent.hasClass("travel-drop-right3")){
                 if(_self.hasClass("active")){
                     config.style = _self.attr("data-router");
                 }else{
-                    config.style = "";   
+                    config.style = "";
                 }
             }
             e.stopPropagation();

@@ -60,7 +60,7 @@ define([
                         token: token,
                         btnId: "uploadBtn",
                         containerId: "uploadContainer",
-                        multi_selection: false,
+                        multi_selection: true,
                         showUploadProgress: function(up, file){
                             // $(".upload-progress").css("width", parseInt(file.percent, 10) + "%");
                             $("#" + file.id).find(".write-progress-wrap").show()
@@ -116,7 +116,7 @@ define([
                 base.showMsg("token获取失败");
             })
     }
-    
+
     function addListener() {
         $("#travelForm").validate({
             'rules': {

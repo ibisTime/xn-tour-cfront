@@ -3,8 +3,9 @@ define([
     'app/util/ajax',
     'app/module/loading/loading',
     'app/util/handlebarsHelpers',
-    'app/module/scroll/scroll'
-], function(base, Ajax, loading, Handlebars, scroll) {
+    'app/module/scroll/scroll',
+    'app/module/moveDelete/moveDelete'
+], function(base, Ajax, loading, Handlebars, scroll, moveDelete) {
 	var config = {
 		"0": {
 			start: 1,
@@ -123,8 +124,8 @@ define([
 							base.hidePullUp();
 						}
 						var tmpl = idx == 0 ? lineTmpl :
-										idx == 1 ? strategyTmpl : 
-											idx == 2 ? hotelTmpl : 
+										idx == 1 ? strategyTmpl :
+											idx == 2 ? hotelTmpl :
 												idx == 3 ? foodTmpl : lineTmpl;
 						$("#content").find(".J_Content" + idx)
                             [refresh ? "html" : "append"](tmpl({items: data}));
@@ -181,6 +182,38 @@ define([
             }else{
             	myScroll.refresh();
             }
-        })
+        });
+        //左滑显示删除按钮事件
+        moveDelete.init("content", "collection-item-a");
+        //左滑后删除收藏
+        $("#content").on("click", ".al_addr_del", function(e) {
+            e.stopPropagation();
+            var that = $(this);
+            base.confirm("确定删除吗？")
+                .then(function () {
+                    deleteFromCollection(that);
+                }, function(){});
+        });
 	}
+    function deleteFromCollection(self){
+        loading.showLoading("删除中...");
+        Ajax.post("618320", {
+            json: {
+                toEntity: self.attr("code"),
+                toType: self.attr("type"),
+                type: 2,
+                interacter: base.getUserId()
+            }
+        }).then(function(res){
+            loading.hideLoading();
+            if(res.success){
+                self.closest(".item").remove();
+            }else{
+                base.showMsg(res.msg || "操作失败");
+            }
+        }, function(){
+            loading.hideLoading();
+            base.showMsg("操作失败");
+        });
+    }
 });

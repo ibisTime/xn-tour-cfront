@@ -1,6 +1,6 @@
 {{#each items}}
-	<div class="item bg_fff collection-item">
-		<a class="wp100 hp100" href="../travel/travel-detail.html?code={{line.code}}">
+	<div class="item bg_fff collection-item p0 z_index0">
+		<a class="wp100 hp100 collection-item-a" href="../travel/travel-detail.html?code={{line.code}}">
 		    <div class="item-c-div item-l">
 		        <img class="center-img" src="{{formatImage line.pathPic}}"/>
 		    </div>
@@ -10,5 +10,6 @@
 		        <div class="collection-food-bottom">¥{{formatMoney line.price}}<span class="smf">起</span></div>
 		    </div>
 		</a>
+		<div class="al_addr_del" code={{line.code}} type="1">删除</div>
 	</div>
 {{/each}}

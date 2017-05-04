@@ -58,7 +58,15 @@
         </div>
     </div>
 	<form id="submitForm" class="wp100">
-		<div class="bg_fff plr10 mt10 pb10 b-tb-ed">
+        <div class="chose-date1">
+            <div class="chose-date-item pt0 p-r">
+                <input id="choseStartDate" type="button" class="spec-top-date"/>
+                <span class="chose-hotel-tip">出行日期</span>
+                <span class="chose-date-time t_bbb" id="startSpan">请选择</span>
+                <input id="outDate" name="outDate" type="hidden" />
+            </div>
+        </div>
+		<div class="bg_fff plr10 pb10 b-tb-ed">
             <div class="submit-textarea-wrap">
                 <div class="p_r wp100">
                     <textarea class="submit-textarea" name="applyNote" id="applyNote" placeholder="有什么特殊要求，写在这里！"></textarea>
@@ -72,6 +80,7 @@
         <input type="button" id="submitBtn" value="提交订单" class="small-btn-ffa800" />
     </div>
 	<link rel="import" href="../footer.html?__inline">
+    <script src="../../js/lib/laydate/laydate.dev.js"></script>
     <script data-loader>
         require(['app/controller/travel/SubmitOrder']);
     </script>

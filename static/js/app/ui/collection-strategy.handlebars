@@ -1,6 +1,6 @@
 {{#each items}}
-	<div class="item bg_fff collection-item">
-		<a class="wp100 hp100" href="../user/strategy-detail.html?code={{guide.code}}">
+	<div class="item bg_fff collection-item p0 z_index0">
+		<a class="wp100 hp100 collection-item-a" href="../user/strategy-detail.html?code={{guide.code}}">
 		    <div class="item-c-div item-l">
 		        <img class="center-img" src="{{formatImage guide.pic}}">
 		    </div>
@@ -14,5 +14,6 @@
 		        </div>
 		    </div>
 		</a>
+		<div class="al_addr_del" code={{guide.code}} type="2">删除</div>
 	</div>
 {{/each}}

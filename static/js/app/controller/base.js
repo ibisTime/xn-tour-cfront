@@ -3,8 +3,8 @@ define([
     'app/util/ajax',
     'app/util/dialog',
     'app/module/loading/loading',
-    'app/module/login/login'
-], function($, Ajax, dialog, loading, login) {
+    // 'app/module/login/login'
+], function($, Ajax, dialog, loading) {
 
     if (Number.prototype.toFixed) {
         var ori_toFixed = Number.prototype.toFixed;
@@ -132,8 +132,8 @@ define([
         formatDate: function(date, format){
             if(!date)
                 return "--";
-            if(typeof date == "string")
-                date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+            // if(typeof date == "string")
+            //     date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
             return new Date(date).format(format);
         },
         getImg: function(pic){
@@ -274,7 +274,7 @@ define([
             }
             return pic;
         },
-        initLocation: function initLocation(initFun, errFun) {
+        initLocation: function(initFun, errFun) {
             var province = sessionStorage.getItem("province") || "",
                 city = sessionStorage.getItem("city") || "",
                 area = sessionStorage.getItem("area") || "",

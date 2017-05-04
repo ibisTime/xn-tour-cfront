@@ -34,12 +34,8 @@ define(["jquery"], function($) {
                 cache[cache_url].then(function(res) {
                     if(res.errorCode == "4"){
                         clearSessionUser();
-                        loading.hideLoading();
                         sessionStorage.setItem("l-return", location.pathname + location.search);
-                        // login.addCont().showCont();
                         location.href = "../user/redirect.html";
-                        // sessionStorage.setItem("user", "0");
-                        // location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
                     }
                 }, function(res) {
                     var d = dialog({
@@ -80,9 +76,7 @@ define(["jquery"], function($) {
                 userId = sessionStorage.getItem("user") || "";
 
             token && (param["token"] = token);
-            // userId && (param["userId"] = userId);
             param["systemCode"] = SYSTEM_CODE;
-            // param["companyCode"] = COMPANY_CODE;
 
             var sendUrl = getUrl(code) + "/api";
             var sendParam = {
@@ -104,11 +98,8 @@ define(["jquery"], function($) {
             return cache[cache_url].then(function(res) {
                 if (res.errorCode == "4") {
                     clearSessionUser();
-                    loading.hideLoading();
                     sessionStorage.setItem("l-return", location.pathname + location.search);
-                    // login.addCont().showCont();
                     location.href = "../user/redirect.html";
-                    // location.href = "../user/wx-login.html?return=" + encodeURIComponent(location.pathname + location.search);
                 }
                 var result = {};
                 res.errorCode == "0" ? (result.success = true, result.data = res.data) :
