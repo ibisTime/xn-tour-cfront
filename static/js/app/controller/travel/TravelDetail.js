@@ -86,16 +86,21 @@ define([
                 $("#outDateEnd").html(base.formatDate(data.outDateEnd, "yyyy-MM-dd"));
                 $("#price").html(base.formatMoney(data.price));
                 $("#name").html(data.name);
-                $("#groupName").html(data.groupName);
-                $("#groupPlace").html(data.groupPlace);
 
-                $("#groupWrap").append('<a class="t-detail-nor-btn" href="tel://'+data.groupMobile+'"><div class="t-detail-tel-icon">拨打</div></a>');
+                if(data.groupName){
+                    $("#groupName").html(data.groupName);
+                    $("#groupPlace").html(data.groupPlace);
+                    $("#groupWrap").removeClass("hidden_i").append('<a class="t-detail-nor-btn" href="tel://'+data.groupMobile+'"><div class="t-detail-tel-icon">拨打</div></a>');
+                }
 
-                $("#address").html(data.province + data.city + data.area + data.detail);
-                travelPoint = {
-                    lng: data.longitude,
-                    lat: data.latitude
-                };
+                if(data.longitude){
+                    $("#addressWrap").removeClass("hidden_i");
+                    $("#address").html(data.province + data.city + data.area + data.detail);
+                    travelPoint = {
+                        lng: data.longitude,
+                        lat: data.latitude
+                    };
+                }
 
                 var tabList = data.lineTabList;
                 // 1 亮点 2行程 3费用 4 须知

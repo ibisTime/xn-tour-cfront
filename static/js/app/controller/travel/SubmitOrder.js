@@ -172,6 +172,10 @@ define([
                 return;
             }
         	if($("#submitForm").valid()){
+                if(!$("#outDate").val()){
+                    base.showMsg("出行日期不能为空");
+                    return;
+                }
                 submitOrder();
         	}
         });

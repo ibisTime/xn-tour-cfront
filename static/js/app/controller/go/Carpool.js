@@ -189,7 +189,7 @@ define([
     }
     function submit(result){
         var data = $("#carpoolForm").serializeObject();
-        data.distance = result.cg;
+        data.distance = result;
         data.userId = base.getUserId();
         data.outDatetime = data.outDatetime + ":00";
         Ajax.post("618240", {

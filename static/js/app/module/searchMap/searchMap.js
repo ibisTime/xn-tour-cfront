@@ -86,7 +86,7 @@ define([
             return;
         }
         var plan = results.getPlan(0);
-        defaultOpt.calcSuccess && defaultOpt.calcSuccess(plan);
+        defaultOpt.calcSuccess && defaultOpt.calcSuccess(plan.dg);
     }
     var Map = {
         addMap: function(option) {

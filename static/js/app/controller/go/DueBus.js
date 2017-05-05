@@ -225,7 +225,7 @@ define([
     }
     function submit(result){
         var data = $("#deuBusForm").serializeObject();
-        data.distance = result.cg;
+        data.distance = result;
         data.booker = base.getUserId();
         data.outDatetime = data.outDatetime + ":00";
         Ajax.post("618210", {
@@ -249,7 +249,7 @@ define([
                 if(res.success){
                     base.confirm("大巴预定成功，总价为：" + base.formatMoney(res.data.distancePrice) + "。<br/>点击确认前往支付")
                         .then(function () {
-                            location.href = "../pay/pay.html?code=" + code + "&type=3"; 
+                            location.href = "../pay/pay.html?code=" + code + "&type=3";
                         }, function () {
                             history.back();
                         });

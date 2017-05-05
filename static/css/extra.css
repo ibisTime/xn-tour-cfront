@@ -3408,3 +3408,7 @@ label.error {
 .pt0{
     padding-top: 0 !important;
 }
+
+.hidden_i{
+    display: none !important;
+}
