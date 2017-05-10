@@ -68,6 +68,24 @@ define([
                 if(data.recommend){
                     $("#tjlyWrap").removeClass("hidden");
                     $("#tjlyCont").html(data.recommend);
+                    // setTimeout(function(){myScroll.refresh()}, 0);
+                    var recommend = $(data.recommend);
+                    var imgs = recommend.find("img");
+                    for (var i = 0; i < imgs.length; i++) {
+                        var img = imgs.eq(i);
+                        if (img[0].complete) {
+                            myScroll.refresh()
+                            continue;
+                        }
+                        (function(img) {
+                            img[0].onload = (function() {
+                                myScroll.refresh()
+                            });
+                        })(img);
+
+                    }
+                    $("#tjlyCont").html(recommend);
+
                 }
 
                 $("#telephone")

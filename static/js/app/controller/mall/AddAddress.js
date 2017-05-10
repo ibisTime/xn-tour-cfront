@@ -50,6 +50,9 @@ define([
         $("#province").cityPicker({
             title: "选择省市县"
         });
+        $("#province").on("click", function(){
+            $(this).blur();
+        })
         $("#addForm").validate({
             'rules': {
                 addressee: {
