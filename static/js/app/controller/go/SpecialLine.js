@@ -14,8 +14,8 @@ define([
         start: 1,
         limit: 10,
         type: type,
-        startSite: '',
-        endSite: '',
+        startSite: base.getDictList("startSite"),
+        endSite: base.getDictList("endSite"),
         dateStart: '',
         status: "1"
     }, isLoading = false, isEnd = false;

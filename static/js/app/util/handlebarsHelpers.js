@@ -54,7 +54,7 @@ define([
     Handlebars.registerHelper('formateDateTime', function(date, options){
         if(!date)
             return "--";
-        date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+        // date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
         return new Date(date).format("yyyy-MM-dd hh:mm:ss");
     });
     Handlebars.registerHelper('formateDateTime1', function(date, options){
@@ -78,7 +78,7 @@ define([
     Handlebars.registerHelper('formateTime', function(date, options){
         if(!date)
             return "--";
-        date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
+        // date = date.replace(/(12:\d\d:\d\d\s)AM$/, "$1PM");
         return new Date(date).format("hh:mm");
     });
     Handlebars.registerHelper('clearTag', function(des, options){
