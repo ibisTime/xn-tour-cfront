@@ -19,7 +19,8 @@ define([
             json: {
                 "mobile": $("#bind-mobile").val(),
                 "smsCaptcha": $("#bind-smsCaptcha").val(),
-                "userId": sessionStorage.getItem("user")
+                "userId": sessionStorage.getItem("user"),
+                "isSendSms": 1
             }
         }).then(function(res){
             loading.hideLoading();
@@ -99,7 +100,7 @@ define([
                 }, 200, function(){
                     defaultOpt.showFun && defaultOpt.showFun();
                 });
-                
+
             }
             return this;
         },
