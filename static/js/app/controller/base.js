@@ -525,11 +525,11 @@ define([
         }
     };
     // 判断是否登录
-    if(!/\/redirect\.html/.test(location.href)){
-        if(!Base.isLogin()){
-            Base.goLogin();
-        }
-    }
+    // if(!/\/redirect\.html/.test(location.href)){
+    //     if(!Base.isLogin()){
+    //         Base.goLogin();
+    //     }
+    // }
 
     return Base;
 });
