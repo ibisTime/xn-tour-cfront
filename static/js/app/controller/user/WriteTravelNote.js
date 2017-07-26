@@ -15,10 +15,10 @@ define([
 
     function init() {
         loading.createLoading();
-        // if(!base.isLogin()){
-        //     base.goLogin();
-        //     return;
-        // }
+        if(!base.isLogin()){
+            base.goLogin();
+            return;
+        }
         $("#publisher").val(base.getUserId());
         addListener();
         getListTravelOrder();
@@ -30,17 +30,17 @@ define([
             status: 4
         }).then(function(res){
             loading.hideLoading();
-            // if(res.success && res.data.length){
+            if(res.success && res.data.length){
                 var html = "";
                 $.each(res.data, function(i, d){
                     html += '<option value="'+d.lineCode+'">'+d.line.name+'</option>';
                 });
                 $("#lineCode").html(html).trigger("change");
-            // }else{
-            //     res.msg && base.showMsg(res.msg);
-            //     $("#travelForm").hide();
-            //     $("#noTravel").show();
-            // }
+            }else{
+                res.msg && base.showMsg(res.msg);
+                $("#travelForm").hide();
+                $("#noTravel").show();
+            }
         }, function(){
             base.showMsg("线路信息获取失败");
             $("#travelForm").hide();
