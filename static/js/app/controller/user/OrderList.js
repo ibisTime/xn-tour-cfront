@@ -904,16 +904,16 @@ define([
             }
         }).then(function(res) {
             if (res.success) {
-                base.showMsg("退款成功");
+                base.showMsg("操作成功");
                 loading.createLoading();
                 success(true);
             } else {
                 loading.hideLoading();
-                base.showMsg(res.msg || "退款失败");
+                base.showMsg(res.msg || "操作失败");
             }
         }, function() {
             loading.hideLoading();
-            base.showMsg("退款失败");
+            base.showMsg("操作失败");
         });
     }
 });

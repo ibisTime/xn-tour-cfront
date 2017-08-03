@@ -148,14 +148,14 @@ define([
                 loading.hideLoading();
                 if(res.success){
                     $("#status").html(lineOrderStatus['2']);
-                    base.showMsg("退款成功");
+                    base.showMsg("操作成功");
                     $(".order-hotel-detail-btn0, .order-hotel-detail-btn1").addClass("hidden");
                 }else{
-                    base.showMsg(res.msg || "退款失败");
+                    base.showMsg(res.msg || "操作失败");
                 }
             }, function(){
                 loading.hideLoading();
-                base.showMsg("退款失败");
+                base.showMsg("操作失败");
             })
     }
     function addListeners(){
