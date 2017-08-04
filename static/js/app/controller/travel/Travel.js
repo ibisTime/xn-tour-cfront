@@ -22,6 +22,7 @@ define([
         travel: {
             category: "",
             name: "",
+            city: "",
             type: "",
             style: "",
             travelTime: "",
@@ -454,6 +455,7 @@ define([
         $("#ok").on("click", function(){
             loading.createLoading();
             hideDrop();
+            config1.travel.first = true;
             getPageTravel(true)
                 .then(function(){
                     loading.hideLoading();
@@ -479,27 +481,27 @@ define([
             var parent = _self.closest(".travel-drop-right");
             if(parent.hasClass("travel-drop-right0")){
                 if(_self.hasClass("active")){
-                    config.name = _self.attr("data-router");
+                    config.travel.city = _self.attr("data-router");
                 }else{
-                    config.name = "";
+                    config.travel.city = "";
                 }
             }else if(parent.hasClass("travel-drop-right1")){
                 if(_self.hasClass("active")){
-                    config.type = _self.attr("data-router");
+                    config.travel.type = _self.attr("data-router");
                 }else{
-                    config.type = "";
+                    config.travel.type = "";
                 }
             }else if(parent.hasClass("travel-drop-right2")){
                 if(_self.hasClass("active")){
-                    config.travelTime = _self.attr("data-router");
+                    config.travel.travelTime = _self.attr("data-router");
                 }else{
-                    config.travelTime = "";
+                    config.travel.travelTime = "";
                 }
             }else if(parent.hasClass("travel-drop-right3")){
                 if(_self.hasClass("active")){
-                    config.style = _self.attr("data-router");
+                    config.travel.style = _self.attr("data-router");
                 }else{
-                    config.style = "";
+                    config.travel.style = "";
                 }
             }
             e.stopPropagation();
